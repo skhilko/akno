@@ -9,30 +9,42 @@
         <title></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
-        <link rel="stylesheet" href="styles/main.css">
+        <link rel="stylesheet" href="styles/prompt.css">
         <script src="bower_components/modernizr/modernizr.js"></script>
     </head>
     <body>
         <button id="open" type="button">Open</button>
-        <button id="close" type="button">Close</button>
+
+        <div id="modal_1" class="prompt-modal prompt-effect-1">
+            <div class="prompt-content">
+                <h3>Modal Dialog</h3>
+                <div>
+                    <p>This is a modal window. You can do the following things with it:</p>
+                    <ul>
+                        <li><strong>Read:</strong> Modal windows will probably tell you something important so don't forget to read what it says.</li>
+                        <li><strong>Look:</strong> modal windows enjoy a certain kind of attention; just look at it and appreciate its presence.</li>
+                        <li><strong>Close:</strong> click on the button below to close the modal.</li>
+                    </ul>
+                    <button class="prompt-action-close">Close me!</button>
+                </div>
+            </div>
+        </div>
 
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
         <script src="bower_components/jquery/jquery.js"></script>
-        <script src="scripts/main.js"></script>
+        <script src="scripts/prompt.js"></script>
 
         <script>
             window.addEventListener("DOMContentLoaded", function() {
-                var prompt = new Prompt();
+                
 
                 document.getElementById('open').addEventListener("click", function() {
+                    var prompt = new Prompt(document.getElementById('modal_1'));
                     prompt.open();
-                }, false);
-
-                document.getElementById('close').addEventListener("click", function() {
-                    prompt.close();
+                    //prompt.destroy();
                 }, false);
             }, false);
         </script>
