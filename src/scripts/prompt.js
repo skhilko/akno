@@ -15,25 +15,29 @@
 
 		this.closeButton = element.querySelector('.prompt-action-close');
 
+		this._createOverlay();
 		this._on('click', this.closeButton, closeHandler);
 		this._on('keydown', this.element, escCloseHandler);
+		promptInstances++;
 	}
 
 	Prompt.prototype.open = function() {
-		this.element.classList.add('prompt-show');
+		this.element.classList.add('prompt-state-visible');
+		this.overlay.classList.add('prompt-state-visible');
 		this.element.focus();
 	};
 
 	Prompt.prototype.close = function() {
-		this.element.classList.remove('prompt-show');
+		this.element.classList.remove('prompt-state-visible');
+		this.overlay.classList.remove('prompt-state-visible');
 	};
 
 	Prompt.prototype.destroy = function() {
-		this.element.classList.remove('prompt-show');
-		_removeEventHandlers(this);
+		this.element.classList.remove('prompt-state-visible');
+		removeEventHandlers(this);
+		this._destroyOverlay();
+		promptInstances--;
 	};
-
-	var KEY_CODE_ESCAPE = 27;
 
 	Prompt.prototype._on = function(event, element, handler) {
 		handler = handler.bind(this);
@@ -44,6 +48,28 @@
 		});
 		element.addEventListener(event, handler, false);
 	};
+
+	Prompt.prototype._createOverlay = function() {
+		var overlay;
+		if (!promptInstances) {
+			overlay = document.createElement('div');
+			overlay.id = 'prompt_overlay';
+			overlay.classList.add('prompt-overlay');
+			document.body.appendChild(overlay);
+		} else {
+			overlay = document.getElementById('prompt_overlay');
+		}
+		this.overlay = overlay;
+	};
+
+	Prompt.prototype._destroyOverlay = function() {
+		if (promptInstances === 1) {
+			document.body.removeChild(this.overlay);
+		}
+	};
+
+	var KEY_CODE_ESCAPE = 27;
+	var promptInstances = 0;
 
 	function closeHandler() {
 		this.close();
@@ -57,7 +83,7 @@
 		}
 	}
 
-	function _removeEventHandlers(instance) {
+	function removeEventHandlers(instance) {
 		for (var i = 0, len = instance.handlers.length; i < len; i++) {
 			var event = instance.handlers[i].event;
 			var element = instance.handlers[i].element;

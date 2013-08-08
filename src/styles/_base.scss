@@ -36,10 +36,6 @@ perspective effects (not including the modals and the overlay).
 	outline: none;
 }
 
-.prompt-show {
-	visibility: visible;
-}
-
 .prompt-overlay {
 	position: fixed;
 	width: 100%;
@@ -53,9 +49,12 @@ perspective effects (not including the modals and the overlay).
 	transition: all 0.3s;
 }
 
-.prompt-show ~ .prompt-overlay {
-	opacity: 1;
+.prompt-state-visible {
 	visibility: visible;
+}
+
+.prompt-overlay.prompt-state-visible {
+	opacity: 1;
 }
 
 /* Content styles */

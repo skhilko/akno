@@ -7,7 +7,7 @@
 	transition: all 0.3s;
 }
 
-.prompt-show.prompt-effect-1 .prompt-content {
+.prompt-state-visible.prompt-effect-1 .prompt-content {
 	transform: scale(1);
 	opacity: 1;
 }
@@ -19,7 +19,7 @@
 	transition: all 0.3s cubic-bezier(0.25, 0.5, 0.5, 0.9);
 }
 
-.prompt-show.prompt-effect-2 .prompt-content {
+.prompt-state-visible.prompt-effect-2 .prompt-content {
 	transform: translateX(0);
 	opacity: 1;
 }
@@ -31,7 +31,7 @@
 	transition: all 0.3s;
 }
 
-.prompt-show.prompt-effect-3 .prompt-content {
+.prompt-state-visible.prompt-effect-3 .prompt-content {
 	transform: translateY(0);
 	opacity: 1;
 }
@@ -42,12 +42,12 @@
 	opacity: 0;
 }
 
-.prompt-show.prompt-effect-4 ~ .prompt-overlay,
+.prompt-state-visible.prompt-effect-4 ~ .prompt-overlay,
 .prompt-effect-4 .prompt-content {
 	transition: all 0.5s;
 }
 
-.prompt-show.prompt-effect-4 .prompt-content {
+.prompt-state-visible.prompt-effect-4 .prompt-content {
 	transform: scale(1) rotate(0deg);
 	opacity: 1;
 }
@@ -63,7 +63,7 @@
 	opacity: 0;
 }
 
-.prompt-show.prompt-effect-5 .prompt-content {
+.prompt-state-visible.prompt-effect-5 .prompt-content {
 	transition: all 0.3s ease-in;
 	transform: translateZ(0px) rotateX(0deg); 
 	opacity: 1;
@@ -80,7 +80,7 @@
 	opacity: 0;
 }
 
-.prompt-show.prompt-effect-6 .prompt-content {
+.prompt-state-visible.prompt-effect-6 .prompt-content {
 	transition: all 0.3s ease-in;
 	transform: translate(0%) translateZ(0) rotate(0deg);
 	opacity: 1;
@@ -98,7 +98,7 @@
 	opacity: 0;
 }
 
-.prompt-show.prompt-effect-7 .prompt-content {
+.prompt-state-visible.prompt-effect-7 .prompt-content {
 	transform: translateY(0%);
 	border-radius: 0 0 3px 3px;
 	opacity: 1;
@@ -116,7 +116,7 @@
 	opacity: 0;
 }
 
-.prompt-show.prompt-effect-8 .prompt-content {
+.prompt-state-visible.prompt-effect-8 .prompt-content {
 	transform: rotateY(0deg);
 	opacity: 1;
 }
@@ -133,7 +133,7 @@
 	opacity: 0;
 }
 
-.prompt-show.prompt-effect-9 .prompt-content {
+.prompt-state-visible.prompt-effect-9 .prompt-content {
 	transform: rotateX(0deg);
 	opacity: 1;
 }
@@ -151,7 +151,7 @@
 	transition: all 0.3s;
 }
 
-.prompt-show.prompt-effect-10 .prompt-content {
+.prompt-state-visible.prompt-effect-10 .prompt-content {
 	transform: rotateX(0deg);
 	opacity: 1;
 }
@@ -163,7 +163,7 @@
 	transition: all 0.3s;
 }
 
-.prompt-show.prompt-effect-11 .prompt-content {
+.prompt-state-visible.prompt-effect-11 .prompt-content {
 	transform: scale(1);
 	opacity: 1;
 }
@@ -175,7 +175,7 @@
 	transition: all 0.3s;
 }
 
-.prompt-show.prompt-effect-12 ~ .prompt-overlay {
+.prompt-state-visible.prompt-effect-12 ~ .prompt-overlay {
 	background: #e74c3c;
 } 
 
@@ -184,7 +184,7 @@
 	background: transparent;
 }
 
-.prompt-show.prompt-effect-12 .prompt-content {
+.prompt-state-visible.prompt-effect-12 .prompt-content {
 	transform: scale(1);
 	opacity: 1;
 }
@@ -200,7 +200,7 @@
 	opacity: 0;
 }
 
-.prompt-show.prompt-effect-13 .prompt-content {
+.prompt-state-visible.prompt-effect-13 .prompt-content {
 	animation: slit .7s forwards ease-out;
 }
 
@@ -228,7 +228,7 @@
 	transition: all 0.3s ease-out;
 }
 
-.prompt-show.prompt-effect-14 .prompt-content {
+.prompt-state-visible.prompt-effect-14 .prompt-content {
 	transform: translateY(0%) rotateX(0deg);
 	opacity: 1;
 }
@@ -246,17 +246,17 @@
 	transition: all 0.3s;
 }
 
-.prompt-show.prompt-effect-15 .prompt-content {
+.prompt-state-visible.prompt-effect-15 .prompt-content {
 	transform: translateZ(0px) translateX(0%) rotateY(0deg);
 	opacity: 1;
 }
 
 /* Effect 16:  Blur */
-.prompt-show.prompt-effect-16 ~ .prompt-overlay {
+.prompt-state-visible.prompt-effect-16 ~ .prompt-overlay {
 	background: rgba(180,46,32,0.5);
 }
 
-.prompt-show.prompt-effect-16 ~ .container {
+.prompt-state-visible.prompt-effect-16 ~ .container {
 	filter: blur(3px);
 }
 
@@ -265,25 +265,25 @@
 	opacity: 0;
 }
 
-.prompt-show.prompt-effect-16 ~ .container,
+.prompt-state-visible.prompt-effect-16 ~ .container,
 .prompt-effect-16 .prompt-content {
 	transition: all 0.3s;
 }
 
-.prompt-show.prompt-effect-16 .prompt-content {
+.prompt-state-visible.prompt-effect-16 .prompt-content {
 	transform: translateY(0);
 	opacity: 1;
 }
 
 /* Effect 17:  Slide in from bottom with perspective on container */
-.prompt-show.prompt-effect-17 ~ .container {
+.prompt-state-visible.prompt-effect-17 ~ .container {
 	height: 100%;
 	overflow: hidden;
 	transition: transform 0.3s;
 }	
 
-.prompt-show.prompt-effect-17 ~ .container,
-.prompt-show.prompt-effect-17 ~ .prompt-overlay  {
+.prompt-state-visible.prompt-effect-17 ~ .container,
+.prompt-state-visible.prompt-effect-17 ~ .prompt-overlay  {
 	transform: rotateX(-2deg);
 	transform-origin: 50% 0%;
 	transform-style: preserve-3d;
@@ -294,25 +294,25 @@
 	transform: translateY(200%);
 }
 
-.prompt-show.prompt-effect-17 .prompt-content {
+.prompt-state-visible.prompt-effect-17 .prompt-content {
 	transform: translateY(0);
 	opacity: 1;
 	transition: all 0.3s 0.2s;
 }
 
 /* Effect 18:  Slide from right with perspective on container */
-.prompt-show.prompt-effect-18 ~ .container {
+.prompt-state-visible.prompt-effect-18 ~ .container {
 	height: 100%;
 	overflow: hidden;
 }
 
-.prompt-show.prompt-effect-18 ~ .prompt-overlay {
+.prompt-state-visible.prompt-effect-18 ~ .prompt-overlay {
 	background: rgba(143,27,15,0.8);
 	transition: all 0.5s;
 }
 
-.prompt-show.prompt-effect-18 ~ .container,
-.prompt-show.prompt-effect-18 ~ .prompt-overlay {
+.prompt-state-visible.prompt-effect-18 ~ .container,
+.prompt-state-visible.prompt-effect-18 ~ .prompt-overlay {
 	transform-style: preserve-3d;
 	transform-origin: 0% 50%;
 	animation: rotateRightSideFirst 0.5s forwards ease-in;
@@ -333,24 +333,24 @@
 	opacity: 0;
 }
 
-.prompt-show.prompt-effect-18 .prompt-content {
+.prompt-state-visible.prompt-effect-18 .prompt-content {
 	transform: translateX(0);
 	opacity: 1;
 	transition: all 0.5s 0.1s;
 }
 
 /* Effect 19:  Slip in from the top with perspective on container */
-.prompt-show.prompt-effect-19 ~ .container {
+.prompt-state-visible.prompt-effect-19 ~ .container {
 	height: 100%;
 	overflow: hidden;
 }
 
-.prompt-show.prompt-effect-19 ~ .prompt-overlay {
+.prompt-state-visible.prompt-effect-19 ~ .prompt-overlay {
 	transition: all 0.5s;
 }
 
-.prompt-show.prompt-effect-19 ~ .container,
-.prompt-show.prompt-effect-19 ~ .prompt-overlay {
+.prompt-state-visible.prompt-effect-19 ~ .container,
+.prompt-state-visible.prompt-effect-19 ~ .prompt-overlay {
 	transform-style: preserve-3d;
 	transform-origin: 50% 100%;
 	animation: OpenTop 0.5s forwards ease-in;
@@ -368,7 +368,7 @@
 	opacity: 0;
 }
 
-.prompt-show.prompt-effect-19 .prompt-content {
+.prompt-state-visible.prompt-effect-19 .prompt-content {
 	transform: translateY(0);
 	opacity: 1;
 	transition: all 0.5s 0.1s;
