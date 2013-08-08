@@ -115,6 +115,7 @@ module.exports = function (grunt) {
             all: {
                 options: {
                     run: true,
+                    reporter: 'Spec',
                     urls: ['http://localhost:<%= connect.options.port %>/index.html']
                 }
             }
