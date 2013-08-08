@@ -33,6 +33,7 @@ perspective effects (not including the modals and the overlay).
 	visibility: hidden;
 	backface-visibility: hidden;
 	transform: translateX(-50%) translateY(-50%);
+	outline: none;
 }
 
 .prompt-show {
