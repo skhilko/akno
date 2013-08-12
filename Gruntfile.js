@@ -67,7 +67,8 @@ module.exports = function (grunt) {
                     middleware: function (connect) {
                         return [
                             mountFolder(connect, '.tmp'),
-                            mountFolder(connect, 'test')
+                            mountFolder(connect, 'test'),
+                            mountFolder(connect, yeomanConfig.src)
                         ];
                     }
                 }
@@ -115,6 +116,7 @@ module.exports = function (grunt) {
             all: {
                 options: {
                     run: true,
+                    log: true,
                     reporter: 'Spec',
                     urls: ['http://localhost:<%= connect.options.port %>/index.html']
                 }
@@ -184,7 +186,6 @@ module.exports = function (grunt) {
                     dest: '<%= yeoman.dist %>',
                     src: [
                         '*.{ico,png,txt}',
-                        '.htaccess',
                         'images/{,*/}*.{webp,gif}',
                         'styles/fonts/*'
                     ]
@@ -204,6 +205,7 @@ module.exports = function (grunt) {
                 'copy:styles'
             ],
             test: [
+                'compass',
                 'copy:styles'
             ],
             dist: [
@@ -216,6 +218,14 @@ module.exports = function (grunt) {
     grunt.registerTask('server', function (target) {
         if (target === 'dist') {
             return grunt.task.run(['build', 'open', 'connect:dist:keepalive']);
+        }
+
+        if (target === 'test') {
+            return grunt.task.run([
+                'clean:server',
+                'concurrent:test',
+                'autoprefixer',
+                'connect:test:keepalive']);
         }
 
         grunt.task.run([
