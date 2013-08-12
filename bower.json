@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "dependencies": {
     "modernizr": "~2.6.2",
-    "jquery": "~1.9.1"
+    "jquery": "~2.0.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "syn": "~3.2.2"
+  }
 }
