@@ -24,12 +24,17 @@
 	Prompt.prototype.open = function() {
 		this.element.classList.add('prompt-state-visible');
 		this.overlay.classList.add('prompt-state-visible');
+		this._lastActive = document.activeElement;
 		this.element.focus();
 	};
 
 	Prompt.prototype.close = function() {
 		this.element.classList.remove('prompt-state-visible');
 		this.overlay.classList.remove('prompt-state-visible');
+
+		if (this._lastActive) {
+			this._lastActive.focus();
+		}
 	};
 
 	Prompt.prototype.destroy = function() {
