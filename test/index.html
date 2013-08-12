@@ -4,9 +4,40 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>Mocha Spec Runner</title>
     <link rel="stylesheet" href="lib/mocha/mocha.css">
+    <style>
+        /* disabling effects to speedup tests and avoid timeouts in checks */
+        .prompt-content, .prompt-overlay {
+            -webkit-transition: none !important;
+            -moz-transition: none !important;
+            -o-transition: none !important;
+            -ms-transition: none !important;
+            transition: none !important;
+        }
+    </style>
 </head>
 <body>
     <div id="mocha"></div>
+
+    <div id="modal_1" class="prompt-modal prompt-effect-1">
+            <div class="prompt-content">
+                <h3>Modal Dialog</h3>
+                <div>
+                    <p>This is a modal window. You can do the following things with it:</p>
+                    <ul>
+                        <li><strong>Read:</strong> Modal windows will probably tell you something important so don't forget to read what it says.</li>
+                        <li><strong>Look:</strong> modal windows enjoy a certain kind of attention; just look at it and appreciate its presence.</li>
+                        <li><strong>Close:</strong> click on the button below to close the modal.</li>
+                    </ul>
+                    <button class="prompt-action-close">Close me!</button>
+                </div>
+            </div>
+        </div>
+        
+    <!-- 3rd-party libs -->
+    <script src="bower_components/jquery/jquery.js"></script>
+    <script src="bower_components/syn/dist/syn.js"></script>
+
+    <script src="lib/phantomjs-shim.js"></script>
     <script src="lib/mocha/mocha.js"></script>
     <script>mocha.setup('bdd')</script>
     <!-- assertion framework -->
@@ -14,10 +45,12 @@
     <script>var expect = chai.expect</script>
 
     <!-- include source files here... -->
+    <script src="scripts/prompt.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles/prompt.css">
 
     <!-- include spec files here... -->
     <script src="spec/test.js"></script>
-
+    
     <script>mocha.run()</script>
 </body>
 </html>
