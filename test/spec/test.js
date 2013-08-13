@@ -1,4 +1,5 @@
-/*global describe, expect, it, afterEach, Syn, Prompt */
+/*global describe, expect, it, afterEach, beforeEach, Prompt */
+// jshint expr: true
 'use strict';
 (function () {
     describe('Prompt', function () {
@@ -58,7 +59,6 @@
             it('should hide the overlay', function() {
                 closeDialog(dialog);
                 expect(isVisible($('.prompt-overlay'))).to.be.false;
-                
             });
         });
 
@@ -90,12 +90,12 @@
             });
 
             it('should return focus to the element which had focus before on close', function() {
-                var input_in_document = document.getElementById('doc_input');
-                input_in_document.focus();
+                var inputInDocument = document.getElementById('doc_input');
+                inputInDocument.focus();
                 var dialog = openDialog();
-                expect(document.activeElement).to.be.not.equal(input_in_document);
+                expect(document.activeElement).to.be.not.equal(inputInDocument);
                 closeDialog(dialog);
-                expect(document.activeElement).to.be.equal(input_in_document);
+                expect(document.activeElement).to.be.equal(inputInDocument);
             });
         });
     });
