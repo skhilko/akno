@@ -3,11 +3,10 @@
 
 	// TODO
 	// -  focus the first focusable element inside of the dialog on open
-	// -  return focus to the dialog when clicked outside
 	// -? remove tabIndex on destroy
 
 	function Prompt(element) {
-		this.handlers = [];
+		this._handlers = [];
 
 		this.element = element;
 		// make the dialog focusable
@@ -39,6 +38,8 @@
 
 	Prompt.prototype.destroy = function() {
 		this.element.classList.remove('prompt-state-visible');
+		this.overlay.classList.remove('prompt-state-visible');
+
 		removeEventHandlers(this);
 		this._destroyOverlay();
 		promptInstances--;
@@ -46,7 +47,7 @@
 
 	Prompt.prototype._on = function(event, element, handler) {
 		handler = handler.bind(this);
-		this.handlers.push({
+		this._handlers.push({
 			event: event,
 			element: element,
 			handler: handler
@@ -89,13 +90,12 @@
 	}
 
 	function removeEventHandlers(instance) {
-		for (var i = 0, len = instance.handlers.length; i < len; i++) {
-			var event = instance.handlers[i].event;
-			var element = instance.handlers[i].element;
-			var handler = instance.handlers[i].handler;
+		for (var i = 0, len = instance._handlers.length; i < len; i++) {
+			var event = instance._handlers[i].event;
+			var element = instance._handlers[i].element;
+			var handler = instance._handlers[i].handler;
 			element.removeEventListener(event, handler);
 		}
-		delete instance.handlers;
 	}
 
 	window.Prompt = Prompt;
