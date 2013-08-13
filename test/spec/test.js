@@ -15,15 +15,12 @@
             return prompt;
         }
 
-        function closeDialog (dialog) {
-            dialog.close();
-        }
-
         describe('#open()', function() {
             var dialog;
 
             afterEach(function() {
-                closeDialog(dialog);
+                dialog.close();
+                dialog.destroy();
             });
 
             it('should show the dialog', function() {
@@ -38,9 +35,11 @@
 
             it('reuses the overlay element for multiple prompt instances', function() {
                 dialog = openDialog();
-                closeDialog(dialog);
-                dialog = openDialog();
-                expect($('.prompt-overlay')).to.have.length(1);
+                dialog.close();
+
+                var oneMoreDialog = openDialog();
+                expect($('.prompt-overlay').length).to.be.equal(1);
+                oneMoreDialog.destroy();
             });
         });
 
@@ -51,32 +50,40 @@
                 dialog = openDialog();
             });
 
+            afterEach(function() {
+                dialog.destroy();
+            });
+
             it('should hide the dialog', function() {
-                closeDialog(dialog);
+                dialog.close();
                 expect(isVisible($('.prompt-modal'))).to.be.false;
             });
 
             it('should hide the overlay', function() {
-                closeDialog(dialog);
+                dialog.close();
                 expect(isVisible($('.prompt-overlay'))).to.be.false;
             });
         });
 
-        describe.skip('#destroy()', function() {
-            // doesn't work because tests are not sandboxed
-            // we have multiple prompt instances left from the previous test runs
+        describe('#destroy()', function() {
             it('should remove overlay element from DOM', function() {
                 var dialog = openDialog();
                 dialog.destroy();
-                expect($('.prompt-overlay')).to.be.empty(0);
+                expect($('.prompt-overlay').length).to.be.equal(0);
             });
 
             it('should remove attached event handlers');
         });
 
         describe('behavior', function() {
+            var dialog;
+            afterEach(function() {
+                dialog.close();
+                dialog.destroy();
+            });
+
             it('should be closed on "esc" key press', function() {
-                openDialog();
+                dialog = openDialog();
                 $(document.activeElement).simulate('keydown', {keyCode: $.simulate.keyCode.ESCAPE});
                 expect(isVisible($('.prompt-modal'))).to.be.false;
             });
@@ -84,17 +91,16 @@
             it('should focus a first focusable element within the dialog on open');
 
             it('should focus the dialog element itself when there is no focusable elements within the dialog on open', function() {
-                var dialog = openDialog();
+                dialog = openDialog();
                 expect(document.activeElement).to.be.equal(dialog.element);
-                closeDialog(dialog);
             });
 
             it('should return focus to the element which had focus before on close', function() {
                 var inputInDocument = document.getElementById('doc_input');
                 inputInDocument.focus();
-                var dialog = openDialog();
+                dialog = openDialog();
                 expect(document.activeElement).to.be.not.equal(inputInDocument);
-                closeDialog(dialog);
+                dialog.close();
                 expect(document.activeElement).to.be.equal(inputInDocument);
             });
         });
