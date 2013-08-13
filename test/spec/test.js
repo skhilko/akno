@@ -76,9 +76,8 @@
 
         describe('behavior', function() {
             it('should be closed on "esc" key press', function() {
-                //TODO doesn't work in phantomjs
                 openDialog();
-                Syn.type('[escape]', document.activeElement);
+                $(document.activeElement).simulate('keydown', {keyCode: $.simulate.keyCode.ESCAPE});
                 expect(isVisible($('.prompt-modal'))).to.be.false;
             });
 

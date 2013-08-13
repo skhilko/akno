@@ -6,6 +6,6 @@
     "jquery": "~2.0.0"
   },
   "devDependencies": {
-    "syn": "~3.2.2"
+    "jquery-simulate": "latest"
   }
 }
