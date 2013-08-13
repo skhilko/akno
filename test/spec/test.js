@@ -66,13 +66,32 @@
         });
 
         describe('#destroy()', function() {
+            var dialog;
+            beforeEach(function() {
+                dialog = openDialog();
+            });
+
             it('should remove overlay element from DOM', function() {
-                var dialog = openDialog();
                 dialog.destroy();
                 expect($('.prompt-overlay').length).to.be.equal(0);
             });
 
-            it('should remove attached event handlers');
+            it('should remove attached event handlers', function() {
+                // Close method is executed in the handlers which should be removed on destroy.
+                // Overwriting the method to add an assertion.
+                var oldClose = Prompt.prototype.close;
+                Prompt.prototype.close = function() {
+                    oldClose.call(this);
+                    // intentionaly failing the test
+                    expect(false, 'event is not removed').to.be.true;
+                };
+
+                dialog.destroy();
+                $('#modal_1').simulate('keydown', {keyCode: $.simulate.keyCode.ESCAPE});
+                $('#modal_1_close').simulate('click');
+
+                Prompt.prototype.close = oldClose;
+            });
         });
 
         describe('behavior', function() {
