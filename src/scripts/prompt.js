@@ -3,20 +3,18 @@
 
 	// TODO
 	// -  focus the first focusable element inside of the dialog on open
-	// -? remove tabIndex on destroy
 
 	function Prompt(element) {
 		this._handlers = [];
 
 		this.element = element;
 		// make the dialog focusable
-		this.element.tabIndex = -1;
-
+		element.setAttribute('tabIndex', -1);
 		this.closeButton = element.querySelector('.prompt-action-close');
 
 		this._createOverlay();
 		this._on('click', this.closeButton, closeHandler);
-		this._on('keydown', this.element, escCloseHandler);
+		this._on('keydown', element, escCloseHandler);
 		promptInstances++;
 	}
 
@@ -28,18 +26,22 @@
 	};
 
 	Prompt.prototype.close = function() {
-		this.element.classList.remove('prompt-state-visible');
-		this.overlay.classList.remove('prompt-state-visible');
-
 		if (this._lastActive) {
 			this._lastActive.focus();
+			// last active element can be unfocusable
+			if(this._lastActive !== document.activeElement) {
+				document.activeElement.blur();
+			}
+			this._lastActive = null;
 		}
+		this.element.classList.remove('prompt-state-visible');
+		this.overlay.classList.remove('prompt-state-visible');
 	};
 
 	Prompt.prototype.destroy = function() {
+		this.element.removeAttribute('tabIndex');
 		this.element.classList.remove('prompt-state-visible');
 		this.overlay.classList.remove('prompt-state-visible');
-
 		removeEventHandlers(this);
 		this._destroyOverlay();
 		promptInstances--;

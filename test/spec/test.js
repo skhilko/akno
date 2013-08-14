@@ -3,6 +3,7 @@
 'use strict';
 (function () {
     describe('Prompt', function () {
+        var dialog;
 
         function isVisible (el) {
             return el.css('visibility') !== 'hidden';
@@ -16,8 +17,6 @@
         }
 
         describe('#open()', function() {
-            var dialog;
-
             afterEach(function() {
                 dialog.close();
                 dialog.destroy();
@@ -44,8 +43,6 @@
         });
 
         describe('#close()', function() {
-            var dialog;
-
             beforeEach(function() {
                 dialog = openDialog();
             });
@@ -66,12 +63,9 @@
         });
 
         describe('#destroy()', function() {
-            var dialog;
-            beforeEach(function() {
-                dialog = openDialog();
-            });
 
             it('should remove overlay element from DOM', function() {
+                var dialog = openDialog();
                 dialog.destroy();
                 expect($('.prompt-overlay').length).to.be.equal(0);
             });
@@ -86,6 +80,7 @@
                     expect(false, 'event is not removed').to.be.true;
                 };
 
+                var dialog = openDialog();
                 dialog.destroy();
                 $('#modal_1').simulate('keydown', {keyCode: $.simulate.keyCode.ESCAPE});
                 $('#modal_1_close').simulate('click');
@@ -94,8 +89,39 @@
             });
         });
 
+        describe('focus', function() {
+            afterEach(function() {
+                dialog.destroy();
+            });
+
+            it('should be given to the first focusable element within the dialog on open');
+            it('should be given to the first element with "autofocus" attribute within the dialog on open');
+
+            it('should be given to the dialog element when there is no focusable elements within the dialog', function() {
+                dialog = openDialog();
+                expect(document.activeElement).to.be.equal(dialog.element);
+                dialog.close();
+            });
+
+            it('should be returned to the previously focused element on dialog close', function() {
+                var inputInDocument = document.getElementById('doc_input');
+                inputInDocument.focus();
+                dialog = openDialog();
+                expect(document.activeElement).to.be.not.equal(inputInDocument);
+                dialog.close();
+                expect(document.activeElement).to.be.equal(inputInDocument);
+            });
+
+            it('should be removed from the dialog on close even if there was no explicitly focused element on open', function() {
+                var lastActiveElement = document.activeElement;
+                dialog = openDialog();
+                expect(document.activeElement).to.be.not.equal(lastActiveElement);
+                dialog.close();
+                expect(document.activeElement).to.be.not.equal(dialog.element);
+            });
+        });
+
         describe('behavior', function() {
-            var dialog;
             afterEach(function() {
                 dialog.close();
                 dialog.destroy();
@@ -105,22 +131,6 @@
                 dialog = openDialog();
                 $(document.activeElement).simulate('keydown', {keyCode: $.simulate.keyCode.ESCAPE});
                 expect(isVisible($('.prompt-modal'))).to.be.false;
-            });
-
-            it('should focus a first focusable element within the dialog on open');
-
-            it('should focus the dialog element itself when there is no focusable elements within the dialog on open', function() {
-                dialog = openDialog();
-                expect(document.activeElement).to.be.equal(dialog.element);
-            });
-
-            it('should return focus to the element which had focus before on close', function() {
-                var inputInDocument = document.getElementById('doc_input');
-                inputInDocument.focus();
-                dialog = openDialog();
-                expect(document.activeElement).to.be.not.equal(inputInDocument);
-                dialog.close();
-                expect(document.activeElement).to.be.equal(inputInDocument);
             });
         });
     });
