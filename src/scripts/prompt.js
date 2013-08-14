@@ -92,11 +92,15 @@
 	}
 
 	function removeEventHandlers(instance) {
-		for (var i = 0, len = instance._handlers.length; i < len; i++) {
-			var event = instance._handlers[i].event;
-			var element = instance._handlers[i].element;
-			var handler = instance._handlers[i].handler;
-			element.removeEventListener(event, handler);
+		if (instance._handlers) {
+			for (var i = 0, len = instance._handlers.length; i < len; i++) {
+				var event = instance._handlers[i].event;
+				var element = instance._handlers[i].element;
+				var handler = instance._handlers[i].handler;
+				element.removeEventListener(event, handler);
+			}
+
+			instance._handlers = null;
 		}
 	}
 
