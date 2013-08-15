@@ -22,7 +22,7 @@
 		this.element.classList.add('prompt-state-visible');
 		this.overlay.classList.add('prompt-state-visible');
 		this._lastActive = document.activeElement;
-		this.element.focus();
+		setFocus(this.element);
 	};
 
 	Prompt.prototype.close = function() {
@@ -103,6 +103,30 @@
 			}
 
 			instance._handlers = null;
+		}
+	}
+
+	function setFocus(element) {
+		// 1. check elements with [autofocus]
+		var autofocusables = element.querySelectorAll('[autofocus]');
+		var	autofocusable;
+		for (var i = 0, len = autofocusables.length; i < len; i++) {
+			autofocusable = autofocusables[i];
+			if(autofocusable && !autofocusable.disabled && isVisible(autofocusable)) {
+				element = autofocusable;
+				break;
+			}
+		}
+
+		// 2. check tabbable content
+		// 3. check tabbable action buttons
+
+		element.focus();
+	}
+
+	function isVisible(element) {
+		if(window.getComputedStyle(element).visibility !== 'hidden') {
+			return element.offsetWidth > 0 && element.offsetHeight > 0;
 		}
 	}
 
