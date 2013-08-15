@@ -48,13 +48,15 @@
 	};
 
 	Prompt.prototype._on = function(event, element, handler) {
-		handler = handler.bind(this);
-		this._handlers.push({
-			event: event,
-			element: element,
-			handler: handler
-		});
-		element.addEventListener(event, handler, false);
+		if(element) {
+			handler = handler.bind(this);
+			this._handlers.push({
+				event: event,
+				element: element,
+				handler: handler
+			});
+			element.addEventListener(event, handler, false);
+		}
 	};
 
 	Prompt.prototype._createOverlay = function() {
