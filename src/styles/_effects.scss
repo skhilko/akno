@@ -1,149 +1,149 @@
 /* Individual modal styles with animations/transitions */
 
 /* Effect 1: Fade in and scale up */
-.prompt-effect-1 .prompt-content {
+.prompt-fx-scale-up .prompt-content {
 	opacity: 0;
 	transition: all 0.3s;
 	transform: scale(0.7);
 }
 
-.prompt-state-visible.prompt-effect-1 .prompt-content {
+.prompt-state-visible.prompt-fx-scale-up .prompt-content {
 	opacity: 1;
 	transform: scale(1);
 }
 
 /* Effect 2: Slide from the right */
-.prompt-effect-2 .prompt-content {
+.prompt-fx-slide-in-right .prompt-content {
 	opacity: 0;
 	transition: all 0.3s cubic-bezier(0.25, 0.5, 0.5, 0.9);
 	transform: translateX(20%);
 }
 
-.prompt-state-visible.prompt-effect-2 .prompt-content {
+.prompt-state-visible.prompt-fx-slide-in-right .prompt-content {
 	opacity: 1;
 	transform: translateX(0);
 }
 
 /* Effect 3: Slide from the bottom */
-.prompt-effect-3 .prompt-content {
+.prompt-fx-slide-in-bottom .prompt-content {
 	opacity: 0;
 	transition: all 0.3s;
 	transform: translateY(20%);
 }
 
-.prompt-state-visible.prompt-effect-3 .prompt-content {
+.prompt-state-visible.prompt-fx-slide-in-bottom .prompt-content {
 	opacity: 1;
 	transform: translateY(0);
 }
 
 /* Effect 4: Newspaper */
-.prompt-effect-4 .prompt-content {
+.prompt-fx-newspaper .prompt-content {
 	opacity: 0;
 	transform: scale(0) rotate(720deg);
 }
 
-.prompt-state-visible.prompt-effect-4 ~ .prompt-overlay,
-.prompt-effect-4 .prompt-content {
+.prompt-state-visible.prompt-fx-newspaper ~ .prompt-overlay,
+.prompt-fx-newspaper .prompt-content {
 	transition: all 0.5s;
 }
 
-.prompt-state-visible.prompt-effect-4 .prompt-content {
+.prompt-state-visible.prompt-fx-newspaper .prompt-content {
 	opacity: 1;
 	transform: scale(1) rotate(0deg);
 }
 
 /* Effect 5: fall */
-.prompt-effect-5.prompt-modal {
+.prompt-fx-fall.prompt-modal {
 	perspective: 1300px;
 }
 
-.prompt-effect-5 .prompt-content { 
+.prompt-fx-fall .prompt-content { 
 	opacity: 0;
 	transform: translateZ(600px) rotateX(20deg);
 	transform-style: preserve-3d;
 }
 
-.prompt-state-visible.prompt-effect-5 .prompt-content { 
+.prompt-state-visible.prompt-fx-fall .prompt-content { 
 	opacity: 1;
 	transition: all 0.3s ease-in;
 	transform: translateZ(0px) rotateX(0deg);
 }
 
 /* Effect 6: side fall */
-.prompt-effect-6.prompt-modal {
+.prompt-fx-side-fall.prompt-modal {
 	perspective: 1300px;
 }
 
-.prompt-effect-6 .prompt-content { 
+.prompt-fx-side-fall .prompt-content { 
 	opacity: 0;
 	transform: translate(30%) translateZ(600px) rotate(10deg);
 	transform-style: preserve-3d;
 }
 
-.prompt-state-visible.prompt-effect-6 .prompt-content {
+.prompt-state-visible.prompt-fx-side-fall .prompt-content {
 	opacity: 1;
 	transition: all 0.3s ease-in;
 	transform: translate(0%) translateZ(0) rotate(0deg);
 }
 
 /* Effect 7:  slide and stick to top */
-.prompt-effect-7{
+.prompt-fx-sticky-top{
 	top: 0;
 	transform: translateX(-50%);
 }
 
-.prompt-effect-7 .prompt-content {
+.prompt-fx-sticky-top .prompt-content {
 	opacity: 0;
 	transition: all .3s;
 	transform: translateY(-200%);
 }
 
-.prompt-state-visible.prompt-effect-7 .prompt-content {
+.prompt-state-visible.prompt-fx-sticky-top .prompt-content {
 	border-radius: 0 0 3px 3px;
 	opacity: 1;
 	transform: translateY(0%);
 }
 
 /* Effect 8: 3D flip horizontal */
-.prompt-effect-8.prompt-modal {
+.prompt-fx-flip-hor.prompt-modal {
 	perspective: 1300px;
 }
 
-.prompt-effect-8 .prompt-content {
+.prompt-fx-flip-hor .prompt-content {
 	opacity: 0;
 	transition: all 0.3s;
 	transform: rotateY(-70deg);
 	transform-style: preserve-3d;
 }
 
-.prompt-state-visible.prompt-effect-8 .prompt-content {
+.prompt-state-visible.prompt-fx-flip-hor .prompt-content {
 	opacity: 1;
 	transform: rotateY(0deg);
 }
 
 /* Effect 9: 3D flip vertical */
-.prompt-effect-9.prompt-modal {
+.prompt-fx-flip-vert.prompt-modal {
 	perspective: 1300px;
 }
 
-.prompt-effect-9 .prompt-content {
+.prompt-fx-flip-vert .prompt-content {
 	opacity: 0;
 	transition: all 0.3s;
 	transform: rotateX(-70deg);
 	transform-style: preserve-3d;
 }
 
-.prompt-state-visible.prompt-effect-9 .prompt-content {
+.prompt-state-visible.prompt-fx-flip-vert .prompt-content {
 	opacity: 1;
 	transform: rotateX(0deg);
 }
 
 /* Effect 10: 3D sign */
-.prompt-effect-10.prompt-modal {
+.prompt-fx-sign.prompt-modal {
 	perspective: 1300px;
 }
 
-.prompt-effect-10 .prompt-content {
+.prompt-fx-sign .prompt-content {
 	opacity: 0;
 	transition: all 0.3s;
 	transform: rotateX(-60deg);
@@ -151,56 +151,56 @@
 	transform-style: preserve-3d;
 }
 
-.prompt-state-visible.prompt-effect-10 .prompt-content {
+.prompt-state-visible.prompt-fx-sign .prompt-content {
 	opacity: 1;
 	transform: rotateX(0deg);
 }
 
 /* Effect 11: Super scaled */
-.prompt-effect-11 .prompt-content {
+.prompt-fx-scale-down .prompt-content {
 	opacity: 0;
 	transition: all 0.3s;
 	transform: scale(2);
 }
 
-.prompt-state-visible.prompt-effect-11 .prompt-content {
+.prompt-state-visible.prompt-fx-scale-down .prompt-content {
 	opacity: 1;
 	transform: scale(1);
 }
 
 /* Effect 12:  Just me */
-.prompt-effect-12 .prompt-content {
+.prompt-fx-just-me .prompt-content {
 	opacity: 0;
 	transition: all 0.3s;
 	transform: scale(0.8);
 }
 
-.prompt-state-visible.prompt-effect-12 ~ .prompt-overlay {
+.prompt-state-visible.prompt-fx-just-me ~ .prompt-overlay {
 	background: #e74c3c;
 } 
 
-.prompt-effect-12 .prompt-content h3,
-.prompt-effect-12 .prompt-content {
+.prompt-fx-just-me .prompt-content h3,
+.prompt-fx-just-me .prompt-content {
 	background: transparent;
 }
 
-.prompt-state-visible.prompt-effect-12 .prompt-content {
+.prompt-state-visible.prompt-fx-just-me .prompt-content {
 	opacity: 1;
 	transform: scale(1);
 }
 
 /* Effect 13: 3D slit */
-.prompt-effect-13.prompt-modal {
+.prompt-fx-split.prompt-modal {
 	perspective: 1300px;
 }
 
-.prompt-effect-13 .prompt-content {
+.prompt-fx-split .prompt-content {
 	opacity: 0;
 	transform: translateZ(-3000px) rotateY(90deg);
 	transform-style: preserve-3d;
 }
 
-.prompt-state-visible.prompt-effect-13 .prompt-content {
+.prompt-state-visible.prompt-fx-split .prompt-content {
 	animation: slit .7s forwards ease-out;
 }
 
@@ -216,11 +216,11 @@
 }
 
 /* Effect 14:  3D Rotate from bottom */
-.prompt-effect-14.prompt-modal {
+.prompt-fx-rotate-bottom.prompt-modal {
 	perspective: 1300px;
 }
 
-.prompt-effect-14 .prompt-content {
+.prompt-fx-rotate-bottom .prompt-content {
 	opacity: 0;
 	transition: all 0.3s ease-out;
 	transform: translateY(100%) rotateX(90deg);
@@ -228,17 +228,17 @@
 	transform-style: preserve-3d;
 }
 
-.prompt-state-visible.prompt-effect-14 .prompt-content {
+.prompt-state-visible.prompt-fx-rotate-bottom .prompt-content {
 	opacity: 1;
 	transform: translateY(0%) rotateX(0deg);
 }
 
 /* Effect 15:  3D Rotate in from left */
-.prompt-effect-15.prompt-modal {
+.prompt-fx-rotate-left.prompt-modal {
 	perspective: 1300px;
 }
 
-.prompt-effect-15 .prompt-content {
+.prompt-fx-rotate-left .prompt-content {
 	opacity: 0;
 	transition: all 0.3s;
 	transform: translateZ(100px) translateX(-30%) rotateY(90deg);
@@ -246,73 +246,73 @@
 	transform-style: preserve-3d;
 }
 
-.prompt-state-visible.prompt-effect-15 .prompt-content {
+.prompt-state-visible.prompt-fx-rotate-left .prompt-content {
 	opacity: 1;
 	transform: translateZ(0px) translateX(0%) rotateY(0deg);
 }
 
 /* Effect 16:  Blur */
-.prompt-state-visible.prompt-effect-16 ~ .prompt-overlay {
+.prompt-state-visible.prompt-fx-blur ~ .prompt-overlay {
 	background: rgba(180,46,32,0.5);
 }
 
-.prompt-state-visible.prompt-effect-16 ~ .container {
+.prompt-state-visible.prompt-fx-blur ~ .container {
 	filter: blur(3px);
 }
 
-.prompt-effect-16 .prompt-content {
+.prompt-fx-blur .prompt-content {
 	opacity: 0;
 	transform: translateY(-5%);
 }
 
-.prompt-state-visible.prompt-effect-16 ~ .container,
-.prompt-effect-16 .prompt-content {
+.prompt-state-visible.prompt-fx-blur ~ .container,
+.prompt-fx-blur .prompt-content {
 	transition: all 0.3s;
 }
 
-.prompt-state-visible.prompt-effect-16 .prompt-content {
+.prompt-state-visible.prompt-fx-blur .prompt-content {
 	opacity: 1;
 	transform: translateY(0);
 }
 
 /* Effect 17:  Slide in from bottom with perspective on container */
-.prompt-state-visible.prompt-effect-17 ~ .container {
+.prompt-state-visible.prompt-fx-let-me-in ~ .container {
 	overflow: hidden;
 	height: 100%;
 	transition: transform 0.3s;
 }	
 
-.prompt-state-visible.prompt-effect-17 ~ .container,
-.prompt-state-visible.prompt-effect-17 ~ .prompt-overlay  {
+.prompt-state-visible.prompt-fx-let-me-in ~ .container,
+.prompt-state-visible.prompt-fx-let-me-in ~ .prompt-overlay  {
 	transform: rotateX(-2deg);
 	transform-origin: 50% 0%;
 	transform-style: preserve-3d;
 }
 
-.prompt-effect-17 .prompt-content {
+.prompt-fx-let-me-in .prompt-content {
 	opacity: 0;
 	transform: translateY(200%);
 }
 
-.prompt-state-visible.prompt-effect-17 .prompt-content {
+.prompt-state-visible.prompt-fx-let-me-in .prompt-content {
 	opacity: 1;
 	transform: translateY(0);
 	transition: all 0.3s 0.2s;
 }
 
 /* Effect 18:  Slide from right with perspective on container */
-.prompt-state-visible.prompt-effect-18 ~ .container {
+.prompt-state-visible.prompt-fx-make-way ~ .container {
 	overflow: hidden;
 	height: 100%;
 }
 
-.prompt-state-visible.prompt-effect-18 ~ .prompt-overlay {
+.prompt-state-visible.prompt-fx-make-way ~ .prompt-overlay {
 	background: rgba(143,27,15,0.8);
 	transition: all 0.5s;
 }
 
-.prompt-state-visible.prompt-effect-18 ~ .container,
-.prompt-state-visible.prompt-effect-18 ~ .prompt-overlay {
+.prompt-state-visible.prompt-fx-make-way ~ .container,
+.prompt-state-visible.prompt-fx-make-way ~ .prompt-overlay {
 	transform-origin: 0% 50%;
 	animation: rotateRightSideFirst 0.5s forwards ease-in;
 	transform-style: preserve-3d;
@@ -328,29 +328,29 @@
 	}
 }
 
-.prompt-effect-18 .prompt-content {
+.prompt-fx-make-way .prompt-content {
 	opacity: 0;
 	transform: translateX(200%);
 }
 
-.prompt-state-visible.prompt-effect-18 .prompt-content {
+.prompt-state-visible.prompt-fx-make-way .prompt-content {
 	opacity: 1;
 	transform: translateX(0);
 	transition: all 0.5s 0.1s;
 }
 
 /* Effect 19:  Slip in from the top with perspective on container */
-.prompt-state-visible.prompt-effect-19 ~ .container {
+.prompt-state-visible.prompt-fx-slip-top ~ .container {
 	overflow: hidden;
 	height: 100%;
 }
 
-.prompt-state-visible.prompt-effect-19 ~ .prompt-overlay {
+.prompt-state-visible.prompt-fx-slip-top ~ .prompt-overlay {
 	transition: all 0.5s;
 }
 
-.prompt-state-visible.prompt-effect-19 ~ .container,
-.prompt-state-visible.prompt-effect-19 ~ .prompt-overlay {
+.prompt-state-visible.prompt-fx-slip-top ~ .container,
+.prompt-state-visible.prompt-fx-slip-top ~ .prompt-overlay {
 	transform-origin: 50% 100%;
 	animation: OpenTop 0.5s forwards ease-in;
 	transform-style: preserve-3d;
@@ -363,12 +363,12 @@
 	}
 }
 
-.prompt-effect-19 .prompt-content {
+.prompt-fx-slip-top .prompt-content {
 	opacity: 0;
 	transform: translateY(-200%);
 }
 
-.prompt-state-visible.prompt-effect-19 .prompt-content {
+.prompt-state-visible.prompt-fx-slip-top .prompt-content {
 	opacity: 1;
 	transform: translateY(0);
 	transition: all 0.5s 0.1s;

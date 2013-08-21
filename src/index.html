@@ -65,7 +65,7 @@
         <span>Delectus, cupiditate, totam, in, repellendus consequatur maxime numquam aut accusamus aperiam esse veritatis modi eum harum quo odio molestiae enim vitae voluptates assumenda ullam aliquam. Aliquid inventore beatae eligendi est.</span>
         <span>Fugiat, ipsa, earum, explicabo, sed magni aliquam assumenda quasi necessitatibus vel recusandae deserunt laudantium ea libero tempora est atque iure reprehenderit et dolores in! Odio, deleniti iusto temporibus facilis et?</span></p>
 
-        <div id="modal_1" class="prompt-modal prompt-effect-1">
+        <div id="modal_1" class="prompt-modal">
             <div class="prompt-content">
                 <h3>Modal Dialog</h3>
                 <div>
@@ -92,7 +92,7 @@
                 
 
                 document.getElementById('open').addEventListener("click", function() {
-                    var prompt = new Prompt(document.getElementById('modal_1'));
+                    var prompt = new Prompt(document.getElementById('modal_1'), {effect: 'scale-up'});
                     prompt.open();
                     //prompt.destroy();
                 }, false);

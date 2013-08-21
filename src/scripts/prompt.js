@@ -1,12 +1,23 @@
 (function(window, undefined) {
 	'use strict';
 
-	function Prompt(element) {
+	/**
+	 * [Prompt description]
+	 *
+	 * Options:
+	 * - effect
+	 * @param {Element} element
+	 * @param {Object} options
+	 */
+	function Prompt(element, options) {
 		this._handlers = [];
 
 		this.element = element;
+		//TODO define defaults
+		this.options = options || {};
 		// make the dialog focusable
 		element.setAttribute('tabIndex', -1);
+		element.classList.add(EFFECTS[this.options.effect]);
 		this.closeButton = element.querySelector('.prompt-action-close');
 
 		this._createOverlay();
@@ -38,6 +49,7 @@
 	Prompt.prototype.destroy = function() {
 		this.element.removeAttribute('tabIndex');
 		this.element.classList.remove('prompt-state-visible');
+		this.element.classList.remove(EFFECTS[this.options.effect]);
 		this.overlay.classList.remove('prompt-state-visible');
 		removeEventHandlers(this);
 		this._destroyOverlay();
@@ -76,6 +88,27 @@
 	};
 
 	var KEY_CODE_ESCAPE = 27;
+	var EFFECTS = {
+		'scale-up': 'prompt-fx-scale-up',
+		'slide-in-right': 'prompt-fx-slide-in-right',
+		'slide-in-bottom': 'prompt-fx-slide-in-bottom',
+		'newspaper': 'prompt-fx-newspaper',
+		'fall': 'prompt-fx-fall',
+		'side-fall': 'prompt-fx-side-fall',
+		'sticky-top': 'prompt-fx-sticky-top',
+		'flip-hor': 'prompt-fx-flip-hor',
+		'flip-vert': 'prompt-fx-flip-vert',
+		'sign': 'prompt-fx-sign',
+		'scale-down': 'prompt-fx-scale-down',
+		'just-me': 'prompt-fx-just-me',
+		'split': 'prompt-fx-split',
+		'rotate-bottom': 'prompt-fx-rotate-bottom',
+		'rotate-left': 'prompt-fx-rotate-left',
+		'blur': 'prompt-fx-blur',
+		'let-me-in': 'prompt-fx-let-me-in',
+		'make-way': 'prompt-fx-make-way',
+		'slip-top': 'prompt-fx-slip-top'
+	};
 	var promptInstances = 0;
 
 	function closeHandler() {
