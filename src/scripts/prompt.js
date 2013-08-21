@@ -1,9 +1,6 @@
 (function(window, undefined) {
 	'use strict';
 
-	// TODO
-	// -  focus the first focusable element inside of the dialog on open
-
 	function Prompt(element) {
 		this._handlers = [];
 
@@ -106,24 +103,51 @@
 		}
 	}
 
-	function setFocus(element) {
-		// 1. check elements with [autofocus]
-		var autofocusables = element.querySelectorAll('[autofocus]');
-		var	autofocusable;
-		for (var i = 0, len = autofocusables.length; i < len; i++) {
-			autofocusable = autofocusables[i];
-			if(autofocusable && !autofocusable.disabled && isVisible(autofocusable)) {
-				element = autofocusable;
-				break;
+	/*
+	 * Sets focus in the following order:
+	 * 1. first content element with autofocus attribute
+	 * 2. first tabbable element within the content of the dialog
+	 * 3. first tabbable action button
+	 * 4. dialog element itself
+	 */
+	function setFocus(container) {
+		var autofocused, tabbable;
+
+		// TODO use content container as a context element
+		var elements = container.querySelectorAll('input,select,button,textarea,object,a');
+		for (var i = 0, len = elements.length; i < len; i++) {
+			var element = elements[i];
+			// will include elements without tabindex attribute, NaN (translated to tabindex '0') and positive values
+			var isTabbable = !(element.tabindex < 0);
+			if(isVisible(element)) {
+				var nodeName = element.nodeName.toLowerCase();
+
+				// Anchors are tabbable if they have an href or positive tabindex attribute.
+				if(!tabbable && nodeName === 'a' && isTabbable) {
+					tabbable = element;
+					// might find an element with a higher rating
+					continue;
+				}
+
+				// input, select, textarea, button, and object elements are tabbable if they do not have a negative tab index and are not disabled
+				if(nodeName !== 'a' && !element.disabled) {
+					if(element.getAttribute('autofocus') !== null) {
+						autofocused = element;
+						// nothing more serious is left here
+						break;
+					} else if(!tabbable && isTabbable) {
+						tabbable = element;
+						// might find an element with a higher rating
+						continue;
+					}
+				}
 			}
 		}
 
-		// 2. check tabbable content
-		// 3. check tabbable action buttons
-
-		element.focus();
+		(autofocused || tabbable || container).focus();
 	}
 
+	// TODO need to check parents as well
 	function isVisible(element) {
 		if(window.getComputedStyle(element).visibility !== 'hidden') {
 			return element.offsetWidth > 0 && element.offsetHeight > 0;

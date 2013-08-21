@@ -94,27 +94,22 @@
                 dialog.destroy();
             });
 
-            it('should be given to the first tabbable element within the dialog on open');
-
-            before(function() {
-                document.getElementById('modal_input_2').autofocus = true;
-                document.getElementById('modal_input_disabled').autofocus = true;
-                document.getElementById('modal_input_hidden_1').autofocus = true;
-                document.getElementById('modal_input_hidden_2').autofocus = true;
+            it('should be given to the first tabbable element within the dialog on open', function() {
+                var anchorElement = document.getElementById('modal_anchor');
+                dialog = openDialog('modal_with_inputs');
+                expect(document.activeElement).to.be.equal(anchorElement);
+                dialog.close();
             });
 
             it('should be given to the first element with "autofocus" attribute within the dialog on open', function() {
+                document.getElementById('modal_input_2').autofocus = true;
+
                 var elementWithAutofocus = document.getElementById('modal_input_2');
                 dialog = openDialog('modal_with_inputs');
                 expect(document.activeElement).to.be.equal(elementWithAutofocus);
                 dialog.close();
-            });
 
-            after(function() {
                 document.getElementById('modal_input_2').autofocus = false;
-                document.getElementById('modal_input_disabled').autofocus = false;
-                document.getElementById('modal_input_hidden_1').autofocus = false;
-                document.getElementById('modal_input_hidden_2').autofocus = false;
             });
 
             it('should be given to the dialog element when there is no focusable elements within the dialog', function() {
