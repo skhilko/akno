@@ -9,8 +9,8 @@
             return el.css('visibility') !== 'hidden';
         }
 
-        function openDialog (id) {
-            var prompt = new Prompt(document.getElementById(id));
+        function openDialog (id, options) {
+            var prompt = new Prompt(document.getElementById(id), options);
             prompt.open();
 
             return prompt;
@@ -133,6 +133,24 @@
                 expect(document.activeElement).to.be.not.equal(lastActiveElement);
                 dialog.close();
                 expect(document.activeElement).to.be.not.equal(dialog.element);
+            });
+        });
+
+        describe('default initialization option', function() {
+            afterEach(function() {
+                dialog.close();
+                dialog.destroy();
+            });
+
+            it('should be applied when an initialization option is not supplied', function() {
+                dialog = openDialog('modal_no_inputs');
+                expect(document.getElementById('modal_no_inputs').classList.contains('prompt-fx-scale-up')).to.be.true;
+            });
+
+            it('should not override a supplied initialization option', function() {
+                dialog = openDialog('modal_no_inputs', {effect: 'slide-in-right'});
+                expect(document.getElementById('modal_no_inputs').classList.contains('prompt-fx-scale-up')).to.be.false;
+                expect(document.getElementById('modal_no_inputs').classList.contains('prompt-fx-slide-in-right')).to.be.true;
             });
         });
 

@@ -13,8 +13,7 @@
 		this._handlers = [];
 
 		this.element = element;
-		//TODO define defaults
-		this.options = options || {};
+		this.options = applyDefaults(options, this.defaults);
 		// make the dialog focusable
 		element.setAttribute('tabIndex', -1);
 		element.classList.add(EFFECTS[this.options.effect]);
@@ -85,6 +84,10 @@
 		if (promptInstances === 1) {
 			document.body.removeChild(this.overlay);
 		}
+	};
+
+	Prompt.prototype.defaults = {
+		effect: 'scale-up'
 	};
 
 	var KEY_CODE_ESCAPE = 27;
@@ -185,6 +188,14 @@
 		if(window.getComputedStyle(element).visibility !== 'hidden') {
 			return element.offsetWidth > 0 && element.offsetHeight > 0;
 		}
+	}
+
+	function applyDefaults(options, defaults) {
+		var result = {};
+		for(var key in defaults) {
+			result[key] = (options && options[key]) || defaults[key];
+		}
+		return result;
 	}
 
 	window.Prompt = Prompt;
