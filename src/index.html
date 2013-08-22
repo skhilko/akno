@@ -10,10 +10,28 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
         <link rel="stylesheet" href="styles/prompt.css">
-        <script src="bower_components/modernizr/modernizr.js"></script>
+        <!--<script src="bower_components/modernizr/modernizr.js"></script>-->
     </head>
     <body>
-        <button id="open" type="button">Open</button>
+        <button class='action-open' type="button" data-effect='scale-up'>Scale Up</button>
+        <button class='action-open' type="button" data-effect='slide-in-right'>Slide In (Right)</button>
+        <button class='action-open' type="button" data-effect='slide-in-bottom'>Slide In (Bottom)</button>
+        <button class='action-open' type="button" data-effect='newspaper'>Newspaper</button>
+        <button class='action-open' type="button" data-effect='fall'>Fall</button>
+        <button class='action-open' type="button" data-effect='side-fall'>Side Fall</button>
+        <button class='action-open' type="button" data-effect='sticky-top'>Sticky Top</button>
+        <button class='action-open' type="button" data-effect='flip-hor'>Horizontal Flip</button>
+        <button class='action-open' type="button" data-effect='flip-vert'>Vertical Flip</button>
+        <button class='action-open' type="button" data-effect='sign'>Sign</button>
+        <button class='action-open' type="button" data-effect='scale-down'>Scale Down</button>
+        <button class='action-open' type="button" data-effect='just-me'>Just Me</button>
+        <button class='action-open' type="button" data-effect='split'>Split</button>
+        <button class='action-open' type="button" data-effect='rotate-bottom'>Rotate Bottom</button>
+        <button class='action-open' type="button" data-effect='rotate-left'>Rotate Left</button>
+        <button class='action-open' type="button" data-effect='blur'>Blur</button>
+        <button class='action-open' type="button" data-effect='let-me-in'>Let Me In</button>
+        <button class='action-open' type="button" data-effect='make-way'>Make Way</button>
+        <button class='action-open' type="button" data-effect='slip-top'>Slip Top</button>
         <p><span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, deleniti, alias, officiis suscipit libero quisquam mollitia dicta iusto molestias error consequuntur autem nam est corporis architecto praesentium porro impedit ex.</span>
         <span>Saepe, corporis, totam, sapiente voluptas accusamus ex magni consequatur labore obcaecati eveniet ipsa quia vero tempore delectus quaerat voluptates illo explicabo ducimus dolores nostrum voluptatem eligendi dolore ipsum recusandae inventore.</span>
         <span>Iusto, assumenda, amet, quam reprehenderit deserunt quas iure velit sit itaque dolorem eius provident eos ducimus et cupiditate sed accusamus doloremque labore adipisci ullam distinctio facere illum veniam fugiat maxime.</span>
@@ -84,19 +102,26 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
-        <script src="bower_components/jquery/jquery.js"></script>
         <script src="scripts/prompt.js"></script>
 
         <script>
-            window.addEventListener("DOMContentLoaded", function() {
-                
-
-                document.getElementById('open').addEventListener("click", function() {
-                    var prompt = new Prompt(document.getElementById('modal_1'), {effect: 'scale-up'});
-                    prompt.open();
-                    //prompt.destroy();
+            (function() {
+                var prompt;
+                var modalElement = document.getElementById('modal_1');
+                document.body.addEventListener("click", function(ev) {
+                    var target = ev.target;
+                    if(target.classList.contains('action-open')) {
+                        if(prompt) {
+                            prompt.destroy()
+                            prompt = null;
+                        }
+                        prompt = new Prompt(modalElement, {
+                            effect: target.dataset.effect
+                        });
+                        prompt.open();
+                    }
                 }, false);
-            }, false);
+            })();
         </script>
 </body>
 </html>
