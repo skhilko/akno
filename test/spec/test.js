@@ -64,6 +64,19 @@
 
         describe('#destroy()', function() {
 
+            it('should cleanup "service" classes', function() {
+                var dialog = openDialog('modal_no_inputs');
+                dialog.destroy();
+                expect(document.getElementById('modal_no_inputs').classList.contains('prompt-state-visible')).to.be.false;
+                expect(document.getElementById('modal_no_inputs').classList.contains('prompt-fx-scale-up')).to.be.false;
+            });
+
+            it('should erase the reference to dom element', function() {
+                var dialog = openDialog('modal_no_inputs');
+                dialog.destroy();
+                expect(dialog.element).to.not.exist;
+            });
+
             it('should remove overlay element from DOM', function() {
                 var dialog = openDialog('modal_no_inputs');
                 dialog.destroy();

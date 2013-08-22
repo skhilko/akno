@@ -46,12 +46,15 @@
 	};
 
 	Prompt.prototype.destroy = function() {
-		this.element.removeAttribute('tabIndex');
-		this.element.classList.remove('prompt-state-visible');
-		this.element.classList.remove(EFFECTS[this.options.effect]);
+		var element = this.element;
+		element.removeAttribute('tabIndex');
+		element.classList.remove('prompt-state-visible');
+		element.classList.remove(EFFECTS[this.options.effect]);
+
 		this.overlay.classList.remove('prompt-state-visible');
 		removeEventHandlers(this);
 		this._destroyOverlay();
+		this.element = null;
 		promptInstances--;
 	};
 
