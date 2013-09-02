@@ -49,11 +49,12 @@
         }
         this.dialog.classList.remove('prompt-state-visible');
         this.overlay.classList.remove('prompt-state-visible');
+        this._trigger('prompt-close');
     };
 
     Prompt.prototype.destroy = function() {
         // put the element back on it's initial place
-        this._oldSibling.parentNode.insertBefore(this.element, this._oldSibling.nextSibling);
+        this._oldSibling.parentNode.insertBefore(this.element, this._oldSibling.nextElementSibling);
         this.overlay.classList.remove('prompt-state-visible');
         removeEventHandlers(this);
         this._destroyOverlay();

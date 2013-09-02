@@ -26,7 +26,9 @@
 
             var openHandler = function() {
                 prompt.element.removeEventListener('prompt-open', openHandler);
-                callback();
+                if (callback) {
+                    callback();
+                }
             };
             prompt.element.addEventListener('prompt-open', openHandler);
 
@@ -95,6 +97,16 @@
                 var dialog = openDialog('modal_no_inputs', function() {
                     dialog.destroy();
                     expect(dialog.element).to.not.exist;
+                    done();
+                });
+            });
+
+            it('should return dom element where it was before prompt initialization', function(done) {
+                var element = document.getElementById('modal_no_inputs');
+                var sibling = element.previousElementSibling;
+                var dialog = openDialog('modal_no_inputs', function() {
+                    dialog.destroy();
+                    expect(sibling.nextElementSibling).to.be.equal(element);
                     done();
                 });
             });
@@ -212,6 +224,37 @@
                     expect(modalWrapper.classList.contains('prompt-fx-scale-up')).to.be.false;
                     expect(modalWrapper.classList.contains('prompt-fx-slide-in-right')).to.be.true;
                     done();
+                });
+            });
+        });
+
+        describe('events', function() {
+            afterEach(function() {
+                dialog.close();
+                dialog.destroy();
+            });
+
+            it('triggers "prompt-open" event when the prompt is shown', function(done) {
+                var element = document.getElementById('modal_no_inputs');
+                var openHandler = function(ev) {
+                    expect(ev.target).to.be.equal(element);
+                    document.body.removeEventListener('prompt-open', openHandler);
+                    done();
+                };
+                document.body.addEventListener('prompt-open', openHandler);
+                dialog = openDialog('modal_no_inputs');
+            });
+
+            it('triggers "prompt-close" event when the prompt is hidden', function(done) {
+                var element = document.getElementById('modal_no_inputs');
+                var closeHandler = function(ev) {
+                    expect(ev.target).to.be.equal(element);
+                    document.body.removeEventListener('prompt-close', closeHandler);
+                    done();
+                };
+                document.body.addEventListener('prompt-close', closeHandler);
+                dialog = openDialog('modal_no_inputs', function() {
+                    dialog.close();
                 });
             });
         });
