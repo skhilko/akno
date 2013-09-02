@@ -122,9 +122,9 @@
         this._trigger('prompt-open');
     };
 
-    Prompt.prototype._escKeyHandler = function() {
-        if (event.keyCode === KEY_CODE_ESCAPE) {
-            event.preventDefault();
+    Prompt.prototype._escKeyHandler = function(ev) {
+        if (ev.keyCode === KEY_CODE_ESCAPE) {
+            ev.preventDefault();
             this.close();
             return;
         }
