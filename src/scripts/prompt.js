@@ -29,8 +29,8 @@
     }
 
     Prompt.prototype.open = function() {
-        this.dialog.classList.add('prompt-state-visible');
-        this.overlay.classList.add('prompt-state-visible');
+        addClass(this.dialog, 'prompt-state-visible');
+        addClass(this.overlay, 'prompt-state-visible');
 
         // set focus manually in case transitions are not supported
         if(!TRANSITION_END_EVENT) {
@@ -47,15 +47,15 @@
             }
             this._lastActive = null;
         }
-        this.dialog.classList.remove('prompt-state-visible');
-        this.overlay.classList.remove('prompt-state-visible');
+        removeClass(this.dialog, 'prompt-state-visible');
+        removeClass(this.overlay, 'prompt-state-visible');
         this._trigger('prompt-close');
     };
 
     Prompt.prototype.destroy = function() {
         // put the element back on it's initial place
         this._oldSibling.parentNode.insertBefore(this.element, this._oldSibling.nextElementSibling);
-        this.overlay.classList.remove('prompt-state-visible');
+        removeClass(this.overlay, 'prompt-state-visible');
         removeEventHandlers(this);
         this._destroyOverlay();
         document.body.removeChild(this.dialog);
@@ -74,7 +74,7 @@
         var dialog = document.createElement('div');
         dialog.className = 'prompt-modal ' + EFFECTS[this.options.effect];
         // make the dialog focusable
-        dialog.setAttribute('tabIndex', -1);
+        dialog.tabIndex = -1;
         dialog.appendChild(content);
         this.dialog = document.body.appendChild(dialog);
     };
@@ -102,7 +102,7 @@
         if (!promptInstances) {
             overlay = document.createElement('div');
             overlay.id = 'prompt_overlay';
-            overlay.classList.add('prompt-overlay');
+            overlay.className = 'prompt-overlay';
             document.body.appendChild(overlay);
         } else {
             overlay = document.getElementById('prompt_overlay');
@@ -135,6 +135,7 @@
     };
 
     var KEY_CODE_ESCAPE = 27;
+    var REGEX_CLASS_SPLIT = /[\t\r\n\f]/g;
     var EFFECTS = {
         'scale-up': 'prompt-fx-scale-up',
         'slide-in-right': 'prompt-fx-slide-in-right',
@@ -186,7 +187,7 @@
         for (var i = 0, len = elements.length; i < len; i++) {
             var element = elements[i];
             // will include elements without tabindex attribute, NaN (translated to tabindex '0') and positive values
-            var isTabbable = !(element.tabindex < 0);
+            var isTabbable = !(element.tabIndex < 0);
             if(isVisible(element)) {
                 var nodeName = element.nodeName.toLowerCase();
 
@@ -199,7 +200,7 @@
 
                 // input, select, textarea, button, and object elements are tabbable if they do not have a negative tab index and are not disabled
                 if(nodeName !== 'a' && !element.disabled) {
-                    if(element.getAttribute('autofocus') !== null) {
+                    if(element.autofocus) {
                         autofocused = element;
                         // nothing more serious is left here
                         break;
@@ -220,6 +221,40 @@
         if(window.getComputedStyle(element).visibility !== 'hidden') {
             return element.offsetWidth > 0 && element.offsetHeight > 0;
         }
+    }
+
+    function addClass(element, value) {
+        if(element.classList) {
+            element.classList.add(value);
+            return;
+        }
+
+        var current = ' ';
+        if(element.className) {
+            current = (' ' + element.className + ' ').replace(REGEX_CLASS_SPLIT, ' ');
+        }
+
+        if( current.indexOf(' ' + value + ' ') < 0 ) {
+            current += value + ' ';
+        }
+        element.className = current.trim();
+    }
+
+    function removeClass(element, value) {
+        if(element.classList) {
+            element.classList.remove(value);
+            return;
+        }
+
+        var current = ' ';
+        if(element.className) {
+            current = (' ' + element.className + ' ').replace(REGEX_CLASS_SPLIT, ' ');
+        }
+
+        if(current.indexOf(' ' + value + ' ') >= 0) {
+            current = current.replace(' ' + value + ' ', ' ');
+        }
+        element.className = value ? current.trim() : '';
     }
 
     function applyDefaults(options, defaults) {

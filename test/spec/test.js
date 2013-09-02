@@ -213,16 +213,16 @@
 
             it('should be applied when an initialization option is not supplied', function(done) {
                 dialog = openDialog('modal_no_inputs', function() {
-                    expect(document.querySelector('.prompt-modal').classList.contains('prompt-fx-scale-up')).to.be.true;
+                    expect($('.prompt-modal').hasClass('prompt-fx-scale-up')).to.be.true;
                     done();
                 });
             });
 
             it('should not override a supplied initialization option', function(done) {
                 dialog = openDialog('modal_no_inputs', {effect: 'slide-in-right'}, function() {
-                    var modalWrapper = document.querySelector('.prompt-modal');
-                    expect(modalWrapper.classList.contains('prompt-fx-scale-up')).to.be.false;
-                    expect(modalWrapper.classList.contains('prompt-fx-slide-in-right')).to.be.true;
+                    var modalWrapper = $('.prompt-modal');
+                    expect(modalWrapper.hasClass('prompt-fx-scale-up')).to.be.false;
+                    expect(modalWrapper.hasClass('prompt-fx-slide-in-right')).to.be.true;
                     done();
                 });
             });

@@ -110,13 +110,13 @@
                 var modalElement = document.getElementById('modal_1');
                 document.body.addEventListener("click", function(ev) {
                     var target = ev.target;
-                    if(target.classList.contains('action-open')) {
+                    if(target.className.indexOf('action-open') >= 0) {
                         if(prompt) {
                             prompt.destroy()
                             prompt = null;
                         }
                         prompt = new Prompt(modalElement, {
-                            effect: target.dataset.effect
+                            effect: target.getAttribute('data-effect')
                         });
 
                         // TODO need a solution: transition doesn't work when dialog is being opened immediately
