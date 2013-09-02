@@ -9,9 +9,26 @@
             return el.css('visibility') !== 'hidden';
         }
 
-        function openDialog (id, options) {
+        /**
+         * Opens the dialog.
+         * Due to css transitions used on dialog open, we have to use an async callback to proceed with test assertions.
+         */
+        function openDialog (id, options, callback) {
+            if(typeof options === 'function') {
+                callback = options;
+                options = null;
+            }
             var prompt = new Prompt(document.getElementById(id), options);
-            prompt.open();
+            // TODO need a solution: transition doesn't work when dialog is being opened immediately
+            setTimeout(function() {
+                prompt.open();
+            }, 0);
+
+            var openHandler = function() {
+                prompt.element.removeEventListener('prompt-open', openHandler);
+                callback();
+            };
+            prompt.element.addEventListener('prompt-open', openHandler);
 
             return prompt;
         }
@@ -22,68 +39,83 @@
                 dialog.destroy();
             });
 
-            it('should show the dialog', function() {
-                dialog = openDialog('modal_no_inputs');
-                expect(isVisible($('.prompt-modal'))).to.be.true;
+            it('should show the dialog', function(done) {
+                dialog = openDialog('modal_no_inputs', function() {
+                    expect(isVisible($('.prompt-modal'))).to.be.true;
+                    done();
+                });
             });
 
-            it('should show the overlay', function() {
-                dialog = openDialog('modal_no_inputs');
-                expect(isVisible($('.prompt-overlay'))).to.be.true;
+            it('should show the overlay', function(done) {
+                dialog = openDialog('modal_no_inputs', function() {
+                    expect(isVisible($('.prompt-overlay'))).to.be.true;
+                    done();
+                });
             });
 
-            it('reuses the overlay element for multiple prompt instances', function() {
-                dialog = openDialog('modal_no_inputs');
-                dialog.close();
+            it('reuses the overlay element for multiple prompt instances', function(done) {
+                dialog = openDialog('modal_no_inputs', function() {
 
-                var oneMoreDialog = openDialog('modal_no_inputs');
-                expect($('.prompt-overlay').length).to.be.equal(1);
-                oneMoreDialog.destroy();
+                    dialog.close();
+
+                    var oneMoreDialog = openDialog('modal_with_inputs', function() {
+                        expect($('.prompt-overlay').length).to.be.equal(1);
+                        oneMoreDialog.destroy();
+                        done();
+                    });
+                });
             });
         });
 
         describe('#close()', function() {
-            beforeEach(function() {
-                dialog = openDialog('modal_no_inputs');
-            });
-
             afterEach(function() {
                 dialog.destroy();
             });
 
-            it('should hide the dialog', function() {
-                dialog.close();
-                expect(isVisible($('.prompt-modal'))).to.be.false;
+            it('should hide the dialog', function(done) {
+                dialog = openDialog('modal_no_inputs', function() {
+                    dialog.close();
+                    expect(isVisible($('.prompt-modal'))).to.be.false;
+                    done();
+                });
             });
 
-            it('should hide the overlay', function() {
-                dialog.close();
-                expect(isVisible($('.prompt-overlay'))).to.be.false;
+            it('should hide the overlay', function(done) {
+                dialog = openDialog('modal_no_inputs', function() {
+                    dialog.close();
+                    expect(isVisible($('.prompt-overlay'))).to.be.false;
+                    done();
+                });
             });
         });
 
         describe('#destroy()', function() {
 
-            it('should cleanup "service" classes', function() {
-                var dialog = openDialog('modal_no_inputs');
-                dialog.destroy();
-                expect(document.getElementById('modal_no_inputs').classList.contains('prompt-state-visible')).to.be.false;
-                expect(document.getElementById('modal_no_inputs').classList.contains('prompt-fx-scale-up')).to.be.false;
+            it('should erase the reference to dom element', function(done) {
+                var dialog = openDialog('modal_no_inputs', function() {
+                    dialog.destroy();
+                    expect(dialog.element).to.not.exist;
+                    done();
+                });
             });
 
-            it('should erase the reference to dom element', function() {
-                var dialog = openDialog('modal_no_inputs');
-                dialog.destroy();
-                expect(dialog.element).to.not.exist;
+            it('should remove overlay element from DOM', function(done) {
+                var dialog = openDialog('modal_no_inputs', function() {
+                    dialog.destroy();
+                    expect($('.prompt-overlay').length).to.be.equal(0);
+                    done();
+                });
             });
 
-            it('should remove overlay element from DOM', function() {
-                var dialog = openDialog('modal_no_inputs');
-                dialog.destroy();
-                expect($('.prompt-overlay').length).to.be.equal(0);
+            it('should remove dialog wrapper element from DOM', function(done) {
+                var dialog = openDialog('modal_no_inputs', function() {
+                    dialog.destroy();
+                    expect($('.prompt-modal').length).to.be.equal(0);
+                    done();
+                });
             });
 
-            it('should remove attached event handlers', function() {
+            it('should remove attached event handlers', function(done) {
                 // Close method is executed in the handlers which should be removed on destroy.
                 // Overwriting the method to add an assertion.
                 var oldClose = Prompt.prototype.close;
@@ -93,12 +125,14 @@
                     expect(false, 'event is not removed').to.be.true;
                 };
 
-                var dialog = openDialog('modal_no_inputs');
-                dialog.destroy();
-                $('#modal_1').simulate('keydown', {keyCode: $.simulate.keyCode.ESCAPE});
-                $('#modal_1_close').simulate('click');
+                var dialog = openDialog('modal_no_inputs', function() {
+                    dialog.destroy();
+                    $('#modal_1').simulate('keydown', {keyCode: $.simulate.keyCode.ESCAPE});
+                    $('#modal_1_close').simulate('click');
 
-                Prompt.prototype.close = oldClose;
+                    Prompt.prototype.close = oldClose;
+                    done();
+                });
             });
         });
 
@@ -107,45 +141,55 @@
                 dialog.destroy();
             });
 
-            it('should be given to the first tabbable element within the dialog on open', function() {
+            it('should be given to the first tabbable element within the dialog on open', function(done) {
                 var anchorElement = document.getElementById('modal_anchor');
-                dialog = openDialog('modal_with_inputs');
-                expect(document.activeElement).to.be.equal(anchorElement);
-                dialog.close();
+                dialog = openDialog('modal_with_inputs', function() {
+                    expect(document.activeElement).to.be.equal(anchorElement);
+                    dialog.close();
+                    done();
+                });
             });
 
-            it('should be given to the first element with "autofocus" attribute within the dialog on open', function() {
+            it('should be given to the first element with "autofocus" attribute within the dialog on open', function(done) {
                 document.getElementById('modal_input_2').autofocus = true;
 
                 var elementWithAutofocus = document.getElementById('modal_input_2');
-                dialog = openDialog('modal_with_inputs');
-                expect(document.activeElement).to.be.equal(elementWithAutofocus);
-                dialog.close();
+                dialog = openDialog('modal_with_inputs', function() {
+                    expect(document.activeElement).to.be.equal(elementWithAutofocus);
+                    dialog.close();
 
-                document.getElementById('modal_input_2').autofocus = false;
+                    document.getElementById('modal_input_2').autofocus = false;
+                    done();
+                });
             });
 
-            it('should be given to the dialog element when there is no focusable elements within the dialog', function() {
-                dialog = openDialog('modal_no_inputs');
-                expect(document.activeElement).to.be.equal(dialog.element);
-                dialog.close();
+            it('should be given to the dialog element when there is no focusable elements within the dialog', function(done) {
+                dialog = openDialog('modal_no_inputs', function() {
+                    expect(document.activeElement).to.be.equal(dialog.dialog);
+                    dialog.close();
+                    done();
+                });
             });
 
-            it('should be returned to the previously focused element on dialog close', function() {
+            it('should be returned to the previously focused element on dialog close', function(done) {
                 var inputInDocument = document.getElementById('doc_input');
                 inputInDocument.focus();
-                dialog = openDialog('modal_no_inputs');
-                expect(document.activeElement).to.be.not.equal(inputInDocument);
-                dialog.close();
-                expect(document.activeElement).to.be.equal(inputInDocument);
+                dialog = openDialog('modal_no_inputs', function() {
+                    expect(document.activeElement).to.be.not.equal(inputInDocument);
+                    dialog.close();
+                    expect(document.activeElement).to.be.equal(inputInDocument);
+                    done();
+                });
             });
 
-            it('should be removed from the dialog on close even if there was no explicitly focused element on open', function() {
+            it('should be removed from the dialog on close even if there was no explicitly focused element on open', function(done) {
                 var lastActiveElement = document.activeElement;
-                dialog = openDialog('modal_no_inputs');
-                expect(document.activeElement).to.be.not.equal(lastActiveElement);
-                dialog.close();
-                expect(document.activeElement).to.be.not.equal(dialog.element);
+                dialog = openDialog('modal_no_inputs', function() {
+                    expect(document.activeElement).to.be.not.equal(lastActiveElement);
+                    dialog.close();
+                    expect(document.activeElement).to.be.not.equal(dialog.element);
+                    done();
+                });
             });
         });
 
@@ -155,15 +199,20 @@
                 dialog.destroy();
             });
 
-            it('should be applied when an initialization option is not supplied', function() {
-                dialog = openDialog('modal_no_inputs');
-                expect(document.getElementById('modal_no_inputs').classList.contains('prompt-fx-scale-up')).to.be.true;
+            it('should be applied when an initialization option is not supplied', function(done) {
+                dialog = openDialog('modal_no_inputs', function() {
+                    expect(document.querySelector('.prompt-modal').classList.contains('prompt-fx-scale-up')).to.be.true;
+                    done();
+                });
             });
 
-            it('should not override a supplied initialization option', function() {
-                dialog = openDialog('modal_no_inputs', {effect: 'slide-in-right'});
-                expect(document.getElementById('modal_no_inputs').classList.contains('prompt-fx-scale-up')).to.be.false;
-                expect(document.getElementById('modal_no_inputs').classList.contains('prompt-fx-slide-in-right')).to.be.true;
+            it('should not override a supplied initialization option', function(done) {
+                dialog = openDialog('modal_no_inputs', {effect: 'slide-in-right'}, function() {
+                    var modalWrapper = document.querySelector('.prompt-modal');
+                    expect(modalWrapper.classList.contains('prompt-fx-scale-up')).to.be.false;
+                    expect(modalWrapper.classList.contains('prompt-fx-slide-in-right')).to.be.true;
+                    done();
+                });
             });
         });
 
@@ -173,10 +222,12 @@
                 dialog.destroy();
             });
 
-            it('should be closed on "esc" key press', function() {
-                dialog = openDialog('modal_no_inputs');
-                $(document.activeElement).simulate('keydown', {keyCode: $.simulate.keyCode.ESCAPE});
-                expect(isVisible($('.prompt-modal'))).to.be.false;
+            it('should be closed on "esc" key press', function(done) {
+                dialog = openDialog('modal_no_inputs', function() {
+                    $(document.activeElement).simulate('keydown', {keyCode: $.simulate.keyCode.ESCAPE});
+                    expect(isVisible($('.prompt-modal'))).to.be.false;
+                    done();
+                });
             });
         });
     });

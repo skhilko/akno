@@ -1,205 +1,250 @@
-(function(window, undefined) {
-	'use strict';
+/*global Event*/
+(function(window, document, undefined) {
+    'use strict';
 
-	/**
-	 * [Prompt description]
-	 *
-	 * Options:
-	 * - effect
-	 * @param {Element} element
-	 * @param {Object} options
-	 */
-	function Prompt(element, options) {
-		this._handlers = [];
+    /**
+     * [Prompt description]
+     *
+     * Options:
+     * - effect
+     * @param {Element} element
+     * @param {Object} options
+     *
+     * Events:
+     * - prompt-open
+     */
+    function Prompt(element, options) {
+        this._handlers = [];
 
-		this.element = element;
-		this.options = applyDefaults(options, this.defaults);
-		// make the dialog focusable
-		element.setAttribute('tabIndex', -1);
-		element.classList.add(EFFECTS[this.options.effect]);
-		this.closeButton = element.querySelector('.prompt-action-close');
+        this.options = applyDefaults(options, this.defaults);
+        this.element = element;
+        this._render();
+        this.closeButton = element.querySelector('.prompt-action-close');
 
-		this._createOverlay();
-		this._on('click', this.closeButton, closeHandler);
-		this._on('keydown', element, escCloseHandler);
-		promptInstances++;
-	}
+        this._createOverlay();
+        this._on('click', this.closeButton, this.close);
+        this._on('keydown', this.dialog, this._escKeyHandler);
+        this._on(TRANSITION_END_EVENT, this.dialog, this._openHandler);
+        promptInstances++;
+    }
 
-	Prompt.prototype.open = function() {
-		this.element.classList.add('prompt-state-visible');
-		this.overlay.classList.add('prompt-state-visible');
-		this._lastActive = document.activeElement;
-		setFocus(this.element);
-	};
+    Prompt.prototype.open = function() {
+        this.dialog.classList.add('prompt-state-visible');
+        this.overlay.classList.add('prompt-state-visible');
 
-	Prompt.prototype.close = function() {
-		if (this._lastActive) {
-			this._lastActive.focus();
-			// last active element can be unfocusable
-			if(this._lastActive !== document.activeElement) {
-				document.activeElement.blur();
-			}
-			this._lastActive = null;
-		}
-		this.element.classList.remove('prompt-state-visible');
-		this.overlay.classList.remove('prompt-state-visible');
-	};
+        // set focus manually in case transitions are not supported
+        if(!TRANSITION_END_EVENT) {
+            this._openHandler();
+        }
+    };
 
-	Prompt.prototype.destroy = function() {
-		var element = this.element;
-		element.removeAttribute('tabIndex');
-		element.classList.remove('prompt-state-visible');
-		element.classList.remove(EFFECTS[this.options.effect]);
+    Prompt.prototype.close = function() {
+        if (this._lastActive) {
+            this._lastActive.focus();
+            // last active element can be unfocusable
+            if(this._lastActive !== document.activeElement) {
+                document.activeElement.blur();
+            }
+            this._lastActive = null;
+        }
+        this.dialog.classList.remove('prompt-state-visible');
+        this.overlay.classList.remove('prompt-state-visible');
+    };
 
-		this.overlay.classList.remove('prompt-state-visible');
-		removeEventHandlers(this);
-		this._destroyOverlay();
-		this.element = null;
-		promptInstances--;
-	};
+    Prompt.prototype.destroy = function() {
+        // put the element back on it's initial place
+        this._oldSibling.parentNode.insertBefore(this.element, this._oldSibling.nextSibling);
+        this.overlay.classList.remove('prompt-state-visible');
+        removeEventHandlers(this);
+        this._destroyOverlay();
+        document.body.removeChild(this.dialog);
+        this.dialog = null;
+        this.element = null;
+        this._oldSibling = null;
+        promptInstances--;
+    };
 
-	Prompt.prototype._on = function(event, element, handler) {
-		if(element) {
-			handler = handler.bind(this);
-			this._handlers.push({
-				event: event,
-				element: element,
-				handler: handler
-			});
-			element.addEventListener(event, handler, false);
-		}
-	};
+    Prompt.prototype._render = function() {
+        var content = document.createElement('div');
+        content.className = 'prompt-content';
+        this._oldSibling = this.element.previousElementSibling;
+        content.appendChild(this.element);
 
-	Prompt.prototype._createOverlay = function() {
-		var overlay;
-		if (!promptInstances) {
-			overlay = document.createElement('div');
-			overlay.id = 'prompt_overlay';
-			overlay.classList.add('prompt-overlay');
-			document.body.appendChild(overlay);
-		} else {
-			overlay = document.getElementById('prompt_overlay');
-		}
-		this.overlay = overlay;
-	};
+        var dialog = document.createElement('div');
+        dialog.className = 'prompt-modal ' + EFFECTS[this.options.effect];
+        // make the dialog focusable
+        dialog.setAttribute('tabIndex', -1);
+        dialog.appendChild(content);
+        this.dialog = document.body.appendChild(dialog);
+    };
 
-	Prompt.prototype._destroyOverlay = function() {
-		if (promptInstances === 1) {
-			document.body.removeChild(this.overlay);
-		}
-	};
+    Prompt.prototype._on = function(event, element, handler) {
+        if(event && element) {
+            handler = handler.bind(this);
+            this._handlers.push({
+                event: event,
+                element: element,
+                handler: handler
+            });
+            element.addEventListener(event, handler, false);
+        }
+    };
 
-	Prompt.prototype.defaults = {
-		effect: 'scale-up'
-	};
+    Prompt.prototype._trigger = function(eventName) {
+        var event = document.createEvent('CustomEvent');
+        event.initEvent(eventName, true, true);
+        this.element.dispatchEvent(event);
+    };
 
-	var KEY_CODE_ESCAPE = 27;
-	var EFFECTS = {
-		'scale-up': 'prompt-fx-scale-up',
-		'slide-in-right': 'prompt-fx-slide-in-right',
-		'slide-in-bottom': 'prompt-fx-slide-in-bottom',
-		'newspaper': 'prompt-fx-newspaper',
-		'fall': 'prompt-fx-fall',
-		'side-fall': 'prompt-fx-side-fall',
-		'sticky-top': 'prompt-fx-sticky-top',
-		'flip-hor': 'prompt-fx-flip-hor',
-		'flip-vert': 'prompt-fx-flip-vert',
-		'sign': 'prompt-fx-sign',
-		'scale-down': 'prompt-fx-scale-down',
-		'just-me': 'prompt-fx-just-me',
-		'split': 'prompt-fx-split',
-		'rotate-bottom': 'prompt-fx-rotate-bottom',
-		'rotate-left': 'prompt-fx-rotate-left',
-		'blur': 'prompt-fx-blur',
-		'let-me-in': 'prompt-fx-let-me-in',
-		'make-way': 'prompt-fx-make-way',
-		'slip-top': 'prompt-fx-slip-top'
-	};
-	var promptInstances = 0;
+    Prompt.prototype._createOverlay = function() {
+        var overlay;
+        if (!promptInstances) {
+            overlay = document.createElement('div');
+            overlay.id = 'prompt_overlay';
+            overlay.classList.add('prompt-overlay');
+            document.body.appendChild(overlay);
+        } else {
+            overlay = document.getElementById('prompt_overlay');
+        }
+        this.overlay = overlay;
+    };
 
-	function closeHandler() {
-		this.close();
-	}
+    Prompt.prototype._destroyOverlay = function() {
+        if (promptInstances === 1) {
+            document.body.removeChild(this.overlay);
+        }
+    };
 
-	function escCloseHandler(event) {
-		if (event.keyCode === KEY_CODE_ESCAPE) {
-			event.preventDefault();
-			this.close();
-			return;
-		}
-	}
+    Prompt.prototype._openHandler = function() {
+        this._lastActive = document.activeElement;
+        setFocus(this.dialog);
+        this._trigger('prompt-open');
+    };
 
-	function removeEventHandlers(instance) {
-		if (instance._handlers) {
-			for (var i = 0, len = instance._handlers.length; i < len; i++) {
-				var event = instance._handlers[i].event;
-				var element = instance._handlers[i].element;
-				var handler = instance._handlers[i].handler;
-				element.removeEventListener(event, handler);
-			}
+    Prompt.prototype._escKeyHandler = function() {
+        if (event.keyCode === KEY_CODE_ESCAPE) {
+            event.preventDefault();
+            this.close();
+            return;
+        }
+    };
 
-			instance._handlers = null;
-		}
-	}
+    Prompt.prototype.defaults = {
+        effect: 'scale-up'
+    };
 
-	/*
-	 * Sets focus in the following order:
-	 * 1. first content element with autofocus attribute
-	 * 2. first tabbable element within the content of the dialog
-	 * 3. first tabbable action button
-	 * 4. dialog element itself
-	 */
-	function setFocus(container) {
-		var autofocused, tabbable;
+    var KEY_CODE_ESCAPE = 27;
+    var EFFECTS = {
+        'scale-up': 'prompt-fx-scale-up',
+        'slide-in-right': 'prompt-fx-slide-in-right',
+        'slide-in-bottom': 'prompt-fx-slide-in-bottom',
+        'newspaper': 'prompt-fx-newspaper',
+        'fall': 'prompt-fx-fall',
+        'side-fall': 'prompt-fx-side-fall',
+        'sticky-top': 'prompt-fx-sticky-top',
+        'flip-hor': 'prompt-fx-flip-hor',
+        'flip-vert': 'prompt-fx-flip-vert',
+        'sign': 'prompt-fx-sign',
+        'scale-down': 'prompt-fx-scale-down',
+        'just-me': 'prompt-fx-just-me',
+        'split': 'prompt-fx-split',
+        'rotate-bottom': 'prompt-fx-rotate-bottom',
+        'rotate-left': 'prompt-fx-rotate-left',
+        'blur': 'prompt-fx-blur',
+        'let-me-in': 'prompt-fx-let-me-in',
+        'make-way': 'prompt-fx-make-way',
+        'slip-top': 'prompt-fx-slip-top'
+    };
+    var promptInstances = 0;
 
-		// TODO use content container as a context element
-		var elements = container.querySelectorAll('input,select,button,textarea,object,a');
-		for (var i = 0, len = elements.length; i < len; i++) {
-			var element = elements[i];
-			// will include elements without tabindex attribute, NaN (translated to tabindex '0') and positive values
-			var isTabbable = !(element.tabindex < 0);
-			if(isVisible(element)) {
-				var nodeName = element.nodeName.toLowerCase();
+    function removeEventHandlers(instance) {
+        if (instance._handlers) {
+            for (var i = 0, len = instance._handlers.length; i < len; i++) {
+                var event = instance._handlers[i].event;
+                var element = instance._handlers[i].element;
+                var handler = instance._handlers[i].handler;
+                element.removeEventListener(event, handler);
+            }
 
-				// Anchors are tabbable if they have an href or positive tabindex attribute.
-				if(!tabbable && nodeName === 'a' && isTabbable) {
-					tabbable = element;
-					// might find an element with a higher rating
-					continue;
-				}
+            instance._handlers = null;
+        }
+    }
 
-				// input, select, textarea, button, and object elements are tabbable if they do not have a negative tab index and are not disabled
-				if(nodeName !== 'a' && !element.disabled) {
-					if(element.getAttribute('autofocus') !== null) {
-						autofocused = element;
-						// nothing more serious is left here
-						break;
-					} else if(!tabbable && isTabbable) {
-						tabbable = element;
-						// might find an element with a higher rating
-						continue;
-					}
-				}
-			}
-		}
+    /*
+     * Sets focus in the following order:
+     * 1. first content element with autofocus attribute
+     * 2. first tabbable element within the content of the dialog
+     * 3. first tabbable action button
+     * 4. dialog element itself
+     */
+    function setFocus(container) {
+        var autofocused, tabbable;
 
-		(autofocused || tabbable || container).focus();
-	}
+        // TODO use content container as a context element
+        var elements = container.querySelectorAll('input,select,button,textarea,object,a');
+        for (var i = 0, len = elements.length; i < len; i++) {
+            var element = elements[i];
+            // will include elements without tabindex attribute, NaN (translated to tabindex '0') and positive values
+            var isTabbable = !(element.tabindex < 0);
+            if(isVisible(element)) {
+                var nodeName = element.nodeName.toLowerCase();
 
-	// TODO need to check parents as well
-	function isVisible(element) {
-		if(window.getComputedStyle(element).visibility !== 'hidden') {
-			return element.offsetWidth > 0 && element.offsetHeight > 0;
-		}
-	}
+                // Anchors are tabbable if they have an href or positive tabindex attribute.
+                if(!tabbable && nodeName === 'a' && isTabbable) {
+                    tabbable = element;
+                    // might find an element with a higher rating
+                    continue;
+                }
 
-	function applyDefaults(options, defaults) {
-		var result = {};
-		for(var key in defaults) {
-			result[key] = (options && options[key]) || defaults[key];
-		}
-		return result;
-	}
+                // input, select, textarea, button, and object elements are tabbable if they do not have a negative tab index and are not disabled
+                if(nodeName !== 'a' && !element.disabled) {
+                    if(element.getAttribute('autofocus') !== null) {
+                        autofocused = element;
+                        // nothing more serious is left here
+                        break;
+                    } else if(!tabbable && isTabbable) {
+                        tabbable = element;
+                        // might find an element with a higher rating
+                        continue;
+                    }
+                }
+            }
+        }
 
-	window.Prompt = Prompt;
-})(window);
+        (autofocused || tabbable || container).focus();
+    }
+
+    // TODO need to check parents as well
+    function isVisible(element) {
+        if(window.getComputedStyle(element).visibility !== 'hidden') {
+            return element.offsetWidth > 0 && element.offsetHeight > 0;
+        }
+    }
+
+    function applyDefaults(options, defaults) {
+        var result = {};
+        for(var key in defaults) {
+            result[key] = (options && options[key]) || defaults[key];
+        }
+        return result;
+    }
+
+    function getTransitionEndEventName() {
+        var transitions = {
+            'transition':'transitionend',
+            'OTransition':'oTransitionEnd',
+            'MozTransition':'transitionend',
+            'WebkitTransition':'webkitTransitionEnd'
+        };
+        var transition;
+        for(transition in transitions){
+            if( document.body.style[transition] !== undefined ){
+                return transitions[transition];
+            }
+        }
+    }
+
+    var TRANSITION_END_EVENT = getTransitionEndEventName();
+
+    window.Prompt = Prompt;
+})(window, window.document);

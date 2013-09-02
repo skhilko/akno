@@ -13,6 +13,8 @@
         <!--<script src="bower_components/modernizr/modernizr.js"></script>-->
     </head>
     <body>
+        <button id='create' type="button">Create</button>
+        <button id='open' type="button">Open</button>
         <button class='action-open' type="button" data-effect='scale-up'>Scale Up</button>
         <button class='action-open' type="button" data-effect='slide-in-right'>Slide In (Right)</button>
         <button class='action-open' type="button" data-effect='slide-in-bottom'>Slide In (Bottom)</button>
@@ -83,18 +85,16 @@
         <span>Delectus, cupiditate, totam, in, repellendus consequatur maxime numquam aut accusamus aperiam esse veritatis modi eum harum quo odio molestiae enim vitae voluptates assumenda ullam aliquam. Aliquid inventore beatae eligendi est.</span>
         <span>Fugiat, ipsa, earum, explicabo, sed magni aliquam assumenda quasi necessitatibus vel recusandae deserunt laudantium ea libero tempora est atque iure reprehenderit et dolores in! Odio, deleniti iusto temporibus facilis et?</span></p>
 
-        <div id="modal_1" class="prompt-modal">
-            <div class="prompt-content">
-                <h3>Modal Dialog</h3>
-                <div>
-                    <p>This is a modal window. You can do the following things with it:</p>
-                    <ul>
-                        <li><strong>Read:</strong> Modal windows will probably tell you something important so don't forget to read what it says.</li>
-                        <li><strong>Look:</strong> modal windows enjoy a certain kind of attention; just look at it and appreciate its presence.</li>
-                        <li><strong>Close:</strong> click on the button below to close the modal.</li>
-                    </ul>
-                    <button class="prompt-action-close">Close me!</button>
-                </div>
+        <div id="modal_1">
+            <h3>Modal Dialog</h3>
+            <div>
+                <p>This is a modal window. You can do the following things with it:</p>
+                <ul>
+                    <li><strong>Read:</strong> Modal windows will probably tell you something important so don't forget to read what it says.</li>
+                    <li><strong>Look:</strong> modal windows enjoy a certain kind of attention; just look at it and appreciate its presence.</li>
+                    <li><strong>Close:</strong> click on the button below to close the modal.</li>
+                </ul>
+                <button class="prompt-action-close">Close me!</button>
             </div>
         </div>
 
@@ -118,8 +118,24 @@
                         prompt = new Prompt(modalElement, {
                             effect: target.dataset.effect
                         });
-                        prompt.open();
+
+                        // TODO need a solution: transition doesn't work when dialog is being opened immediately
+                        setTimeout(function() {
+                            prompt.open();
+                        }, 25);
                     }
+                }, false);
+
+                var dialog;
+                document.getElementById('create').addEventListener("click", function(ev) {
+                        dialog = new Prompt(modalElement, {
+                            effect: 'scale-up'
+                        });
+
+                        //dialog.open();
+                }, false);
+                document.getElementById('open').addEventListener('click', function() {
+                    dialog.open();
                 }, false);
             })();
         </script>

@@ -5,8 +5,20 @@
     <title>Mocha Spec Runner</title>
     <link rel="stylesheet" href="lib/mocha/mocha.css">
     <style>
-        /* disabling effects to speedup tests and avoid timeouts in checks */
-        .prompt-content, .prompt-overlay {
+
+        /* speeding up tests */
+        .prompt-content {
+            -webkit-transition: all 1ms !important;
+            -moz-transition: all 1ms !important;
+            -o-transition: all 1ms !important;
+            -ms-transition: all 1ms !important;
+            transition: all 1ms !important;
+        }
+
+        /*
+            it's not critical to disable transitions on overlay element during tests, but helps to run assertions on overlay
+         */
+        .prompt-overlay {
             -webkit-transition: none !important;
             -moz-transition: none !important;
             -o-transition: none !important;
@@ -26,38 +38,34 @@
 <body>
     <div id="mocha"></div>
 
-    <div id="modal_no_inputs" class="prompt-modal">
-        <div class="prompt-content">
-            <h3>Modal Dialog</h3>
-            <div>
-                <p>This is a modal window. You can do the following things with it:</p>
-                <ul>
-                    <li><strong>Read:</strong> Modal windows will probably tell you something important so don't forget to read what it says.</li>
-                    <li><strong>Look:</strong> modal windows enjoy a certain kind of attention; just look at it and appreciate its presence.</li>
-                    <li><strong>Close:</strong> click on the button below to close the modal.</li>
-                </ul>
-            </div>
+    <div id="modal_no_inputs">
+        <h3>Modal Dialog</h3>
+        <div>
+            <p>This is a modal window. You can do the following things with it:</p>
+            <ul>
+                <li><strong>Read:</strong> Modal windows will probably tell you something important so don't forget to read what it says.</li>
+                <li><strong>Look:</strong> modal windows enjoy a certain kind of attention; just look at it and appreciate its presence.</li>
+                <li><strong>Close:</strong> click on the button below to close the modal.</li>
+            </ul>
         </div>
     </div>
 
-    <div id="modal_with_inputs" class="prompt-modal">
-        <div class="prompt-content">
-            <h3>Modal Dialog</h3>
-            <div>
-                <p>This is a modal window. You can do the following things with it:</p>
-                <ul>
-                    <li><strong>Read:</strong> Modal windows will probably tell you something important so don't forget to read what it says.</li>
-                    <li><strong>Look:</strong> modal windows enjoy a certain kind of attention; just look at it and appreciate its presence.</li>
-                    <li><strong>Close:</strong> click on the button below to close the modal.</li>
-                </ul>
-                <a id="modal_anchor" href="#test">Test Anchor</a>
-                <input id="modal_input_1" type="text">
-                <input id="modal_input_disabled" type="text" disabled>
-                <input id="modal_input_hidden_1" type="text">
-                <input id="modal_input_hidden_2" type="text">
-                <input id="modal_input_2" type="text">
-                <button id="modal_1_close" class="prompt-action-close">Close me!</button>
-            </div>
+    <div id="modal_with_inputs">
+        <h3>Modal Dialog</h3>
+        <div>
+            <p>This is a modal window. You can do the following things with it:</p>
+            <ul>
+                <li><strong>Read:</strong> Modal windows will probably tell you something important so don't forget to read what it says.</li>
+                <li><strong>Look:</strong> modal windows enjoy a certain kind of attention; just look at it and appreciate its presence.</li>
+                <li><strong>Close:</strong> click on the button below to close the modal.</li>
+            </ul>
+            <a id="modal_anchor" href="#test">Test Anchor</a>
+            <input id="modal_input_1" type="text">
+            <input id="modal_input_disabled" type="text" disabled>
+            <input id="modal_input_hidden_1" type="text">
+            <input id="modal_input_hidden_2" type="text">
+            <input id="modal_input_2" type="text">
+            <button id="modal_1_close" class="prompt-action-close">Close me!</button>
         </div>
     </div>
 
