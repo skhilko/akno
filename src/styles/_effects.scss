@@ -252,7 +252,9 @@
 	transform: translateZ(0px) translateX(0%) rotateY(0deg);
 }
 
-/* Effect 16:  Blur */
+/* Effect 16:  Blur
+ NOTE: As of today, chrome is the only browser which really supports blur filter.
+ Disabling for better times.
 .prompt-state-visible.prompt-fx-blur ~ .prompt-overlay {
 	background: rgba(180,46,32,0.5);
 }
@@ -274,7 +276,7 @@
 .prompt-state-visible.prompt-fx-blur .prompt-content {
 	opacity: 1;
 	transform: translateY(0);
-}
+} */
 
 /* Effect 17:  Slide in from bottom with perspective on container */
 .prompt-state-visible.prompt-fx-let-me-in ~ .container {

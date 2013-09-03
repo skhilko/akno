@@ -207,9 +207,6 @@
             'rotate-left': {
                 className: 'prompt-fx-rotate-left'
             },
-            'blur': {
-                className: 'prompt-fx-blur'
-            },
             'let-me-in': {
                 className: 'prompt-fx-let-me-in',
                 hasPerspective: true
