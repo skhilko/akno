@@ -31,7 +31,6 @@
 
     Prompt.prototype.open = function() {
         addClass(this.dialog, 'prompt-state-visible');
-        addClass(this.overlay, 'prompt-state-visible');
         if(this.effectConfig.hasPerspective) {
             setTimeout(function() {
                 addClass(document.documentElement, 'prompt-perspective');
@@ -54,7 +53,6 @@
             this._lastActive = null;
         }
         removeClass(this.dialog, 'prompt-state-visible');
-        removeClass(this.overlay, 'prompt-state-visible');
         if(this.effectConfig.hasPerspective) {
             removeClass(document.documentElement, 'prompt-perspective');
         }
@@ -64,7 +62,6 @@
     Prompt.prototype.destroy = function() {
         // put the element back on it's initial place
         this._oldSibling.parentNode.insertBefore(this.element, this._oldSibling.nextElementSibling);
-        removeClass(this.overlay, 'prompt-state-visible');
         this._removeEventHandlers();
         this._destroyOverlay();
         document.body.removeChild(this.dialog);
@@ -85,7 +82,8 @@
         // make the dialog focusable
         dialog.tabIndex = -1;
         dialog.appendChild(content);
-        this.dialog = document.body.appendChild(dialog);
+        // ensure the dialog is rendered before all service elements to make selectors work 
+        this.dialog = document.body.insertBefore(dialog, document.body.firstChild);
     };
 
     Prompt.prototype._on = function(event, element, handler) {
@@ -159,7 +157,6 @@
     var KEY_CODE_ESCAPE = 27;
     var REGEX_CLASS_SEPARATOR = /[\t\r\n\f]/g;
     // TODO need additional configuration in some cases:
-    // - override overlay style
     // - add additional container class on page conten but not the dialog itself
     var EFFECTS = {
             'scale-up': {

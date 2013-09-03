@@ -16,9 +16,8 @@ perspective effects (not including the modals and the overlay).
 	perspective: 600px;
 }
 
-.container {
+.prompt-container {
 	min-height: 100%;
-	background: #e74c3c;
 }
 
 .prompt-modal {
@@ -53,7 +52,8 @@ perspective effects (not including the modals and the overlay).
 	visibility: visible;
 }
 
-.prompt-overlay.prompt-state-visible {
+.prompt-state-visible ~ .prompt-overlay {
+	visibility: visible;
 	opacity: 1;
 }
 

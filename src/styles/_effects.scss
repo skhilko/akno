@@ -259,7 +259,7 @@
 	background: rgba(180,46,32,0.5);
 }
 
-.prompt-state-visible.prompt-fx-blur ~ .container {
+.prompt-state-visible.prompt-fx-blur ~ .prompt-container {
 	filter: blur(3px);
 }
 
@@ -268,7 +268,7 @@
 	transform: translateY(-5%);
 }
 
-.prompt-state-visible.prompt-fx-blur ~ .container,
+.prompt-state-visible.prompt-fx-blur ~ .prompt-container,
 .prompt-fx-blur .prompt-content {
 	transition: all 0.3s;
 }
@@ -279,13 +279,13 @@
 } */
 
 /* Effect 17:  Slide in from bottom with perspective on container */
-.prompt-state-visible.prompt-fx-let-me-in ~ .container {
+.prompt-state-visible.prompt-fx-let-me-in ~ .prompt-container {
 	overflow: hidden;
 	height: 100%;
 	transition: transform 0.3s;
 }	
 
-.prompt-state-visible.prompt-fx-let-me-in ~ .container,
+.prompt-state-visible.prompt-fx-let-me-in ~ .prompt-container,
 .prompt-state-visible.prompt-fx-let-me-in ~ .prompt-overlay  {
 	transform: rotateX(-2deg);
 	transform-origin: 50% 0%;
@@ -304,7 +304,7 @@
 }
 
 /* Effect 18:  Slide from right with perspective on container */
-.prompt-state-visible.prompt-fx-make-way ~ .container {
+.prompt-state-visible.prompt-fx-make-way ~ .prompt-container {
 	overflow: hidden;
 	height: 100%;
 }
@@ -314,7 +314,7 @@
 	transition: all 0.5s;
 }
 
-.prompt-state-visible.prompt-fx-make-way ~ .container,
+.prompt-state-visible.prompt-fx-make-way ~ .prompt-container,
 .prompt-state-visible.prompt-fx-make-way ~ .prompt-overlay {
 	transform-origin: 0% 50%;
 	animation: rotateRightSideFirst 0.5s forwards ease-in;
@@ -343,7 +343,7 @@
 }
 
 /* Effect 19:  Slip in from the top with perspective on container */
-.prompt-state-visible.prompt-fx-slip-top ~ .container {
+.prompt-state-visible.prompt-fx-slip-top ~ .prompt-container {
 	overflow: hidden;
 	height: 100%;
 }
@@ -352,7 +352,7 @@
 	transition: all 0.5s;
 }
 
-.prompt-state-visible.prompt-fx-slip-top ~ .container,
+.prompt-state-visible.prompt-fx-slip-top ~ .prompt-container,
 .prompt-state-visible.prompt-fx-slip-top ~ .prompt-overlay {
 	transform-origin: 50% 100%;
 	animation: OpenTop 0.5s forwards ease-in;
