@@ -65,7 +65,7 @@
         // put the element back on it's initial place
         this._oldSibling.parentNode.insertBefore(this.element, this._oldSibling.nextElementSibling);
         removeClass(this.overlay, 'prompt-state-visible');
-        removeEventHandlers(this);
+        this._removeEventHandlers();
         this._destroyOverlay();
         document.body.removeChild(this.dialog);
         this.dialog = null;
@@ -97,6 +97,19 @@
                 handler: handler
             });
             element.addEventListener(event, handler, false);
+        }
+    };
+
+    Prompt.prototype._removeEventHandlers = function() {
+        if (this._handlers) {
+            for (var i = 0, len = this._handlers.length; i < len; i++) {
+                var event = this._handlers[i].event;
+                var element = this._handlers[i].element;
+                var handler = this._handlers[i].handler;
+                element.removeEventListener(event, handler);
+            }
+
+            this._handlers = null;
         }
     };
 
@@ -147,84 +160,70 @@
     var REGEX_CLASS_SEPARATOR = /[\t\r\n\f]/g;
     // TODO need additional configuration in some cases:
     // - override overlay style
-    // - add prompt-perspective class on html element
     // - add additional container class on page conten but not the dialog itself
     var EFFECTS = {
-        'scale-up': {
-            className: 'prompt-fx-scale-up'
-        },
-        'slide-in-right': {
-            className: 'prompt-fx-slide-in-right'
-        },
-        'slide-in-bottom': {
-            className: 'prompt-fx-slide-in-bottom'
-        },
-        'newspaper': {
-            className: 'prompt-fx-newspaper'
-        },
-        'fall': {
-            className: 'prompt-fx-fall'
-        },
-        'side-fall': {
-            className: 'prompt-fx-side-fall'
-        },
-        'sticky-top': {
-            className: 'prompt-fx-sticky-top'
-        },
-        'flip-hor': {
-            className: 'prompt-fx-flip-hor'
-        },
-        'flip-vert': {
-            className: 'prompt-fx-flip-vert'
-        },
-        'sign': {
-            className: 'prompt-fx-sign'
-        },
-        'scale-down': {
-            className: 'prompt-fx-scale-down'
-        },
-        'just-me': {
-            className: 'prompt-fx-just-me'
-        },
-        'split': {
-            className: 'prompt-fx-split'
-        },
-        'rotate-bottom': {
-            className: 'prompt-fx-rotate-bottom'
-        },
-        'rotate-left': {
-            className: 'prompt-fx-rotate-left'
-        },
-        'blur': {
-            className: 'prompt-fx-blur'
-        },
-        'let-me-in': {
-            className: 'prompt-fx-let-me-in',
-            hasPerspective: true
-        },
-        'make-way': {
-            className: 'prompt-fx-make-way',
-            hasPerspective: true
-        },
-        'slip-top': {
-            className: 'prompt-fx-slip-top',
-            hasPerspective: true
-        }
-    };
-    var promptInstances = 0;
-
-    function removeEventHandlers(instance) {
-        if (instance._handlers) {
-            for (var i = 0, len = instance._handlers.length; i < len; i++) {
-                var event = instance._handlers[i].event;
-                var element = instance._handlers[i].element;
-                var handler = instance._handlers[i].handler;
-                element.removeEventListener(event, handler);
+            'scale-up': {
+                className: 'prompt-fx-scale-up'
+            },
+            'slide-in-right': {
+                className: 'prompt-fx-slide-in-right'
+            },
+            'slide-in-bottom': {
+                className: 'prompt-fx-slide-in-bottom'
+            },
+            'newspaper': {
+                className: 'prompt-fx-newspaper'
+            },
+            'fall': {
+                className: 'prompt-fx-fall'
+            },
+            'side-fall': {
+                className: 'prompt-fx-side-fall'
+            },
+            'sticky-top': {
+                className: 'prompt-fx-sticky-top'
+            },
+            'flip-hor': {
+                className: 'prompt-fx-flip-hor'
+            },
+            'flip-vert': {
+                className: 'prompt-fx-flip-vert'
+            },
+            'sign': {
+                className: 'prompt-fx-sign'
+            },
+            'scale-down': {
+                className: 'prompt-fx-scale-down'
+            },
+            'just-me': {
+                className: 'prompt-fx-just-me'
+            },
+            'split': {
+                className: 'prompt-fx-split'
+            },
+            'rotate-bottom': {
+                className: 'prompt-fx-rotate-bottom'
+            },
+            'rotate-left': {
+                className: 'prompt-fx-rotate-left'
+            },
+            'blur': {
+                className: 'prompt-fx-blur'
+            },
+            'let-me-in': {
+                className: 'prompt-fx-let-me-in',
+                hasPerspective: true
+            },
+            'make-way': {
+                className: 'prompt-fx-make-way',
+                hasPerspective: true
+            },
+            'slip-top': {
+                className: 'prompt-fx-slip-top',
+                hasPerspective: true
             }
-
-            instance._handlers = null;
-        }
-    }
+        };
+    var promptInstances = 0;
 
     /*
      * Sets focus in the following order:

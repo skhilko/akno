@@ -207,7 +207,8 @@
 @keyframes slit {
 	50% {
 		opacity: 1;
-		transform: translateZ(-250px) rotateY(89deg); animation-timing-function: ease-in;
+		transform: translateZ(-250px) rotateY(89deg);
+		animation-timing-function: ease-in;
 	}
 	100% {
 		opacity: 1;
