@@ -1,4 +1,3 @@
-/*global Event*/
 (function(window, document, undefined) {
     'use strict';
 
@@ -17,7 +16,6 @@
         this._handlers = [];
 
         this.options = applyDefaults(options, this.defaults);
-        this.effectConfig = EFFECTS[this.options.effect];
         this.element = element;
         this._render();
         this.closeButton = element.querySelector('.prompt-action-close');
@@ -31,12 +29,6 @@
 
     Prompt.prototype.open = function() {
         addClass(this.dialog, 'prompt-state-visible');
-        if(this.effectConfig.hasPerspective) {
-            setTimeout(function() {
-                addClass(document.documentElement, 'prompt-perspective');
-            }, 25);
-        }
-
         // set focus manually in case transitions are not supported
         if(!TRANSITION_END_EVENT) {
             this._openHandler();
@@ -53,9 +45,6 @@
             this._lastActive = null;
         }
         removeClass(this.dialog, 'prompt-state-visible');
-        if(this.effectConfig.hasPerspective) {
-            removeClass(document.documentElement, 'prompt-perspective');
-        }
         this._trigger('prompt-close');
     };
 
@@ -78,7 +67,7 @@
         content.appendChild(this.element);
 
         var dialog = document.createElement('div');
-        dialog.className = 'prompt-modal ' + this.effectConfig.className;
+        dialog.className = 'prompt-modal ' + EFFECTS[this.options.effect];
         // make the dialog focusable
         dialog.tabIndex = -1;
         dialog.appendChild(content);
@@ -159,63 +148,21 @@
     // TODO need additional configuration in some cases:
     // - add additional container class on page conten but not the dialog itself
     var EFFECTS = {
-            'scale-up': {
-                className: 'prompt-fx-scale-up'
-            },
-            'slide-in-right': {
-                className: 'prompt-fx-slide-in-right'
-            },
-            'slide-in-bottom': {
-                className: 'prompt-fx-slide-in-bottom'
-            },
-            'newspaper': {
-                className: 'prompt-fx-newspaper'
-            },
-            'fall': {
-                className: 'prompt-fx-fall'
-            },
-            'side-fall': {
-                className: 'prompt-fx-side-fall'
-            },
-            'sticky-top': {
-                className: 'prompt-fx-sticky-top'
-            },
-            'flip-hor': {
-                className: 'prompt-fx-flip-hor'
-            },
-            'flip-vert': {
-                className: 'prompt-fx-flip-vert'
-            },
-            'sign': {
-                className: 'prompt-fx-sign'
-            },
-            'scale-down': {
-                className: 'prompt-fx-scale-down'
-            },
-            'just-me': {
-                className: 'prompt-fx-just-me'
-            },
-            'split': {
-                className: 'prompt-fx-split'
-            },
-            'rotate-bottom': {
-                className: 'prompt-fx-rotate-bottom'
-            },
-            'rotate-left': {
-                className: 'prompt-fx-rotate-left'
-            },
-            'let-me-in': {
-                className: 'prompt-fx-let-me-in',
-                hasPerspective: true
-            },
-            'make-way': {
-                className: 'prompt-fx-make-way',
-                hasPerspective: true
-            },
-            'slip-top': {
-                className: 'prompt-fx-slip-top',
-                hasPerspective: true
-            }
+            'scale-up': 'prompt-fx-scale-up',
+            'slide-in-right': 'prompt-fx-slide-in-right',
+            'slide-in-bottom': 'prompt-fx-slide-in-bottom',
+            'newspaper': 'prompt-fx-newspaper',
+            'fall': 'prompt-fx-fall',
+            'side-fall': 'prompt-fx-side-fall',
+            'sticky-top': 'prompt-fx-sticky-top',
+            'flip-hor': 'prompt-fx-flip-hor',
+            'flip-vert': 'prompt-fx-flip-vert',
+            'sign': 'prompt-fx-sign',
+            'scale-down': 'prompt-fx-scale-down',
+            'just-me': 'prompt-fx-just-me',
+            'split': 'prompt-fx-split',
+            'rotate-bottom': 'prompt-fx-rotate-bottom',
+            'rotate-left': 'prompt-fx-rotate-left'
         };
     var promptInstances = 0;
 

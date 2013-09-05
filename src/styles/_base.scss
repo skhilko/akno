@@ -1,25 +1,8 @@
 /* General styles for the modal */
 
 /* 
-Styles for the html/body for special modal where we want 3d effects
-Note that we need a container wrapping all content on the page for the 
-perspective effects (not including the modals and the overlay).
+	Styles for the html/body for special modal where we want 3d effects
 */
-.prompt-perspective,
-.prompt-perspective body {
-	overflow: hidden;
-	height: 100%;
-}
-
-.prompt-perspective body  {
-	background: #222;
-	perspective: 600px;
-}
-
-.prompt-container {
-	min-height: 100%;
-}
-
 .prompt-modal {
 	position: fixed;
 	top: 50%;
