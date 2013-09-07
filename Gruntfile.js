@@ -2,22 +2,8 @@
 'use strict';
 var LIVERELOAD_PORT = 35729;
 var lrSnippet = require('connect-livereload')({port: LIVERELOAD_PORT});
-var fs = require('fs');
 var mountFolder = function (connect, dir) {
     return connect.static(require('path').resolve(dir));
-};
-var serveIndex = function(req, res, next) {
-    if(req.originalUrl === '/') {
-        fs.readFile('index.html', function (err, data) {
-            if (err) {
-                throw err;
-            }
-            res.setHeader('Content-Type', 'text/html');
-            res.end(data);
-        });
-    } else {
-        next();
-    }
 };
 
 // # Globbing
@@ -52,7 +38,7 @@ module.exports = function (grunt) {
                     livereload: LIVERELOAD_PORT
                 },
                 files: [
-                    'index.html',
+                    'examples/index.html',
                     '.tmp/styles/{,*/}*.css',
                     '{.tmp,<%= yeoman.src %>}/scripts/{,*/}*.js',
                     '<%= yeoman.src %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
@@ -70,9 +56,9 @@ module.exports = function (grunt) {
                     middleware: function (connect) {
                         return [
                             lrSnippet,
-                            serveIndex,
                             mountFolder(connect, '.tmp'),
-                            mountFolder(connect, yeomanConfig.src)
+                            mountFolder(connect, yeomanConfig.src),
+                            mountFolder(connect, 'examples')
                         ];
                     }
                 }
