@@ -93,23 +93,39 @@
 
         describe('#destroy()', function() {
 
-            it('should erase the reference to dom element', function(done) {
-                var dialog = openDialog('modal_no_inputs', function() {
-                    dialog.destroy();
-                    expect(dialog.element).to.not.exist;
-                    done();
+            describe('initial position', function() {
+                it('should return dom element to the initial position in case the element had siblings', function(done) {
+                    var element = document.getElementById('modal_no_inputs');
+                    var sibling = element.previousElementSibling;
+                    var dialog = openDialog('modal_no_inputs', function() {
+                        dialog.destroy();
+                        expect(sibling.nextElementSibling).to.be.equal(element);
+                        done();
+                    });
+                });
+
+                it('should return dom element to the initial position in case the element didn\'t have siblings', function(done) {
+                    var element = document.getElementById('modal_no_inputs');
+                    var oldSibling = element.nextElementSibling;
+                    var parent = createParent(element);
+
+                    var dialog = openDialog('modal_no_inputs', function() {
+                        dialog.destroy();
+                        expect(parent.firstChild).to.be.equal(element);
+                        // revert dom structure
+                        document.body.insertBefore(element, oldSibling);
+                        document.body.removeChild(parent);
+                        done();
+                    });
                 });
             });
 
-            it('should return dom element where it was before prompt initialization', function(done) {
-                var element = document.getElementById('modal_no_inputs');
-                var sibling = element.previousElementSibling;
-                var dialog = openDialog('modal_no_inputs', function() {
-                    dialog.destroy();
-                    expect(sibling.nextElementSibling).to.be.equal(element);
-                    done();
-                });
-            });
+            function createParent (element) {
+                var parent = document.createElement('div');
+                parent.appendChild(element);
+                document.body.appendChild(parent);
+                return parent;
+            }
 
             it('should remove overlay element from DOM', function(done) {
                 var dialog = openDialog('modal_no_inputs', function() {

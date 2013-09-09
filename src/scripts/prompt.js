@@ -49,22 +49,24 @@
     };
 
     Prompt.prototype.destroy = function() {
-        // put the element back on it's initial place
-        this._oldSibling.parentNode.insertBefore(this.element, this._oldSibling.nextElementSibling);
+        // put the element back on its initial place
+        this._originalPosition.parent.insertBefore(this.element, this._originalPosition.next);
         this._removeEventHandlers();
         this._destroyOverlay();
         document.body.removeChild(this.dialog);
-        this.dialog = null;
-        this.element = null;
-        this._oldSibling = null;
         promptInstances--;
     };
 
     Prompt.prototype._render = function() {
+        var element = this.element;
+        this._originalPosition = {
+            parent: element.parentNode,
+            next: element.nextElementSibling
+        };
+
         var content = document.createElement('div');
         content.className = 'prompt-content';
-        this._oldSibling = this.element.previousElementSibling;
-        content.appendChild(this.element);
+        content.appendChild(element);
 
         var dialog = document.createElement('div');
         dialog.className = 'prompt-modal ' + EFFECTS[this.options.effect];
