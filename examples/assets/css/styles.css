@@ -1,0 +1,47 @@
+body {
+    background-color: #FAFCFD;
+    color: #444444;
+    -webkit-transition: background-color 0.8s ease-out 0s;
+    transition: background-color 0.8s ease-out 0s;
+}
+
+header {
+    border-bottom-color: #C9C8C7;
+    margin-top: 0;
+}
+
+header h2{
+    margin-top: 10px;
+}
+
+.poster-wrapper {
+    position: relative;
+}
+
+.poster {
+    font-size: 392px;
+    font-weight: bold;
+    color: #FFFFFF;
+    line-height: 180px;
+    overflow: hidden;
+}
+
+.translation {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    margin-bottom: 5px;
+}
+
+.translation .language {
+    color: #999999;
+}
+
+.action-open {
+	margin: 5px;
+}
+
+footer {
+	font-size: .9em;
+	margin: 80px 0 40px 0;
+}
