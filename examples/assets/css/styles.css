@@ -251,15 +251,15 @@ header {
 }
 
 .poster {
-    overflow: hidden;
-    color: #FFFFFF;
-    font-weight: bold;
-    font-size: 392px;
-    text-align: center;
-    line-height: 180px;
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
     position: absolute;
+    overflow: hidden;
     width: 100%;
+    color: #FFFFFF;
+    text-align: center;
+    font-weight: bold;
+    font-size: 500px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    line-height: 230px;
 }
 
 .translation {
@@ -270,8 +270,12 @@ header {
     color: #999999;
 }
 
+header {
+    margin-bottom: 70px;
+}
+
 header .header-line {
-    padding-top: 50px;
+    padding-top: 105px;
 }
 
 header h1 {
@@ -291,19 +295,71 @@ header h1 small {
     margin: 5px;
 }
 
+.badge {
+    position: relative;
+    width: 230px;
+    height: 230px;
+    border-radius: 50%;
+    color: #fff;
+    text-align: center;
+    font-size: 140px;
+}
+
+.badge [class^='icon-'] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.tile-html-five .badge {
+    background-color: #e74c3c;
+}
+
+.tile-light .badge {
+    background-color: #3498db;
+}
+
+.tile-smart .badge {
+    background-color: #f1c40f;
+}
+
+.tile-html-five h3 {
+    color: #e74c3c;
+}
+
+.tile-light h3 {
+    color: #3498db;
+}
+
+.tile-smart h3 {
+    color: #f1c40f;
+}
+
+.tile {
+    text-align: center;
+}
+
+.tile .badge {
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+}
 
 footer {
     margin-top: 50px;
-    padding: 20px 0 10px 0;
+    padding: 30px 0 20px 0;
     background-color: #edeff1;
     color: #bac1c8;
     font-size: 15px;
-    
 }
+
 footer a {
     color: #9aa4af;
     font-weight: 700;
 }
+
 footer p {
     margin-bottom: 10px;
     font-size: 15px;
@@ -320,13 +376,21 @@ footer p {
 
 @media (min-width: 768px) and (max-width: 991px) {
     .poster {
-        left: -10%;
-        width: 110%;
+        left: -15%;
+        width: 115%;
         letter-spacing: -30px;
     }
 }
 
 @media (min-width: 992px) and (max-width: 1199px) {
+    .poster {
+        left: -10%;
+        width: 110%;
+        letter-spacing: -20px;
+    }
+}
+
+@media (min-width: 1200px) {
     .poster {
         left: -2%;
         width: 102%;

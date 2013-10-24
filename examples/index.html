@@ -11,6 +11,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+        <link rel="stylesheet" href="assets/css/fontello.css">
         <link rel="stylesheet" href="assets/css/styles.css">
         <link rel="stylesheet" href="styles/prompt.css">
     </head>
@@ -21,7 +22,6 @@
                 <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
             <![endif]-->
             <header>
-                
                 <div class="row header-line">
                     <div class="col-sm-7 col-md-8">
                         <h1>
@@ -42,37 +42,30 @@
             </header>
             <!-- <button id='create' type="button" class='btn btn-primary'>Create</button>
             <button id='open' type="button" class='btn btn-primary'>Open</button> -->
-            <h3>Highlights</h3>
             <div class="row">
-                <div class="col-xs-12">
-                    <ul>
-                        <li>
-                            <h4>CSS3 appearence effects</h4>
-                            <p>Uses css transitions to reveal a dialog window.</p>
-                        </li>
-                        <li>
-                            <h4>No dependencies</h4>
-                            <p>jQuery is supported, but not required.</p>
-                        </li>
-                        <li>
-                            <h4>Smart focus</h4>
-                            <p>Prompt automatically captures focus upon opening a window. Here are the rules for  first introduced by jQuery UI:</p>
-                            <ul>
-                                <li>The first element within the dialog with the <span class="label label-default">autofocus</span> attribute.</li>
-                                <li>The first tabbable element within the dialog's content.</li>
-                                <li>The first action button.</li>
-                                <li>The dialog's close button.</li>
-                                <li>The dialog itself.</li>
-                            </ul>
-                        </li>
-                        <li>
-                            <h4>MIT License</h4>
-                            <p>Yay!</p>
-                        </li>
-                    </ul>
+                <div class="col-sm-4">
+                    <div class="tile tile-html-five">
+                        <div class="badge badge-html-five"><i class="icon-rocket"></i></div>
+                        <h3>Fast</h3>
+                        <p>Uses css transitions to reveal a window.<br>Let the browser optimize painting and compositing here.</p>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="tile tile-light">
+                        <div class="badge badge-light"><i class="icon-feather"></i></div>
+                        <h3>Light</h3>
+                        <p>No dependencies.<br>jQuery is supported, but not required.</p>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="tile tile-smart">
+                        <div class="badge badge-smart"><i class="icon-lightbulb"></i></div>
+                        <h3>Smart</h3>
+                        <p>Captures focus and ensures that tabbing cycles focus between elements within the dialog.</p>
+                    </div>
                 </div>
             </div>
-            <hr>
+
             <h3>Just show me already!</h3>
             <div class="row">
                 <div class="col-xs-12">
@@ -92,6 +85,11 @@
                     <button class='btn btn-primary action-open' type="button" data-effect='rotate-bottom'>Rotate Bottom</button>
                     <button class='btn btn-primary action-open' type="button" data-effect='rotate-left'>Rotate Left</button>
                 </div>
+            </div>
+
+            <h3>License</h3>
+            <div class="row">
+                <div class="col-xs-12"><p>MIT</p></div>
             </div>
         </div>
         <footer>
