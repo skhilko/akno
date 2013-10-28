@@ -165,12 +165,16 @@ module.exports = function (grunt) {
             dist: {}
         },
         uglify: {
-            dist: {}
+            dist: {
+                files: {
+                    '<%= yeoman.dist %>/scripts/akno.min.js': ['src/scripts/akno.js']
+                }
+            }
         },
         cssmin: {
             dist: {
                 files: {
-                    '<%= yeoman.dist %>/styles/main.css': [
+                    '<%= yeoman.dist %>/styles/akno.css': [
                         '.tmp/styles/{,*/}*.css',
                         '<%= yeoman.src %>/styles/{,*/}*.css'
                     ]
@@ -186,6 +190,7 @@ module.exports = function (grunt) {
                     cwd: '<%= yeoman.src %>',
                     dest: '<%= yeoman.dist %>',
                     src: [
+                        'scripts/akno.js',
                         '*.{ico,png,txt}',
                         'images/{,*/}*.{webp,gif}',
                         'styles/fonts/*'
