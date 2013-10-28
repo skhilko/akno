@@ -1,4 +1,4 @@
-prompt
+akno
 ======
 
 Yet another JS modal dialog.

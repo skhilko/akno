@@ -2,7 +2,7 @@
     'use strict';
 
     /**
-     * [Prompt description]
+     * [Akno description]
      *
      * Options:
      * - effect
@@ -10,32 +10,32 @@
      * @param {Object} options
      *
      * Events:
-     * - prompt-open
+     * - akno-open
      */
-    function Prompt(element, options) {
+    function Akno(element, options) {
         this._handlers = [];
 
         this.options = applyDefaults(options, this.defaults);
         this.element = element;
         this._render();
-        this.closeButton = element.querySelector('.prompt-action-close');
+        this.closeButton = element.querySelector('.akno-action-close');
 
         this._createOverlay();
         this._on('click', this.closeButton, this.close);
         this._on('keydown', this.dialog, this._escKeyHandler);
         this._on(TRANSITION_END_EVENT, this.dialog, this._openHandler);
-        promptInstances++;
+        aknoInstances++;
     }
 
-    Prompt.prototype.open = function() {
-        addClass(this.dialog, 'prompt-state-visible');
+    Akno.prototype.open = function() {
+        addClass(this.dialog, 'akno-state-visible');
         // set focus manually in case transitions are not supported
         if(!TRANSITION_END_EVENT) {
             this._openHandler();
         }
     };
 
-    Prompt.prototype.close = function() {
+    Akno.prototype.close = function() {
         if (this._lastActive) {
             this._lastActive.focus();
             // last active element can be unfocusable
@@ -44,20 +44,20 @@
             }
             this._lastActive = null;
         }
-        removeClass(this.dialog, 'prompt-state-visible');
-        this._trigger('prompt-close');
+        removeClass(this.dialog, 'akno-state-visible');
+        this._trigger('akno-close');
     };
 
-    Prompt.prototype.destroy = function() {
+    Akno.prototype.destroy = function() {
         // put the element back on its initial place
         this._originalPosition.parent.insertBefore(this.element, this._originalPosition.next);
         this._removeEventHandlers();
         this._destroyOverlay();
         document.body.removeChild(this.dialog);
-        promptInstances--;
+        aknoInstances--;
     };
 
-    Prompt.prototype._render = function() {
+    Akno.prototype._render = function() {
         var element = this.element;
         this._originalPosition = {
             parent: element.parentNode,
@@ -65,11 +65,11 @@
         };
 
         var content = document.createElement('div');
-        content.className = 'prompt-content';
+        content.className = 'akno-content';
         content.appendChild(element);
 
         var dialog = document.createElement('div');
-        dialog.className = 'prompt-modal ' + EFFECTS[this.options.effect];
+        dialog.className = 'akno-modal ' + EFFECTS[this.options.effect];
         // make the dialog focusable
         dialog.tabIndex = -1;
         dialog.appendChild(content);
@@ -77,7 +77,7 @@
         this.dialog = document.body.insertBefore(dialog, document.body.firstChild);
     };
 
-    Prompt.prototype._on = function(event, element, handler) {
+    Akno.prototype._on = function(event, element, handler) {
         if(event && element) {
             handler = handler.bind(this);
             this._handlers.push({
@@ -89,7 +89,7 @@
         }
     };
 
-    Prompt.prototype._removeEventHandlers = function() {
+    Akno.prototype._removeEventHandlers = function() {
         if (this._handlers) {
             for (var i = 0, len = this._handlers.length; i < len; i++) {
                 var event = this._handlers[i].event;
@@ -102,38 +102,38 @@
         }
     };
 
-    Prompt.prototype._trigger = function(eventName) {
+    Akno.prototype._trigger = function(eventName) {
         var event = document.createEvent('CustomEvent');
         event.initEvent(eventName, true, true);
         this.element.dispatchEvent(event);
     };
 
-    Prompt.prototype._createOverlay = function() {
+    Akno.prototype._createOverlay = function() {
         var overlay;
-        if (!promptInstances) {
+        if (!aknoInstances) {
             overlay = document.createElement('div');
-            overlay.id = 'prompt_overlay';
-            overlay.className = 'prompt-overlay';
+            overlay.id = 'akno_overlay';
+            overlay.className = 'akno-overlay';
             document.body.appendChild(overlay);
         } else {
-            overlay = document.getElementById('prompt_overlay');
+            overlay = document.getElementById('akno_overlay');
         }
         this.overlay = overlay;
     };
 
-    Prompt.prototype._destroyOverlay = function() {
-        if (promptInstances === 1) {
+    Akno.prototype._destroyOverlay = function() {
+        if (aknoInstances === 1) {
             document.body.removeChild(this.overlay);
         }
     };
 
-    Prompt.prototype._openHandler = function() {
+    Akno.prototype._openHandler = function() {
         this._lastActive = document.activeElement;
         setFocus(this.dialog);
-        this._trigger('prompt-open');
+        this._trigger('akno-open');
     };
 
-    Prompt.prototype._escKeyHandler = function(ev) {
+    Akno.prototype._escKeyHandler = function(ev) {
         if (ev.keyCode === KEY_CODE_ESCAPE) {
             ev.preventDefault();
             this.close();
@@ -141,7 +141,7 @@
         }
     };
 
-    Prompt.prototype.defaults = {
+    Akno.prototype.defaults = {
         effect: 'scale-up'
     };
 
@@ -150,23 +150,23 @@
     // TODO need additional configuration in some cases:
     // - add additional container class on page conten but not the dialog itself
     var EFFECTS = {
-            'scale-up': 'prompt-fx-scale-up',
-            'slide-in-right': 'prompt-fx-slide-in-right',
-            'slide-in-bottom': 'prompt-fx-slide-in-bottom',
-            'newspaper': 'prompt-fx-newspaper',
-            'fall': 'prompt-fx-fall',
-            'side-fall': 'prompt-fx-side-fall',
-            'sticky-top': 'prompt-fx-sticky-top',
-            'flip-hor': 'prompt-fx-flip-hor',
-            'flip-vert': 'prompt-fx-flip-vert',
-            'sign': 'prompt-fx-sign',
-            'scale-down': 'prompt-fx-scale-down',
-            'just-me': 'prompt-fx-just-me',
-            'split': 'prompt-fx-split',
-            'rotate-bottom': 'prompt-fx-rotate-bottom',
-            'rotate-left': 'prompt-fx-rotate-left'
+            'scale-up': 'akno-fx-scale-up',
+            'slide-in-right': 'akno-fx-slide-in-right',
+            'slide-in-bottom': 'akno-fx-slide-in-bottom',
+            'newspaper': 'akno-fx-newspaper',
+            'fall': 'akno-fx-fall',
+            'side-fall': 'akno-fx-side-fall',
+            'sticky-top': 'akno-fx-sticky-top',
+            'flip-hor': 'akno-fx-flip-hor',
+            'flip-vert': 'akno-fx-flip-vert',
+            'sign': 'akno-fx-sign',
+            'scale-down': 'akno-fx-scale-down',
+            'just-me': 'akno-fx-just-me',
+            'split': 'akno-fx-split',
+            'rotate-bottom': 'akno-fx-rotate-bottom',
+            'rotate-left': 'akno-fx-rotate-left'
         };
-    var promptInstances = 0;
+    var aknoInstances = 0;
 
     /*
      * Sets focus in the following order:
@@ -278,5 +278,5 @@
 
     var TRANSITION_END_EVENT = getTransitionEndEventName();
 
-    window.Prompt = Prompt;
+    window.Akno = Akno;
 })(window, window.document);

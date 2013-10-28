@@ -1,8 +1,8 @@
-/*global describe, expect, it, afterEach, beforeEach, Prompt */
+/*global describe, expect, it, afterEach, beforeEach, Akno */
 // jshint expr: true
 'use strict';
 (function () {
-    describe('Prompt', function () {
+    describe('Akno', function () {
         var dialog;
 
         function isVisible (el) {
@@ -18,21 +18,21 @@
                 callback = options;
                 options = null;
             }
-            var prompt = new Prompt(document.getElementById(id), options);
+            var akno = new Akno(document.getElementById(id), options);
             // TODO need a solution: transition doesn't work when dialog is being opened immediately
             setTimeout(function() {
-                prompt.open();
+                akno.open();
             }, 0);
 
             var openHandler = function() {
-                prompt.element.removeEventListener('prompt-open', openHandler);
+                akno.element.removeEventListener('akno-open', openHandler);
                 if (callback) {
                     callback();
                 }
             };
-            prompt.element.addEventListener('prompt-open', openHandler);
+            akno.element.addEventListener('akno-open', openHandler);
 
-            return prompt;
+            return akno;
         }
 
         describe('#open()', function() {
@@ -43,25 +43,25 @@
 
             it('should show the dialog', function(done) {
                 dialog = openDialog('modal_no_inputs', function() {
-                    expect(isVisible($('.prompt-modal'))).to.be.true;
+                    expect(isVisible($('.akno-modal'))).to.be.true;
                     done();
                 });
             });
 
             it('should show the overlay', function(done) {
                 dialog = openDialog('modal_no_inputs', function() {
-                    expect(isVisible($('.prompt-overlay'))).to.be.true;
+                    expect(isVisible($('.akno-overlay'))).to.be.true;
                     done();
                 });
             });
 
-            it('reuses the overlay element for multiple prompt instances', function(done) {
+            it('reuses the overlay element for multiple akno instances', function(done) {
                 dialog = openDialog('modal_no_inputs', function() {
 
                     dialog.close();
 
                     var oneMoreDialog = openDialog('modal_with_inputs', function() {
-                        expect($('.prompt-overlay').length).to.be.equal(1);
+                        expect($('.akno-overlay').length).to.be.equal(1);
                         oneMoreDialog.destroy();
                         done();
                     });
@@ -77,7 +77,7 @@
             it('should hide the dialog', function(done) {
                 dialog = openDialog('modal_no_inputs', function() {
                     dialog.close();
-                    expect(isVisible($('.prompt-modal'))).to.be.false;
+                    expect(isVisible($('.akno-modal'))).to.be.false;
                     done();
                 });
             });
@@ -85,7 +85,7 @@
             it('should hide the overlay', function(done) {
                 dialog = openDialog('modal_no_inputs', function() {
                     dialog.close();
-                    expect(isVisible($('.prompt-overlay'))).to.be.false;
+                    expect(isVisible($('.akno-overlay'))).to.be.false;
                     done();
                 });
             });
@@ -130,7 +130,7 @@
             it('should remove overlay element from DOM', function(done) {
                 var dialog = openDialog('modal_no_inputs', function() {
                     dialog.destroy();
-                    expect($('.prompt-overlay').length).to.be.equal(0);
+                    expect($('.akno-overlay').length).to.be.equal(0);
                     done();
                 });
             });
@@ -138,7 +138,7 @@
             it('should remove dialog wrapper element from DOM', function(done) {
                 var dialog = openDialog('modal_no_inputs', function() {
                     dialog.destroy();
-                    expect($('.prompt-modal').length).to.be.equal(0);
+                    expect($('.akno-modal').length).to.be.equal(0);
                     done();
                 });
             });
@@ -146,8 +146,8 @@
             it('should remove attached event handlers', function(done) {
                 // Close method is executed in the handlers which should be removed on destroy.
                 // Overwriting the method to add an assertion.
-                var oldClose = Prompt.prototype.close;
-                Prompt.prototype.close = function() {
+                var oldClose = Akno.prototype.close;
+                Akno.prototype.close = function() {
                     oldClose.call(this);
                     // intentionaly failing the test
                     expect(false, 'event is not removed').to.be.true;
@@ -158,7 +158,7 @@
                     $('#modal_1').simulate('keydown', {keyCode: $.simulate.keyCode.ESCAPE});
                     $('#modal_1_close').simulate('click');
 
-                    Prompt.prototype.close = oldClose;
+                    Akno.prototype.close = oldClose;
                     done();
                 });
             });
@@ -229,16 +229,16 @@
 
             it('should be applied when an initialization option is not supplied', function(done) {
                 dialog = openDialog('modal_no_inputs', function() {
-                    expect($('.prompt-modal').hasClass('prompt-fx-scale-up')).to.be.true;
+                    expect($('.akno-modal').hasClass('akno-fx-scale-up')).to.be.true;
                     done();
                 });
             });
 
             it('should not override a supplied initialization option', function(done) {
                 dialog = openDialog('modal_no_inputs', {effect: 'slide-in-right'}, function() {
-                    var modalWrapper = $('.prompt-modal');
-                    expect(modalWrapper.hasClass('prompt-fx-scale-up')).to.be.false;
-                    expect(modalWrapper.hasClass('prompt-fx-slide-in-right')).to.be.true;
+                    var modalWrapper = $('.akno-modal');
+                    expect(modalWrapper.hasClass('akno-fx-scale-up')).to.be.false;
+                    expect(modalWrapper.hasClass('akno-fx-slide-in-right')).to.be.true;
                     done();
                 });
             });
@@ -250,25 +250,25 @@
                 dialog.destroy();
             });
 
-            it('triggers "prompt-open" event when the prompt is shown', function(done) {
+            it('triggers "akno-open" event when the akno is shown', function(done) {
                 var element = document.getElementById('modal_no_inputs');
                 var openHandler = function(ev) {
                     expect(ev.target).to.be.equal(element);
-                    document.body.removeEventListener('prompt-open', openHandler);
+                    document.body.removeEventListener('akno-open', openHandler);
                     done();
                 };
-                document.body.addEventListener('prompt-open', openHandler);
+                document.body.addEventListener('akno-open', openHandler);
                 dialog = openDialog('modal_no_inputs');
             });
 
-            it('triggers "prompt-close" event when the prompt is hidden', function(done) {
+            it('triggers "akno-close" event when the akno is hidden', function(done) {
                 var element = document.getElementById('modal_no_inputs');
                 var closeHandler = function(ev) {
                     expect(ev.target).to.be.equal(element);
-                    document.body.removeEventListener('prompt-close', closeHandler);
+                    document.body.removeEventListener('akno-close', closeHandler);
                     done();
                 };
-                document.body.addEventListener('prompt-close', closeHandler);
+                document.body.addEventListener('akno-close', closeHandler);
                 dialog = openDialog('modal_no_inputs', function() {
                     dialog.close();
                 });
@@ -284,7 +284,7 @@
             it('should be closed on "esc" key press', function(done) {
                 dialog = openDialog('modal_no_inputs', function() {
                     $(document.activeElement).simulate('keydown', {keyCode: $.simulate.keyCode.ESCAPE});
-                    expect(isVisible($('.prompt-modal'))).to.be.false;
+                    expect(isVisible($('.akno-modal'))).to.be.false;
                     done();
                 });
             });

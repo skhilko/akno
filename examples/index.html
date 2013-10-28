@@ -13,7 +13,7 @@
         <link rel="stylesheet" href="assets/css/bootstrap.min.css">
         <link rel="stylesheet" href="assets/css/fontello.css">
         <link rel="stylesheet" href="assets/css/styles.css">
-        <link rel="stylesheet" href="styles/prompt.css">
+        <link rel="stylesheet" href="styles/akno.css">
     </head>
     <body>
         <div class="poster">AKNO</div>
@@ -100,9 +100,9 @@
                        <p>Code licensed under <a href="http://opensource.org/licenses/mit-license.php">MIT License</a>.</p>
                    </div>
                    <div class="col-sm-6">
-                       <iframe src="http://ghbtns.com/github-btn.html?user=skhilko&repo=prompt&type=watch&count=true"
+                       <iframe src="http://ghbtns.com/github-btn.html?user=skhilko&repo=akno&type=watch&count=true"
                            allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
-                       <iframe src="http://ghbtns.com/github-btn.html?user=skhilko&repo=prompt&type=fork&count=true"
+                       <iframe src="http://ghbtns.com/github-btn.html?user=skhilko&repo=akno&type=fork&count=true"
                            allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
                    </div>
                </div>
@@ -118,31 +118,31 @@
                         <li><strong>Look:</strong> modal windows enjoy a certain kind of attention; just look at it and appreciate its presence.</li>
                         <li><strong>Close:</strong> click on the button below to close the modal.</li>
                     </ul>
-                    <button class="prompt-action-close">Close me!</button>
+                    <button class="akno-action-close">Close me!</button>
                 </div>
             </div>
         </div>
 
-        <script src="scripts/prompt.js"></script>
+        <script src="scripts/akno.js"></script>
 
         <script>
             (function() {
-                var prompt;
+                var akno;
                 var modalElement = document.getElementById('modal_1');
                 document.body.addEventListener("click", function(ev) {
                     var target = ev.target;
                     if(target.className.indexOf('action-open') >= 0) {
-                        if(prompt) {
-                            prompt.destroy()
-                            prompt = null;
+                        if(akno) {
+                            akno.destroy()
+                            akno = null;
                         }
-                        prompt = new Prompt(modalElement, {
+                        akno = new Akno(modalElement, {
                             effect: target.getAttribute('data-effect')
                         });
 
                         // TODO need a solution: transition doesn't work when dialog is being opened immediately
                         setTimeout(function() {
-                            prompt.open();
+                            akno.open();
                         }, 25);
                     }
                 }, false);
@@ -153,7 +153,7 @@
                 
                 /*var dialog;
                 document.getElementById('create').addEventListener("click", function(ev) {
-                        dialog = new Prompt(modalElement, {
+                        dialog = new Akno(modalElement, {
                             effect: 'scale-up'
                         });
 

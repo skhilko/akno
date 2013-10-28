@@ -7,7 +7,7 @@
     <style>
 
         /* speeding up tests */
-        .prompt-content {
+        .akno-content {
             -webkit-transition: all 1ms !important;
             -moz-transition: all 1ms !important;
             -o-transition: all 1ms !important;
@@ -18,7 +18,7 @@
         /*
             it's not critical to disable transitions on overlay element during tests, but helps to run assertions on overlay
          */
-        .prompt-overlay {
+        .akno-overlay {
             -webkit-transition: none !important;
             -moz-transition: none !important;
             -o-transition: none !important;
@@ -65,7 +65,7 @@
             <input id="modal_input_hidden_1" type="text">
             <input id="modal_input_hidden_2" type="text">
             <input id="modal_input_2" type="text">
-            <button id="modal_1_close" class="prompt-action-close">Close me!</button>
+            <button id="modal_1_close" class="akno-action-close">Close me!</button>
         </div>
     </div>
 
@@ -83,8 +83,8 @@
     <script>var expect = chai.expect</script>
 
     <!-- include source files here... -->
-    <script src="scripts/prompt.js"></script>
-    <link rel="stylesheet" type="text/css" href="styles/prompt.css">
+    <script src="scripts/akno.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles/akno.css">
 
     <!-- include spec files here... -->
     <script src="spec/test.js"></script>
