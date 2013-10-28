@@ -15,6 +15,15 @@ Contributing
 Contributions are welcome! If you would like to contribute, please issue a pull request. Make sure to test the code.
 We are using [mocha](http://visionmedia.github.io/mocha/) with [chai](http://chaijs.com/). Add test cases to `test/spec/test.js`, and run `grunt test`.
 
+Local build
+-----------
+
+To build akno locally please run:
+
+`grunt build`
+
+The result will appear in `dist` directory.
+
 Versioning
 ----------
 Akno follows the Semantic Versioning guidelines as much as possible.
