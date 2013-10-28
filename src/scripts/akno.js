@@ -183,7 +183,7 @@
         for (var i = 0, len = elements.length; i < len; i++) {
             var element = elements[i];
             // will include elements without tabindex attribute, NaN (translated to tabindex '0') and positive values
-            var isTabbable = !(element.tabIndex < 0);
+            var isTabbable = element.tabIndex >= 0;
             if(isVisible(element)) {
                 var nodeName = element.nodeName.toLowerCase();
 

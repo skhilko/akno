@@ -1,4 +1,4 @@
-/*global describe, expect, it, afterEach, beforeEach, Akno */
+/*global describe, expect, it, afterEach, Akno */
 // jshint expr: true
 'use strict';
 (function () {
