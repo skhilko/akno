@@ -1,0 +1,14 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg">
+<metadata>Copyright (C) 2013 by original authors @ fontello.com</metadata>
+<defs>
+<font id="fontello" horiz-adv-x="1000" >
+<font-face font-family="fontello" font-weight="400" font-stretch="normal" units-per-em="1000" ascent="850" descent="-150" />
+<missing-glyph horiz-adv-x="1000" />
+<glyph glyph-name="lightbulb" unicode="&#xe800;" d="m411 529q0-8-6-13t-12-5t-13 5t-5 13q0 25-30 39t-59 14q-8 0-13 5t-5 13t5 13t13 5q28 0 55-9t49-30t21-50z m89 0q0 40-19 74t-50 57t-69 35t-76 12t-76-12t-69-35t-50-57t-20-74q0-57 38-101q6-6 17-18t17-19q72-85 79-166h127q8 81 79 166q6 6 17 19t17 18q38 44 38 101z m71 0q0-87-57-150q-25-27-42-49t-33-53t-19-60q26-15 26-46q0-20-14-35q14-15 14-36q0-29-25-45q8-13 8-26q0-26-18-40t-43-14q-11-25-34-39t-48-15t-49 15t-33 39q-26 0-44 14t-17 40q0 13 7 26q-25 16-25 45q0 21 14 36q-14 15-14 35q0 31 26 46q-2 28-19 60t-33 53t-41 49q-58 63-58 150q0 55 25 103t65 79t92 49t104 19t104-19t91-49t66-79t24-103z" horiz-adv-x="571.4" />
+<glyph glyph-name="rocket" unicode="&#xe801;" d="m804 600q0 22-16 38t-38 16t-38-16t-16-38t16-38t38-16t38 16t16 38z m125 161q0-139-43-241t-141-201q-45-44-109-98l-11-211q-1-9-9-15l-214-125q-4-2-9-2q-7 0-13 5l-36 36q-7 7-4 17l47 155l-156 156l-155-47q-1-1-5-1q-7 0-12 5l-36 36q-10 11-3 22l125 214q6 8 15 9l211 11q54 64 98 109q105 104 200 144t241 40q7 0 13-6t6-12z" horiz-adv-x="928.6" />
+<glyph glyph-name="feather" unicode="&#xe802;" d="m60-138q-6-20-26-8q-18 8-16 34q4 100 50 226q-100 154-52 316q10-32 32-78t44-80t32-30q8 4 0 83t-11 166t25 157q22 44 80 94t104 70q-24-46-33-94t-4-78t21-32q12 0 84 120t106 122q46 4 114-29t82-65q12-24 0-79t-40-83q-44-44-146-62t-114-24q-16-10 12-34q54-48 176-20q-56-80-136-114t-132-38t-54-10q-4-24 49-54t101-14q-30-56-63-84t-54-35t-76-11t-85-8z" horiz-adv-x="698" />
+</font>
+</defs>
+</svg>

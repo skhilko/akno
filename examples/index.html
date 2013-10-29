@@ -1,0 +1,165 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+        <link rel="stylesheet" href="assets/css/fontello.css">
+        <link rel="stylesheet" href="assets/css/styles.css">
+        <link rel="stylesheet" href="../dist/styles/akno.min.css">
+    </head>
+    <body>
+        <div class="poster">AKNO</div>
+        <div class='container'>
+            <!--[if lt IE 9]>
+                <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+            <![endif]-->
+            <header>
+                <div class="row header-line">
+                    <div class="col-sm-7 col-md-8">
+                        <h1>
+                            Akno
+                            <small>Simple, fast and beautiful modal windows</small>
+                        </h1>
+                    </div>
+                    <div class="col-sm-5 col-md-4">
+                        <blockquote class='translation'>
+                            <p>
+                                <b>akno</b> /aknó/, <i>n.</i>
+                                <a class='language' href='http://en.wikipedia.org/wiki/Belarus' target="blank">Belarusian</a>
+                            </p>
+                            <p>1. window</p>
+                        </blockquote>
+                    </div>
+                </div>
+            </header>
+            <!-- <button id='create' type="button" class='btn btn-primary'>Create</button>
+            <button id='open' type="button" class='btn btn-primary'>Open</button> -->
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="tile tile-html-five">
+                        <div class="badge badge-html-five"><i class="icon-rocket"></i></div>
+                        <h3>Fast</h3>
+                        <p>Uses css transitions to reveal a window.<br>Let the browser optimize painting and compositing here.</p>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="tile tile-light">
+                        <div class="badge badge-light"><i class="icon-feather"></i></div>
+                        <h3>Light</h3>
+                        <p>No dependencies.<br>jQuery is supported, but not required.</p>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="tile tile-smart">
+                        <div class="badge badge-smart"><i class="icon-lightbulb"></i></div>
+                        <h3>Smart</h3>
+                        <p>Captures focus and ensures that tabbing cycles focus between elements within the dialog.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Just show me already!</h3>
+            <div class="row">
+                <div class="col-xs-12">
+                    <button class='btn btn-primary action-open' type="button" data-effect='scale-up'>Scale Up</button>
+                    <button class='btn btn-primary action-open' type="button" data-effect='slide-in-right'>Slide In (Right)</button>
+                    <button class='btn btn-primary action-open' type="button" data-effect='slide-in-bottom'>Slide In (Bottom)</button>
+                    <button class='btn btn-primary action-open' type="button" data-effect='newspaper'>Newspaper</button>
+                    <button class='btn btn-primary action-open' type="button" data-effect='fall'>Fall</button>
+                    <button class='btn btn-primary action-open' type="button" data-effect='side-fall'>Side Fall</button>
+                    <button class='btn btn-primary action-open' type="button" data-effect='sticky-top'>Sticky Top</button>
+                    <button class='btn btn-primary action-open' type="button" data-effect='flip-hor'>Horizontal Flip</button>
+                    <button class='btn btn-primary action-open' type="button" data-effect='flip-vert'>Vertical Flip</button>
+                    <button class='btn btn-primary action-open' type="button" data-effect='sign'>Sign</button>
+                    <button class='btn btn-primary action-open' type="button" data-effect='scale-down'>Scale Down</button>
+                    <button class='btn btn-primary action-open' type="button" data-effect='just-me'>Just Me</button>
+                    <button class='btn btn-primary action-open' type="button" data-effect='split'>Split</button>
+                    <button class='btn btn-primary action-open' type="button" data-effect='rotate-bottom'>Rotate Bottom</button>
+                    <button class='btn btn-primary action-open' type="button" data-effect='rotate-left'>Rotate Left</button>
+                </div>
+            </div>
+
+            <h3>License</h3>
+            <div class="row">
+                <div class="col-xs-12"><p>MIT</p></div>
+            </div>
+        </div>
+        <footer>
+           <div class="container">
+               <div class="row">
+                   <div class="col-sm-6">
+                       <p>Built and designed with love by Siarhei Khilko.</p>
+                       <p>Code licensed under <a href="http://opensource.org/licenses/mit-license.php">MIT License</a>.</p>
+                   </div>
+                   <div class="col-sm-6">
+                       <iframe src="http://ghbtns.com/github-btn.html?user=skhilko&repo=akno&type=watch&count=true"
+                           allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
+                       <iframe src="http://ghbtns.com/github-btn.html?user=skhilko&repo=akno&type=fork&count=true"
+                           allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
+                   </div>
+               </div>
+           </div>
+        </footer>
+        <div class="hidden">
+            <div id="modal_1">
+                <h3>Modal Dialog</h3>
+                <div>
+                    <p>This is a modal window. You can do the following things with it:</p>
+                    <ul>
+                        <li><strong>Read:</strong> Modal windows will probably tell you something important so don't forget to read what it says.</li>
+                        <li><strong>Look:</strong> modal windows enjoy a certain kind of attention; just look at it and appreciate its presence.</li>
+                        <li><strong>Close:</strong> click on the button below to close the modal.</li>
+                    </ul>
+                    <button class="akno-action-close">Close me!</button>
+                </div>
+            </div>
+        </div>
+
+        <script src="../dist/scripts/akno.min.js"></script>
+
+        <script>
+            (function() {
+                var akno;
+                var modalElement = document.getElementById('modal_1');
+                document.body.addEventListener("click", function(ev) {
+                    var target = ev.target;
+                    if(target.className.indexOf('action-open') >= 0) {
+                        if(akno) {
+                            akno.destroy()
+                            akno = null;
+                        }
+                        akno = new Akno(modalElement, {
+                            effect: target.getAttribute('data-effect')
+                        });
+
+                        // TODO need a solution: transition doesn't work when dialog is being opened immediately
+                        setTimeout(function() {
+                            akno.open();
+                        }, 25);
+                    }
+                }, false);
+
+                setTimeout(function() {
+                    document.body.className = 'fade-in';
+                }, 25);
+                
+                /*var dialog;
+                document.getElementById('create').addEventListener("click", function(ev) {
+                        dialog = new Akno(modalElement, {
+                            effect: 'scale-up'
+                        });
+
+                        //dialog.open();
+                }, false);
+                document.getElementById('open').addEventListener('click', function() {
+                    dialog.open();
+                }, false);*/
+            })();
+        </script>
+    </body>
+</html>
