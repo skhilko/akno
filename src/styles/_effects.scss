@@ -176,7 +176,8 @@
 }
 
 .akno-state-visible.akno-fx-just-me ~ .akno-overlay {
-	background: #e74c3c;
+	// TODO need to remove dependency on theme styles in Just Me effect
+	background: #fff;
 } 
 
 .akno-fx-just-me .akno-content h3,
@@ -185,6 +186,7 @@
 }
 
 .akno-state-visible.akno-fx-just-me .akno-content {
+	border: 1px solid transparent;
 	opacity: 1;
 	transform: scale(1);
 }
