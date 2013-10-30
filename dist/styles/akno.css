@@ -33,7 +33,7 @@
   visibility: hidden;
   width: 100%;
   height: 100%;
-  background: rgba(143, 27, 15, 0.8);
+  background: rgba(52, 73, 94, 0.8);
   opacity: 0;
   -webkit-transition: all 0.3s;
   transition: all 0.3s;
@@ -60,8 +60,8 @@
   position: relative;
   margin: 0 auto;
   border-radius: 3px;
-  background: #e74c3c;
-  color: #fff;
+  background: #fff;
+  border: 1px solid #bdc3c7;
 }
 
 /* line 52, ../../src/styles/_base.scss */
@@ -69,29 +69,23 @@
 .akno-content h3 {
   margin: 0;
   padding: 0.4em;
-  border-radius: 3px 3px 0 0;
-  background: rgba(0, 0, 0, 0.1);
-  text-align: center;
   font-weight: 300;
   font-size: 2.4em;
-  opacity: 0.8;
+  border-bottom: 1px solid #ecf0f1;
 }
 
-/* line 63, ../../src/styles/_base.scss */
+/* line 60, ../../src/styles/_base.scss */
 
 .akno-content > div {
   margin: 0;
   padding: 15px 40px 30px;
-  font-weight: 300;
-  font-size: 1.15em;
 }
 
-/* line 70, ../../src/styles/_base.scss */
+/* line 65, ../../src/styles/_base.scss */
 
 .akno-content button {
   display: block;
   margin: 0 auto;
-  font-size: 0.8em;
 }
 
 /* Individual modal styles with animations/transitions */
