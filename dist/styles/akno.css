@@ -387,19 +387,20 @@
 /* line 178, ../../src/styles/_effects.scss */
 
 .akno-state-visible.akno-fx-just-me ~ .akno-overlay {
-  background: #e74c3c;
+  background: #fff;
 }
 
-/* line 183, ../../src/styles/_effects.scss */
+/* line 184, ../../src/styles/_effects.scss */
 
 .akno-fx-just-me .akno-content h3,
 .akno-fx-just-me .akno-content {
   background: transparent;
 }
 
-/* line 187, ../../src/styles/_effects.scss */
+/* line 188, ../../src/styles/_effects.scss */
 
 .akno-state-visible.akno-fx-just-me .akno-content {
+  border: 1px solid transparent;
   opacity: 1;
   -webkit-transform: scale(1);
   transform: scale(1);
@@ -407,14 +408,14 @@
 
 /* Effect 13: 3D slit */
 
-/* line 193, ../../src/styles/_effects.scss */
+/* line 195, ../../src/styles/_effects.scss */
 
 .akno-fx-split.akno-modal {
   -webkit-perspective: 1300px;
   perspective: 1300px;
 }
 
-/* line 197, ../../src/styles/_effects.scss */
+/* line 199, ../../src/styles/_effects.scss */
 
 .akno-fx-split .akno-content {
   opacity: 0;
@@ -424,7 +425,7 @@
   transform-style: preserve-3d;
 }
 
-/* line 203, ../../src/styles/_effects.scss */
+/* line 205, ../../src/styles/_effects.scss */
 
 .akno-state-visible.akno-fx-split .akno-content {
   -webkit-animation: slit .7s forwards ease-out;
@@ -432,7 +433,7 @@
 }
 
 @-webkit-keyframes slit {
-  /* line 208, ../../src/styles/_effects.scss */
+  /* line 210, ../../src/styles/_effects.scss */
   50% {
     opacity: 1;
     -webkit-transform: translateZ(-250px) rotateY(89deg);
@@ -441,7 +442,7 @@
     animation-timing-function: ease-in;
   }
 
-  /* line 213, ../../src/styles/_effects.scss */
+  /* line 215, ../../src/styles/_effects.scss */
   100% {
     opacity: 1;
     -webkit-transform: translateZ(0) rotateY(0deg);
@@ -450,7 +451,7 @@
 }
 
 @keyframes slit {
-  /* line 208, ../../src/styles/_effects.scss */
+  /* line 210, ../../src/styles/_effects.scss */
   50% {
     opacity: 1;
     -webkit-transform: translateZ(-250px) rotateY(89deg);
@@ -459,7 +460,7 @@
     animation-timing-function: ease-in;
   }
 
-  /* line 213, ../../src/styles/_effects.scss */
+  /* line 215, ../../src/styles/_effects.scss */
   100% {
     opacity: 1;
     -webkit-transform: translateZ(0) rotateY(0deg);
@@ -469,14 +470,14 @@
 
 /* Effect 14:  3D Rotate from bottom */
 
-/* line 220, ../../src/styles/_effects.scss */
+/* line 222, ../../src/styles/_effects.scss */
 
 .akno-fx-rotate-bottom.akno-modal {
   -webkit-perspective: 1300px;
   perspective: 1300px;
 }
 
-/* line 224, ../../src/styles/_effects.scss */
+/* line 226, ../../src/styles/_effects.scss */
 
 .akno-fx-rotate-bottom .akno-content {
   opacity: 0;
@@ -490,7 +491,7 @@
   transform-style: preserve-3d;
 }
 
-/* line 232, ../../src/styles/_effects.scss */
+/* line 234, ../../src/styles/_effects.scss */
 
 .akno-state-visible.akno-fx-rotate-bottom .akno-content {
   opacity: 1;
@@ -500,14 +501,14 @@
 
 /* Effect 15:  3D Rotate in from left */
 
-/* line 238, ../../src/styles/_effects.scss */
+/* line 240, ../../src/styles/_effects.scss */
 
 .akno-fx-rotate-left.akno-modal {
   -webkit-perspective: 1300px;
   perspective: 1300px;
 }
 
-/* line 242, ../../src/styles/_effects.scss */
+/* line 244, ../../src/styles/_effects.scss */
 
 .akno-fx-rotate-left .akno-content {
   opacity: 0;
@@ -521,7 +522,7 @@
   transform-style: preserve-3d;
 }
 
-/* line 250, ../../src/styles/_effects.scss */
+/* line 252, ../../src/styles/_effects.scss */
 
 .akno-state-visible.akno-fx-rotate-left .akno-content {
   opacity: 1;
