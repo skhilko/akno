@@ -64,9 +64,17 @@
             next: element.nextElementSibling
         };
 
+        // TODO make use of templates
         var content = document.createElement('div');
         content.className = 'akno-content';
-        content.appendChild(element);
+
+        var header = document.createElement('h3');
+        header.textContent = 'Modal Dialog';
+        content.appendChild(header);
+
+        var contentContainer = document.createElement('div');
+        contentContainer.appendChild(element);
+        content.appendChild(contentContainer);
 
         var dialog = document.createElement('div');
         dialog.className = 'akno-modal ' + EFFECTS[this.options.effect];
