@@ -13,7 +13,7 @@
      * - akno-open
      */
     function Akno(element, options) {
-        this._handlers = [];
+        this._handlers = {};
 
         this.options = applyDefaults(options, this.defaults);
         this.element = element;
@@ -85,25 +85,32 @@
         this.dialog = document.body.insertBefore(dialog, document.body.firstChild);
     };
 
-    Akno.prototype._on = function(event, element, handler) {
-        if(event && element) {
+    Akno.prototype._on = function(eventName, element, handler) {
+        if(eventName && element) {
             handler = handler.bind(this);
-            this._handlers.push({
-                event: event,
+            this._handlers[eventName] = {
+                eventName: eventName,
                 element: element,
                 handler: handler
-            });
-            element.addEventListener(event, handler, false);
+            };
+            element.addEventListener(eventName, handler, false);
+        }
+    };
+
+    Akno.prototype._off = function(eventName) {
+        var handlerData = this._handlers[eventName];
+        if (handlerData) {
+            handlerData.element.removeEventListener(handlerData.eventName, handlerData.handler);
+            delete this._handlers[eventName];
         }
     };
 
     Akno.prototype._removeEventHandlers = function() {
         if (this._handlers) {
-            for (var i = 0, len = this._handlers.length; i < len; i++) {
-                var event = this._handlers[i].event;
-                var element = this._handlers[i].element;
-                var handler = this._handlers[i].handler;
-                element.removeEventListener(event, handler);
+            for (var eventName in this._handlers) {
+                var element = this._handlers[eventName].element;
+                var handler = this._handlers[eventName].handler;
+                element.removeEventListener(eventName, handler);
             }
 
             this._handlers = null;
@@ -136,6 +143,7 @@
     };
 
     Akno.prototype._openHandler = function() {
+        this._off(TRANSITION_END_EVENT);
         this._lastActive = document.activeElement;
         setFocus(this.dialog);
         this._trigger('akno-open');
@@ -185,7 +193,6 @@
      */
     function setFocus(container) {
         var autofocused, tabbable;
-
         // TODO use content container as a context element
         var elements = container.querySelectorAll('input,select,button,textarea,object,a');
         for (var i = 0, len = elements.length; i < len; i++) {
