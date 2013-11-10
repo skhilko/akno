@@ -23,15 +23,20 @@
         this._createOverlay();
         this._on('click', this.closeButton, this.close);
         this._on('keydown', this.dialog, this._escKeyHandler);
-        this._on(TRANSITION_END_EVENT, this.dialog, this._openHandler);
+        this._on('keydown', this.dialog, this._tabKeyHandler);
         aknoInstances++;
     }
 
     Akno.prototype.open = function() {
+        if(TRANSITION_END_EVENT) {
+            this._on(TRANSITION_END_EVENT, this.dialog, this._openAnimationHandler);
+        }
+
         addClass(this.dialog, 'akno-state-visible');
         // set focus manually in case transitions are not supported
         if(!TRANSITION_END_EVENT) {
-            this._openHandler();
+            this._initFocus();
+            this._trigger('akno-open');
         }
     };
 
@@ -51,7 +56,7 @@
     Akno.prototype.destroy = function() {
         // put the element back on its initial place
         this._originalPosition.parent.insertBefore(this.element, this._originalPosition.next);
-        this._removeEventHandlers();
+        this._handlers = null;
         this._destroyOverlay();
         document.body.removeChild(this.dialog);
         aknoInstances--;
@@ -75,6 +80,8 @@
         var contentContainer = document.createElement('div');
         contentContainer.appendChild(element);
         content.appendChild(contentContainer);
+        // TODO content should include action buttons
+        this.content = contentContainer;
 
         var dialog = document.createElement('div');
         dialog.className = 'akno-modal ' + EFFECTS[this.options.effect];
@@ -87,33 +94,35 @@
 
     Akno.prototype._on = function(eventName, element, handler) {
         if(eventName && element) {
+            var handlerUid = getUid(handler);
+            var elementUid = getUid(element);
             handler = handler.bind(this);
-            this._handlers[eventName] = {
-                eventName: eventName,
-                element: element,
-                handler: handler
-            };
-            element.addEventListener(eventName, handler, false);
-        }
-    };
-
-    Akno.prototype._off = function(eventName) {
-        var handlerData = this._handlers[eventName];
-        if (handlerData) {
-            handlerData.element.removeEventListener(handlerData.eventName, handlerData.handler);
-            delete this._handlers[eventName];
-        }
-    };
-
-    Akno.prototype._removeEventHandlers = function() {
-        if (this._handlers) {
-            for (var eventName in this._handlers) {
-                var element = this._handlers[eventName].element;
-                var handler = this._handlers[eventName].handler;
-                element.removeEventListener(eventName, handler);
+            handler[UID] = handlerUid;
+            var elementHandlers = this._handlers[elementUid];
+            if(!elementHandlers || !elementHandlers.length) {
+                elementHandlers = [];
+                this._handlers[elementUid] = elementHandlers;
             }
+            elementHandlers.push({
+                eventName: eventName,
+                handler: handler
+            });
+            element.addEventListener(eventName, handler);
+        }
+    };
 
-            this._handlers = null;
+    Akno.prototype._off = function(eventName, element, handler) {
+        var elementEventHandlers = this._handlers[getUid(element)];
+        var handlerData;
+        if (elementEventHandlers) {
+            for (var i = 0, len = elementEventHandlers.length; i < len; i++) {
+                handlerData = elementEventHandlers[i];
+                if(handlerData.eventName === eventName && getUid(handlerData.handler) === getUid(handler)) {
+                    element.removeEventListener(eventName, handlerData.handler);
+                    elementEventHandlers.splice(i, 1);
+                    len--;
+                }
+            }
         }
     };
 
@@ -136,16 +145,20 @@
         this.overlay = overlay;
     };
 
+    Akno.prototype._initFocus = function() {
+        this._lastActive = document.activeElement;
+        setFocus(this.dialog);
+    };
+
     Akno.prototype._destroyOverlay = function() {
         if (aknoInstances === 1) {
             document.body.removeChild(this.overlay);
         }
     };
 
-    Akno.prototype._openHandler = function() {
-        this._off(TRANSITION_END_EVENT);
-        this._lastActive = document.activeElement;
-        setFocus(this.dialog);
+    Akno.prototype._openAnimationHandler = function() {
+        this._off(TRANSITION_END_EVENT, this.dialog, this._openAnimationHandler);
+        this._initFocus();
         this._trigger('akno-open');
     };
 
@@ -157,12 +170,35 @@
         }
     };
 
+    Akno.prototype._tabKeyHandler = function(ev) {
+        if (ev.keyCode === TAB_CODE_ESCAPE) {
+            // content + buttons
+            var tabbables = getTabbables(this.content);
+            if(tabbables.length) {
+                var first = tabbables[0];
+                var last  = tabbables[tabbables.length - 1];
+                if ( ( ev.target === last || ev.target === this.dialog ) && !ev.shiftKey ) {
+                    first.focus();
+                    ev.preventDefault();
+                } else if ( ( ev.target === first || ev.target === this.dialog ) && ev.shiftKey ) {
+                    last.focus();
+                    ev.preventDefault();
+                }
+            } else {
+                this.dialog.focus();
+            }
+        }
+    };
+
     Akno.prototype.defaults = {
         effect: 'scale-up'
     };
 
     var KEY_CODE_ESCAPE = 27;
+    var TAB_CODE_ESCAPE = 9;
     var REGEX_CLASS_SEPARATOR = /[\t\r\n\f]/g;
+    var UID = 'aknouid';
+
     // TODO need additional configuration in some cases:
     // - add additional container class on page conten but not the dialog itself
     var EFFECTS = {
@@ -189,42 +225,24 @@
      * 1. first content element with autofocus attribute
      * 2. first tabbable element within the content of the dialog
      * 3. first tabbable action button
-     * 4. dialog element itself
+     * 4. TODO close button
+     * 5. dialog element itself
      */
     function setFocus(container) {
-        var autofocused, tabbable;
         // TODO use content container as a context element
-        var elements = container.querySelectorAll('input,select,button,textarea,object,a');
-        for (var i = 0, len = elements.length; i < len; i++) {
-            var element = elements[i];
-            // will include elements without tabindex attribute, NaN (translated to tabindex '0') and positive values
-            var isTabbable = element.tabIndex >= 0;
-            if(isVisible(element)) {
-                var nodeName = element.nodeName.toLowerCase();
-
-                // Anchors are tabbable if they have an href or positive tabindex attribute.
-                if(!tabbable && nodeName === 'a' && isTabbable) {
-                    tabbable = element;
-                    // might find an element with a higher rating
-                    continue;
-                }
-
-                // input, select, textarea, button, and object elements are tabbable if they do not have a negative tab index and are not disabled
-                if(nodeName !== 'a' && !element.disabled) {
-                    if(element.autofocus) {
-                        autofocused = element;
-                        // nothing more serious is left here
-                        break;
-                    } else if(!tabbable && isTabbable) {
-                        tabbable = element;
-                        // might find an element with a higher rating
-                        continue;
-                    }
-                }
-            }
+        var autofocus = container.querySelector('[autofocus]');
+        if(autofocus) {
+            autofocus.focus();
+            return;
         }
 
-        (autofocused || tabbable || container).focus();
+        var tabbable = getTabbables(container, true);
+        if(tabbable.length) {
+            tabbable[0].focus();
+            return;
+        }
+
+        container.focus();
     }
 
     // TODO need to check parents as well
@@ -232,6 +250,40 @@
         if(window.getComputedStyle(element).visibility !== 'hidden') {
             return element.offsetWidth > 0 && element.offsetHeight > 0;
         }
+    }
+
+    /**
+     * Return tabbable elements within a container.
+     * @param  {Element} container
+     * @param  {Boolean} first a boolean flag indicating the first tabbable element should be returned. Performance optimization.
+     * @return {Array} an array of tabbable elements
+     */
+    function getTabbables(container, first) {
+        var tabbables = [];
+        var elements = container.querySelectorAll('input,select,button,textarea,object,a');
+        for (var i = 0, len = elements.length; i < len; i++) {
+            var element = elements[i];
+            // will include elements without tabindex attribute, NaN (translated to tabindex '0') and positive values
+            var hasTabIndex = element.tabIndex >= 0;
+            if(isVisible(element)) {
+                var nodeName = element.nodeName.toLowerCase();
+
+                // Anchors are tabbable if they have an href or positive tabindex attribute.
+                if(nodeName === 'a') {
+                    if(hasTabIndex || element.href.length) {
+                        tabbables.push(element);
+                    }
+                } else if(hasTabIndex && !element.disabled) {
+                    // input, select, textarea, button, and object elements are tabbable if they do not have a negative tab index and are not disabled
+                    tabbables.push(element);
+                }
+            }
+
+            if (first && tabbables.length === 1) {
+                return tabbables;
+            }
+        }
+        return tabbables;
     }
 
     function addClass(element, value) {
@@ -289,6 +341,20 @@
                 return transitions[transition];
             }
         }
+    }
+
+    function getUid(object) {
+        var uid = object[UID];
+        if(!uid) {
+            uid = generateUid();
+            object[UID] = uid;
+        }
+        return uid;
+    }
+
+    var _uid = 1;
+    function generateUid() {
+        return '' + _uid++;
     }
 
     var TRANSITION_END_EVENT = getTransitionEndEventName();

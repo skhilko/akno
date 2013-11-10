@@ -219,6 +219,18 @@
                     done();
                 });
             });
+
+            it('should cycle through dialog focusable elements when focus reaches the last element or the first in case `shift` key is pressed', function(done) {
+                dialog = openDialog('modal_with_inputs', function() {
+                    $('#modal_1_close').focus();
+                    $('#modal_1_close').simulate('keydown', {keyCode: $.simulate.keyCode.TAB});
+                    expect(document.activeElement).to.be.equal(document.getElementById('modal_anchor'));
+                    $('#modal_anchor').simulate('keydown', {keyCode: $.simulate.keyCode.TAB, shiftKey: true});
+                    expect(document.activeElement).to.be.equal(document.getElementById('modal_1_close'));
+                    dialog.close();
+                    done();
+                });
+            });
         });
 
         describe('default initialization option', function() {
