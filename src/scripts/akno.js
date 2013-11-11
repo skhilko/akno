@@ -1,6 +1,11 @@
 (function(window, document, undefined) {
     'use strict';
 
+    var defaults = {
+        effect: 'scale-up',
+        header: 'Modal Window'
+    };
+
     /**
      * [Akno description]
      *
@@ -69,27 +74,19 @@
             next: element.nextElementSibling
         };
 
-        // TODO make use of templates
-        var content = document.createElement('div');
-        content.className = 'akno-content';
+        var wrapper = document.createElement('div');
+        wrapper.innerHTML = tmpl.akno({
+            header: this.options.header,
+            effect: EFFECTS[this.options.effect]
+        });
+        var content = wrapper.querySelector('.akno-body');
+        content.appendChild(element);
 
-        var header = document.createElement('h3');
-        header.textContent = 'Modal Dialog';
-        content.appendChild(header);
-
-        var contentContainer = document.createElement('div');
-        contentContainer.appendChild(element);
-        content.appendChild(contentContainer);
         // TODO content should include action buttons
-        this.content = contentContainer;
+        this.content = content;
 
-        var dialog = document.createElement('div');
-        dialog.className = 'akno-modal ' + EFFECTS[this.options.effect];
-        // make the dialog focusable
-        dialog.tabIndex = -1;
-        dialog.appendChild(content);
         // ensure the dialog is rendered before all service elements to make selectors work 
-        this.dialog = document.body.insertBefore(dialog, document.body.firstChild);
+        this.dialog = document.body.insertBefore(wrapper.firstChild, document.body.firstChild);
     };
 
     Akno.prototype._on = function(eventName, element, handler) {
@@ -190,9 +187,7 @@
         }
     };
 
-    Akno.prototype.defaults = {
-        effect: 'scale-up'
-    };
+    Akno.prototype.defaults = defaults;
 
     var KEY_CODE_ESCAPE = 27;
     var TAB_CODE_ESCAPE = 9;
@@ -218,7 +213,17 @@
             'rotate-bottom': 'akno-fx-rotate-bottom',
             'rotate-left': 'akno-fx-rotate-left'
         };
+
     var aknoInstances = 0;
+
+    var tmpl = (function(){
+        function encodeHTMLSource() {  var encodeHTMLRules = { "&": "&#38;", "<": "&#60;", ">": "&#62;", '"': '&#34;', "'": '&#39;', "/": '&#47;' },  matchHTML = /&(?!#?w+;)|<|>|"|'|\//g;  return function() {    return this ? this.replace(matchHTML, function(m) {return encodeHTMLRules[m] || m;}) : this;  };};
+        String.prototype.encodeHTML=encodeHTMLSource();
+        var tmpl = {};
+          tmpl['akno']=function anonymous(it) {
+        var out='<div class="akno-modal '+(it.effect)+'" tabindex="-1"><div class="akno-content">';if(it.header){out+='<h1>'+(it.header||'').toString().encodeHTML()+'</h1>';}out+='<div class="akno-body"></div></div></div>';return out;
+        };
+        return tmpl;})();
 
     /*
      * Sets focus in the following order:

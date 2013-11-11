@@ -161,6 +161,16 @@ module.exports = function (grunt) {
                 }]
             }
         },
+        dot: {
+            dist: {
+                options: {
+                    root: __dirname + '/src'
+                },
+                files: {
+                    '<%= yeoman.dist %>/scripts/akno.tmpl.js': ['src/templates/akno.jst']
+                }
+            }
+        },
         concat: {
             dist: {
                 files: {
