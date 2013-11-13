@@ -196,7 +196,7 @@ module.exports = function (grunt) {
         uglify: {
             dist: {
                 files: {
-                    '<%= yeoman.dist %>/scripts/akno.min.js': ['src/scripts/akno.js']
+                    '<%= yeoman.dist %>/scripts/akno.min.js': ['.tmp/scripts/akno.js']
                 }
             }
         },
