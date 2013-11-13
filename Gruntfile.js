@@ -33,6 +33,7 @@ module.exports = function (grunt) {
                 files: ['<%= yeoman.src %>/styles/{,*/}*.css'],
                 tasks: ['copy:styles', 'autoprefixer']
             },
+            //TODO reload concat
             livereload: {
                 options: {
                     livereload: LIVERELOAD_PORT
@@ -162,24 +163,35 @@ module.exports = function (grunt) {
             }
         },
         dot: {
-            dist: {
+            all: {
                 options: {
                     root: __dirname + '/src'
                 },
                 files: {
-                    '<%= yeoman.dist %>/scripts/akno.tmpl.js': ['src/templates/akno.jst']
+                    '.tmp/templates/dialog.js': '<%= yeoman.src %>/templates/dialog.jst'
                 }
             }
         },
         concat: {
-            dist: {
-                files: {
-                    '<%= yeoman.dist %>/styles/akno.css': [
-                        '.tmp/styles/{,*/}*.css',
-                        '<%= yeoman.src %>/styles/{,*/}*.css'
-                    ]
-                }
-            }
+            vanilla: {
+                src: [
+                    '<%= yeoman.src %>/scripts/wrap/intro.js',
+                    '<%= yeoman.src %>/scripts/akno.js',
+                    '.tmp/templates/dialog.js',
+                    '<%= yeoman.src %>/scripts/wrap/outro.js'
+
+                ],
+                dest: '.tmp/scripts/akno.js'
+            }/*TODO,
+            jquery: {
+                '.tmp/scripts/akno.jquery.js': [
+                    '<%= yeoman.src %>/wrap/jquery-intro.js',
+                    '<%= yeoman.src %>/akno.js',
+                    '.tmp/templates/akno.js',
+                    '<%= yeoman.src %>/wrap/jquery-outro.js'
+
+                ]
+            }*/
         },
         uglify: {
             dist: {
@@ -207,33 +219,29 @@ module.exports = function (grunt) {
                     cwd: '<%= yeoman.src %>',
                     dest: '<%= yeoman.dist %>',
                     src: [
-                        'scripts/akno.js',
                         '*.{ico,png,txt}',
                         'images/{,*/}*.{webp,gif}',
                         'styles/fonts/*'
                     ]
+                }, {
+                    '<%= yeoman.dist %>/scripts/akno.js': '.tmp/scripts/akno.js'
+                }, {
+                    '<%= yeoman.dist %>/styles/akno.css': '.tmp/styles/akno.css'
                 }]
-            },
-            styles: {
-                expand: true,
-                dot: true,
-                cwd: '<%= yeoman.src %>/styles',
-                dest: '.tmp/styles/',
-                src: '{,*/}*.css'
             }
         },
         concurrent: {
             server: [
                 'compass',
-                'copy:styles'
+                'concat:vanilla'
             ],
             test: [
                 'compass',
-                'copy:styles'
+                'concat:vanilla'
             ],
             dist: [
                 'compass',
-                'copy:styles'
+                'concat:vanilla'
             ]
         }
     });
@@ -246,6 +254,7 @@ module.exports = function (grunt) {
         if (target === 'test') {
             return grunt.task.run([
                 'clean:server',
+                'dot',
                 'concurrent:test',
                 'autoprefixer',
                 'connect:test:keepalive'
@@ -254,6 +263,7 @@ module.exports = function (grunt) {
 
         grunt.task.run([
             'clean:server',
+            'dot',
             'concurrent:server',
             'autoprefixer',
             'connect:livereload',
@@ -264,6 +274,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('test', [
         'clean:server',
+        'dot',
         'concurrent:test',
         'autoprefixer',
         'connect:test',
@@ -272,12 +283,13 @@ module.exports = function (grunt) {
 
     grunt.registerTask('build', [
         'clean:dist',
+        'dot',
         'concurrent:dist',
         'autoprefixer',
         'concat',
+        'copy:dist',
         'cssmin',
-        'uglify',
-        'copy:dist'
+        'uglify'
     ]);
 
     grunt.registerTask('default', [
