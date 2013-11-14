@@ -1,6 +1,186 @@
 /*global tmpl*/
 'use strict';
 
+function getTransitionEndEventName() {
+    var transitions = {
+        'transition':'transitionend',
+        'OTransition':'oTransitionEnd',
+        'MozTransition':'transitionend',
+        'WebkitTransition':'webkitTransitionEnd'
+    };
+    var transition;
+    for(transition in transitions){
+        if( document.body.style[transition] !== undefined ){
+            return transitions[transition];
+        }
+    }
+}
+
+var _uid = 1;
+
+var TRANSITION_END_EVENT = getTransitionEndEventName();
+var KEY_CODE_ESCAPE = 27;
+var TAB_CODE_ESCAPE = 9;
+var REGEX_CLASS_SEPARATOR = /[\t\r\n\f]/g;
+var UID = 'aknouid';
+
+// TODO need additional configuration in some cases:
+// - add additional container class on page conten but not the dialog itself
+var EFFECTS = {
+        'scale-up': 'akno-fx-scale-up',
+        'slide-in-right': 'akno-fx-slide-in-right',
+        'slide-in-bottom': 'akno-fx-slide-in-bottom',
+        'newspaper': 'akno-fx-newspaper',
+        'fall': 'akno-fx-fall',
+        'side-fall': 'akno-fx-side-fall',
+        'sticky-top': 'akno-fx-sticky-top',
+        'flip-hor': 'akno-fx-flip-hor',
+        'flip-vert': 'akno-fx-flip-vert',
+        'sign': 'akno-fx-sign',
+        'scale-down': 'akno-fx-scale-down',
+        'just-me': 'akno-fx-just-me',
+        'split': 'akno-fx-split',
+        'rotate-bottom': 'akno-fx-rotate-bottom',
+        'rotate-left': 'akno-fx-rotate-left'
+    };
+
+var aknoInstances = 0;
+
+
+// TODO need to check parents as well
+function isVisible(element) {
+    if(window.getComputedStyle(element).visibility !== 'hidden') {
+        return element.offsetWidth > 0 && element.offsetHeight > 0;
+    }
+}
+
+/**
+ * Return tabbable elements within a container.
+ * @param  {Element} container
+ * @param  {Boolean} first a boolean flag indicating the first tabbable element should be returned. Performance optimization.
+ * @return {Array} an array of tabbable elements
+ */
+function getTabbables(container, first) {
+    var tabbables = [];
+    var elements = container.querySelectorAll('input,select,button,textarea,object,a');
+    for (var i = 0, len = elements.length; i < len; i++) {
+        var element = elements[i];
+        // will include elements without tabindex attribute, NaN (translated to tabindex '0') and positive values
+        var hasTabIndex = element.tabIndex >= 0;
+        if(isVisible(element)) {
+            var nodeName = element.nodeName.toLowerCase();
+
+            // Anchors are tabbable if they have an href or positive tabindex attribute.
+            if(nodeName === 'a') {
+                if(hasTabIndex || element.href.length) {
+                    tabbables.push(element);
+                }
+            } else if(hasTabIndex && !element.disabled) {
+                // input, select, textarea, button, and object elements are tabbable if they do not have a negative tab index and are not disabled
+                tabbables.push(element);
+            }
+        }
+
+        if (first && tabbables.length === 1) {
+            return tabbables;
+        }
+    }
+    return tabbables;
+}
+
+/*
+ * Sets focus in the following order:
+ * 1. first content element with autofocus attribute
+ * 2. first tabbable element within the content of the dialog
+ * 3. first tabbable action button
+ * 4. TODO close button
+ * 5. dialog element itself
+ */
+function setFocus(container) {
+    // TODO use content container as a context element
+    var autofocus = container.querySelector('[autofocus]');
+    if(autofocus) {
+        autofocus.focus();
+        return;
+    }
+
+    var tabbable = getTabbables(container, true);
+    if(tabbable.length) {
+        tabbable[0].focus();
+        return;
+    }
+
+    container.focus();
+}
+
+function addClass(element, value) {
+    if(element.classList) {
+        element.classList.add(value);
+        return;
+    }
+
+    var current = ' ';
+    if(element.className) {
+        current = (' ' + element.className + ' ').replace(REGEX_CLASS_SEPARATOR, ' ');
+    }
+
+    if( current.indexOf(' ' + value + ' ') < 0 ) {
+        current += value + ' ';
+    }
+    element.className = current.trim();
+}
+
+function removeClass(element, value) {
+    if(element.classList) {
+        element.classList.remove(value);
+        return;
+    }
+
+    var current = ' ';
+    if(element.className) {
+        current = (' ' + element.className + ' ').replace(REGEX_CLASS_SEPARATOR, ' ');
+    }
+
+    if(current.indexOf(' ' + value + ' ') >= 0) {
+        current = current.replace(' ' + value + ' ', ' ');
+    }
+    element.className = value ? current.trim() : '';
+}
+
+function applyDefaults(options, defaults) {
+    var result = {};
+    var key;
+    for(key in options) {
+        result[key] = options[key];
+    }
+    // add missing defaults
+    for(key in defaults) {
+        if(result[key] === undefined) {
+            result[key] = defaults[key];
+        }
+    }
+    return result;
+}
+
+function generateUid() {
+    return '' + _uid++;
+}
+
+function getUid(object) {
+    var uid = object[UID];
+    if(!uid) {
+        uid = generateUid();
+        object[UID] = uid;
+    }
+    return uid;
+}
+
+
+
+//
+// Akno Component
+// --------------
+
 var defaults = {
     effect: 'scale-up'
 };
@@ -189,178 +369,3 @@ Akno.prototype._tabKeyHandler = function(ev) {
 };
 
 Akno.prototype.defaults = defaults;
-
-var KEY_CODE_ESCAPE = 27;
-var TAB_CODE_ESCAPE = 9;
-var REGEX_CLASS_SEPARATOR = /[\t\r\n\f]/g;
-var UID = 'aknouid';
-
-// TODO need additional configuration in some cases:
-// - add additional container class on page conten but not the dialog itself
-var EFFECTS = {
-        'scale-up': 'akno-fx-scale-up',
-        'slide-in-right': 'akno-fx-slide-in-right',
-        'slide-in-bottom': 'akno-fx-slide-in-bottom',
-        'newspaper': 'akno-fx-newspaper',
-        'fall': 'akno-fx-fall',
-        'side-fall': 'akno-fx-side-fall',
-        'sticky-top': 'akno-fx-sticky-top',
-        'flip-hor': 'akno-fx-flip-hor',
-        'flip-vert': 'akno-fx-flip-vert',
-        'sign': 'akno-fx-sign',
-        'scale-down': 'akno-fx-scale-down',
-        'just-me': 'akno-fx-just-me',
-        'split': 'akno-fx-split',
-        'rotate-bottom': 'akno-fx-rotate-bottom',
-        'rotate-left': 'akno-fx-rotate-left'
-    };
-
-var aknoInstances = 0;
-
-/*
- * Sets focus in the following order:
- * 1. first content element with autofocus attribute
- * 2. first tabbable element within the content of the dialog
- * 3. first tabbable action button
- * 4. TODO close button
- * 5. dialog element itself
- */
-function setFocus(container) {
-    // TODO use content container as a context element
-    var autofocus = container.querySelector('[autofocus]');
-    if(autofocus) {
-        autofocus.focus();
-        return;
-    }
-
-    var tabbable = getTabbables(container, true);
-    if(tabbable.length) {
-        tabbable[0].focus();
-        return;
-    }
-
-    container.focus();
-}
-
-// TODO need to check parents as well
-function isVisible(element) {
-    if(window.getComputedStyle(element).visibility !== 'hidden') {
-        return element.offsetWidth > 0 && element.offsetHeight > 0;
-    }
-}
-
-/**
- * Return tabbable elements within a container.
- * @param  {Element} container
- * @param  {Boolean} first a boolean flag indicating the first tabbable element should be returned. Performance optimization.
- * @return {Array} an array of tabbable elements
- */
-function getTabbables(container, first) {
-    var tabbables = [];
-    var elements = container.querySelectorAll('input,select,button,textarea,object,a');
-    for (var i = 0, len = elements.length; i < len; i++) {
-        var element = elements[i];
-        // will include elements without tabindex attribute, NaN (translated to tabindex '0') and positive values
-        var hasTabIndex = element.tabIndex >= 0;
-        if(isVisible(element)) {
-            var nodeName = element.nodeName.toLowerCase();
-
-            // Anchors are tabbable if they have an href or positive tabindex attribute.
-            if(nodeName === 'a') {
-                if(hasTabIndex || element.href.length) {
-                    tabbables.push(element);
-                }
-            } else if(hasTabIndex && !element.disabled) {
-                // input, select, textarea, button, and object elements are tabbable if they do not have a negative tab index and are not disabled
-                tabbables.push(element);
-            }
-        }
-
-        if (first && tabbables.length === 1) {
-            return tabbables;
-        }
-    }
-    return tabbables;
-}
-
-function addClass(element, value) {
-    if(element.classList) {
-        element.classList.add(value);
-        return;
-    }
-
-    var current = ' ';
-    if(element.className) {
-        current = (' ' + element.className + ' ').replace(REGEX_CLASS_SEPARATOR, ' ');
-    }
-
-    if( current.indexOf(' ' + value + ' ') < 0 ) {
-        current += value + ' ';
-    }
-    element.className = current.trim();
-}
-
-function removeClass(element, value) {
-    if(element.classList) {
-        element.classList.remove(value);
-        return;
-    }
-
-    var current = ' ';
-    if(element.className) {
-        current = (' ' + element.className + ' ').replace(REGEX_CLASS_SEPARATOR, ' ');
-    }
-
-    if(current.indexOf(' ' + value + ' ') >= 0) {
-        current = current.replace(' ' + value + ' ', ' ');
-    }
-    element.className = value ? current.trim() : '';
-}
-
-function applyDefaults(options, defaults) {
-    var result = {};
-    var key;
-    for(key in options) {
-        result[key] = options[key];
-    }
-    // add missing defaults
-    for(key in defaults) {
-        if(result[key] === undefined) {
-            result[key] = defaults[key];
-        }
-    }
-    return result;
-}
-
-function getTransitionEndEventName() {
-    var transitions = {
-        'transition':'transitionend',
-        'OTransition':'oTransitionEnd',
-        'MozTransition':'transitionend',
-        'WebkitTransition':'webkitTransitionEnd'
-    };
-    var transition;
-    for(transition in transitions){
-        if( document.body.style[transition] !== undefined ){
-            return transitions[transition];
-        }
-    }
-}
-
-function getUid(object) {
-    var uid = object[UID];
-    if(!uid) {
-        uid = generateUid();
-        object[UID] = uid;
-    }
-    return uid;
-}
-
-var _uid = 1;
-function generateUid() {
-    return '' + _uid++;
-}
-
-var TRANSITION_END_EVENT = getTransitionEndEventName();
-
-window.Akno = Akno;
