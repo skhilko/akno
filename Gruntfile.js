@@ -33,7 +33,17 @@ module.exports = function (grunt) {
                 files: ['<%= yeoman.src %>/styles/{,*/}*.css'],
                 tasks: ['copy:styles', 'autoprefixer']
             },
-            //TODO reload concat
+            js: {
+                files: [
+                    '<%= yeoman.src %>/scripts/{,*/}*.js',
+                    '.tmp/templates/{,*/}*.js'
+                ],
+                tasks: ['concat']
+            },
+            templates: {
+                files: ['<%= yeoman.src %>/templates/{,*/}*.jst'],
+                tasks: ['dot']
+            },
             livereload: {
                 options: {
                     livereload: LIVERELOAD_PORT
@@ -41,8 +51,7 @@ module.exports = function (grunt) {
                 files: [
                     'examples/index.html',
                     '.tmp/styles/{,*/}*.css',
-                    '{.tmp,<%= yeoman.src %>}/scripts/{,*/}*.js',
-                    '<%= yeoman.src %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
+                    '.tmp/scripts/{,*/}*.js'
                 ]
             }
         },
