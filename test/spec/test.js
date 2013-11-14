@@ -241,7 +241,7 @@
 
             it('should be applied when an initialization option is not supplied', function(done) {
                 dialog = openDialog('modal_no_inputs', function() {
-                    expect($('.akno-modal').hasClass('akno-fx-scale-up')).to.be.true;
+                    expect(dialog.options.effect).to.be.equal('scale-up');
                     done();
                 });
             });
@@ -249,7 +249,29 @@
             it('should not override a supplied initialization option', function(done) {
                 dialog = openDialog('modal_no_inputs', {effect: 'slide-in-right'}, function() {
                     var modalWrapper = $('.akno-modal');
-                    expect(modalWrapper.hasClass('akno-fx-scale-up')).to.be.false;
+                    expect(dialog.options.effect).to.be.equal('slide-in-right');
+                    done();
+                });
+            });
+
+            it('should not override `null` value options', function(done) {
+                dialog = openDialog('modal_no_inputs', {effect: null}, function() {
+                    var modalWrapper = $('.akno-modal');
+                    expect(dialog.options.effect).to.be.null;
+                    done();
+                });
+            });
+        });
+
+        describe('open effect', function() {
+            afterEach(function() {
+                dialog.close();
+                dialog.destroy();
+            });
+
+            it('should be applied as a class on dialog element', function(done) {
+                dialog = openDialog('modal_no_inputs', {effect: 'slide-in-right'}, function() {
+                    var modalWrapper = $('.akno-modal');
                     expect(modalWrapper.hasClass('akno-fx-slide-in-right')).to.be.true;
                     done();
                 });

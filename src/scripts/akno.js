@@ -2,15 +2,16 @@
 'use strict';
 
 var defaults = {
-    effect: 'scale-up',
-    header: 'Modal Window'
+    effect: 'scale-up'
 };
 
 /**
  * [Akno description]
  *
  * Options:
- * - effect
+ * - effect {String}, default 'scale-up' - effect to be used to show the dialog.
+ * - header {String}, optional - header text. Header is not rendered in case the parameter is not provided.
+ * 
  * @param {Element} element
  * @param {Object} options
  *
@@ -318,8 +319,15 @@ function removeClass(element, value) {
 
 function applyDefaults(options, defaults) {
     var result = {};
-    for(var key in defaults) {
-        result[key] = (options && options[key]) || defaults[key];
+    var key;
+    for(key in options) {
+        result[key] = options[key];
+    }
+    // add missing defaults
+    for(key in defaults) {
+        if(result[key] === undefined) {
+            result[key] = defaults[key];
+        }
     }
     return result;
 }

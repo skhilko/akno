@@ -131,7 +131,8 @@
                             akno = null;
                         }
                         akno = new Akno(modalElement, {
-                            effect: target.getAttribute('data-effect')
+                            effect: target.getAttribute('data-effect'),
+                            header: 'Listen Carefully'
                         });
 
                         // TODO need a solution: transition doesn't work when dialog is being opened immediately
@@ -147,7 +148,9 @@
                         akno.destroy()
                         akno = null;
                     }
-                    akno = new Akno(document.getElementById('modal_with_inputs'));
+                    akno = new Akno(document.getElementById('modal_with_inputs'), {
+                        header: 'Inputs Example'
+                    });
 
                     // TODO need a solution: transition doesn't work when dialog is being opened immediately
                     setTimeout(function() {
