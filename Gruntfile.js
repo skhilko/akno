@@ -191,16 +191,16 @@ module.exports = function (grunt) {
 
                 ],
                 dest: '.tmp/scripts/akno.js'
-            }/*TODO,
+            },
             jquery: {
-                '.tmp/scripts/akno.jquery.js': [
-                    '<%= yeoman.src %>/wrap/jquery-intro.js',
-                    '<%= yeoman.src %>/akno.js',
-                    '.tmp/templates/akno.js',
-                    '<%= yeoman.src %>/wrap/jquery-outro.js'
-
-                ]
-            }*/
+                src: [
+                    '<%= yeoman.src %>/scripts/wrap/jquery-intro.js',
+                    '<%= yeoman.src %>/scripts/akno.js',
+                    '.tmp/templates/dialog.js',
+                    '<%= yeoman.src %>/scripts/wrap/jquery-outro.js'
+                ],
+                dest: '.tmp/scripts/akno.jquery.js'
+            }
         },
         uglify: {
             dist: {
