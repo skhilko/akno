@@ -205,7 +205,8 @@ module.exports = function (grunt) {
         uglify: {
             dist: {
                 files: {
-                    '<%= yeoman.dist %>/scripts/akno.min.js': ['.tmp/scripts/akno.js']
+                    '<%= yeoman.dist %>/scripts/akno.min.js':        '.tmp/scripts/akno.js',
+                    '<%= yeoman.dist %>/scripts/akno.jquery.min.js': '.tmp/scripts/akno.jquery.js'
                 }
             }
         },
@@ -222,21 +223,11 @@ module.exports = function (grunt) {
         // Put files not handled in other tasks here
         copy: {
             dist: {
-                files: [{
-                    expand: true,
-                    dot: true,
-                    cwd: '<%= yeoman.src %>',
-                    dest: '<%= yeoman.dist %>',
-                    src: [
-                        '*.{ico,png,txt}',
-                        'images/{,*/}*.{webp,gif}',
-                        'styles/fonts/*'
-                    ]
-                }, {
-                    '<%= yeoman.dist %>/scripts/akno.js': '.tmp/scripts/akno.js'
-                }, {
-                    '<%= yeoman.dist %>/styles/akno.css': '.tmp/styles/akno.css'
-                }]
+                files: {
+                    '<%= yeoman.dist %>/scripts/akno.js':        '.tmp/scripts/akno.js',
+                    '<%= yeoman.dist %>/scripts/akno.jquery.js': '.tmp/scripts/akno.jquery.js',
+                    '<%= yeoman.dist %>/styles/akno.css':        '.tmp/styles/akno.css'
+                }
             }
         },
         concurrent: {
