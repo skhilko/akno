@@ -182,7 +182,8 @@ function getUid(object) {
 // --------------
 
 var defaults = {
-    effect: 'scale-up'
+    effect: 'scale-up',
+    open: true
 };
 
 /**
@@ -191,6 +192,7 @@ var defaults = {
  * Options:
  * - effect {String}, default 'scale-up' - effect to be used to show the dialog.
  * - header {String}, optional - header text. Header is not rendered in case the parameter is not provided.
+ * - open {Boolean}, default `true` - if set to `true`, the akno will open upon initialization.
  * 
  * @param {Element} element
  * @param {Object} options
@@ -211,6 +213,10 @@ function Akno(element, options) {
     this._on('keydown', this.dialog, this._escKeyHandler);
     this._on('keydown', this.dialog, this._tabKeyHandler);
     aknoInstances++;
+
+    if(this.options.open) {
+        this.open();
+    }
 }
 
 Akno.prototype.open = function() {

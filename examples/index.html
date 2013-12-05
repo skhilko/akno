@@ -41,8 +41,6 @@
                     </div>
                 </div>
             </header>
-            <!-- <button id='create' type="button" class='btn btn-primary'>Create</button>
-            <button id='open' type="button" class='btn btn-primary'>Open</button> -->
             <h3>Use Cases</h3>
             <div class="row">
                 <div class="col-xs-12">
@@ -134,8 +132,6 @@
                             effect: target.getAttribute('data-effect'),
                             header: 'Listen Carefully'
                         });
-
-                        akno.open();
                     }
                 }, false);
 
@@ -148,26 +144,12 @@
                     akno = new Akno(document.getElementById('modal_with_inputs'), {
                         header: 'Inputs Example'
                     });
-
-                    akno.open();
                 }, false);
 
 
                 setTimeout(function() {
                     document.body.className = 'fade-in';
                 }, 25);
-                
-                /*var dialog;
-                document.getElementById('create').addEventListener("click", function(ev) {
-                        dialog = new Akno(modalElement, {
-                            effect: 'scale-up'
-                        });
-
-                        //dialog.open();
-                }, false);
-                document.getElementById('open').addEventListener('click', function() {
-                    dialog.open();
-                }, false);*/
             })();
         </script>
     </body>

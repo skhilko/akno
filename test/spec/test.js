@@ -19,11 +19,6 @@
                 options = null;
             }
             var akno = new Akno(document.getElementById(id), options);
-            // TODO need a solution: transition doesn't work when dialog is being opened immediately
-            setTimeout(function() {
-                akno.open();
-            }, 0);
-
             var openHandler = function() {
                 akno.element.removeEventListener('akno-open', openHandler);
                 if (callback) {
@@ -242,6 +237,7 @@
             it('should be applied when an initialization option is not supplied', function(done) {
                 dialog = openDialog('modal_no_inputs', function() {
                     expect(dialog.options.effect).to.be.equal('scale-up');
+                    expect(dialog.options.open).to.be.true;
                     done();
                 });
             });
