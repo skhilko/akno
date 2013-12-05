@@ -268,6 +268,10 @@ Akno.prototype._render = function() {
 
     // ensure the dialog is rendered before all service elements to make selectors work 
     this.dialog = document.body.insertBefore(wrapper.firstChild, document.body.firstChild);
+
+    // force repaint for transformations to kick in immediately
+    // jshint -W030
+    this.dialog.offsetHeight;
 };
 
 Akno.prototype._on = function(eventName, element, handler) {
