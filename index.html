@@ -41,8 +41,6 @@
                     </div>
                 </div>
             </header>
-            <!-- <button id='create' type="button" class='btn btn-primary'>Create</button>
-            <button id='open' type="button" class='btn btn-primary'>Open</button> -->
             <div class="row">
                 <div class="col-sm-4">
                     <div class="tile tile-html-five">
@@ -137,29 +135,12 @@
                         akno = new Akno(modalElement, {
                             effect: target.getAttribute('data-effect')
                         });
-
-                        // TODO need a solution: transition doesn't work when dialog is being opened immediately
-                        setTimeout(function() {
-                            akno.open();
-                        }, 25);
                     }
                 }, false);
 
                 setTimeout(function() {
                     document.body.className = 'fade-in';
                 }, 25);
-                
-                /*var dialog;
-                document.getElementById('create').addEventListener("click", function(ev) {
-                        dialog = new Akno(modalElement, {
-                            effect: 'scale-up'
-                        });
-
-                        //dialog.open();
-                }, false);
-                document.getElementById('open').addEventListener('click', function() {
-                    dialog.open();
-                }, false);*/
             })();
         </script>
     </body>
