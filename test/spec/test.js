@@ -248,7 +248,6 @@
 
             it('should not override a supplied initialization option', function(done) {
                 dialog = openDialog('modal_no_inputs', {effect: 'slide-in-right'}, function() {
-                    var modalWrapper = $('.akno-modal');
                     expect(dialog.options.effect).to.be.equal('slide-in-right');
                     done();
                 });
@@ -256,7 +255,6 @@
 
             it('should not override `null` value options', function(done) {
                 dialog = openDialog('modal_no_inputs', {effect: null}, function() {
-                    var modalWrapper = $('.akno-modal');
                     expect(dialog.options.effect).to.be.null;
                     done();
                 });
