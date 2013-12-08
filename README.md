@@ -27,15 +27,6 @@ To build akno locally please run:
 
 The result will appear in `dist` directory.
 
-Local build
------------
-
-To build akno locally please run:
-
-`grunt build`
-
-The result will appear in `dist` directory.
-
 Versioning
 ----------
 Akno follows the Semantic Versioning guidelines as much as possible.
