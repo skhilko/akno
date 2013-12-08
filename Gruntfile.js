@@ -237,7 +237,7 @@ module.exports = function (grunt) {
             ],
             test: [
                 'compass',
-                'concat:vanilla'
+                'concat:jquery'
             ],
             dist: [
                 'compass',
