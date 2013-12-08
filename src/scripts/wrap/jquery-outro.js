@@ -19,6 +19,7 @@ Plugin.prototype.init = function() {
 
 Plugin.prototype.destroy = function() {
     this.akno.destroy();
+    this.element.removeData('plugin_' + pluginName);
     this.element = null;
 };
 

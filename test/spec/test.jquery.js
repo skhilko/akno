@@ -41,6 +41,11 @@
                 element.akno('close');
                 expect(isVisible($('.akno-modal'))).to.be.false;
             });
+
+            it('should cleanup jQuery data on "destroy" call', function() {
+                element.akno('destroy');
+                expect(element.data('plugin_akno')).to.be.undefined;
+            });
         });
     });
 })();
