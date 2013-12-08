@@ -389,7 +389,7 @@ var tmpl = {};
 var out='<div class="akno-modal '+(it.effect)+'" tabindex="-1"><div class="akno-content">';if(it.header){out+='<h1>'+(it.header||'').toString().encodeHTML()+'</h1>';}out+='<div class="akno-body"></div></div></div>';return out;
 };
 return tmpl;})();
-
+window.Akno = Akno;
 
 //
 // jQuery plugin starts here
@@ -401,7 +401,6 @@ function Plugin(element, options) {
     // this.element is jQuery wrapper
     this.element = element;
     this.options = options;
-    this._name = pluginName;
     this.init();
 }
 
@@ -411,6 +410,7 @@ Plugin.prototype.init = function() {
 
 Plugin.prototype.destroy = function() {
     this.akno.destroy();
+    this.element.removeData('plugin_' + pluginName);
     this.element = null;
 };
 
@@ -426,9 +426,12 @@ $.fn[pluginName] = function(options) {
     } else if (typeof options === 'string' && options[0] !== '_' && options !== 'init') {
         return this.each(function() {
             var instance = $.data(this, 'plugin_' + pluginName);
-            if (instance instanceof Plugin && typeof instance[options] === 'function') {
-                // allowing to override akno methods in the jq plugin
-                (instance[options] || instance.akno[options]).apply(instance.akno, Array.prototype.slice.call(args, 1));
+            if (instance instanceof Plugin) {
+                // call with akno instance if not on the plugin
+                if(typeof instance[options] !== 'function' && typeof instance.akno[options] === 'function') {
+                    instance = instance.akno;
+                }
+                instance[options].apply(instance, Array.prototype.slice.call(args, 1));
             }
         });
     }
