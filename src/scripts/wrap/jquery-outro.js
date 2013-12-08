@@ -7,34 +7,33 @@ window.Akno = Akno;
 var pluginName = 'akno';
 
 function Plugin(element, options) {
-    // this.element is jQuery wrapper
     this.element = element;
     this.options = options;
     this.init();
 }
 
 Plugin.prototype.init = function() {
-    this.akno = new Akno(this.element[0], this.options);
+    this.akno = new Akno(this.element, this.options);
 };
 
 Plugin.prototype.destroy = function() {
     this.akno.destroy();
-    this.element.removeData('plugin_' + pluginName);
+    $.removeData(this.element, 'plugin_' + pluginName);
     this.element = null;
 };
 
 $.fn[pluginName] = function(options) {
     var args = arguments;
+    var dataKey = 'plugin_' + pluginName;
     if (options === undefined || typeof options === 'object') {
         return this.each(function() {
-            var el = $(this);
-            if (!el.data('plugin_' + pluginName)) {
-                el.data('plugin_' + pluginName, new Plugin(el, options));
+            if (!$.data(this, dataKey)) {
+                $.data(this, dataKey, new Plugin(this, options));
             }
         });
     } else if (typeof options === 'string' && options[0] !== '_' && options !== 'init') {
         return this.each(function() {
-            var instance = $.data(this, 'plugin_' + pluginName);
+            var instance = $.data(this, dataKey);
             if (instance instanceof Plugin) {
                 // call with akno instance if not on the plugin
                 if(typeof instance[options] !== 'function' && typeof instance.akno[options] === 'function') {
