@@ -2,7 +2,7 @@ akno
 ======
 
 Yet another JS modal dialog.
-To get started, check out this [demo](http://skhilko.github.com/akno) to see it in action!
+To get started, check out this [demo](http://skhilko.github.com/akno#demo) to see it in action!
 
 Browser support:
 - IE 9+ (no effects)
@@ -33,6 +33,6 @@ The result will appear in `dist` directory.
 
 License
 -------
-Copyright (c) 2013 Siarhei Khilko
+Copyright (c) 2013 Siarhei Khilko.
 
 Licensed under the MIT License.
