@@ -6,8 +6,9 @@
         <title></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+        <link href='//fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+        <!-- <link rel="stylesheet" href="assets/css/bootstrap.min.css"> -->
         <link rel="stylesheet" href="assets/css/fontello.css">
         <link rel="stylesheet" href="assets/css/styles.css">
         <link rel="stylesheet" href="dist/styles/akno.min.css">
@@ -38,9 +39,23 @@
                             </p>
                             <p>1. window</p>
                         </blockquote>
+                        <div class="btn-group gh-btn-group">
+                            <a href="https://github.com/skhilko/akno/archive/master.tar.gz" rel="nofollow" class="btn btn-inverse btn-embossed">
+                                Download<br>
+                                <strong>ZIP File</strong>
+                            </a>
+                            <a href="https://github.com/skhilko/akno/archive/master.tar.gz" rel="nofollow" class="btn btn-inverse btn-embossed">
+                                Download<br>
+                                <strong>TAR Ball</strong>
+                            </a>
+                            <a href="https://github.com/skhilko/akno" class="btn btn-inverse btn-embossed gh-link">
+                                <i class="icon-github-circled"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </header>
+
             <div class="row">
                 <div class="col-sm-4">
                     <div class="tile tile-html-five">
@@ -65,10 +80,145 @@
                 </div>
             </div>
 
-            <h3>Just show me already!</h3>
+
+            <h2>How do I use it?</h2>
+
+            <h3>General Usage</h3>
+            <p>Akno doesn't have any external dependencies. Simply include <code>akno.min.js</code> and <code>akno.min.css</code> on the page and you're good to go. This will load the Akno object into the global window object for you.</p>
             <div class="row">
-                <div class="col-xs-12">
+                <div class="col-sm-6">
+    <pre class="prettyprint">
+    <code class="lang-js">
+    var akno = new Akno(document.getElementById('signupDialog'));
+    // ... somewhere later
+    akno.close();</code>
+    </pre>
+                </div>
+            </div>
+            <h3>jQuery</h3>
+            <p>In case you want akno as a jQuery plugin, make sure to include this <code>akno.jquery.min.js</code> build instead of the regular one. Same styles <code>akno.min.css</code> are still required.</p>
+            <div class="row">
+                <div class="col-sm-6">
+    <pre class="prettyprint">
+    <code class="lang-js">
+    $('#signupDialog').akno();
+    // ... somewhere later
+    $('#signupDialog').akno('close');</code>
+    </pre>
+                </div>
+            </div>
+
+            <h2 id="api">What APIs are available?</h2>
+            <h3>Options</h3>
+            Options object can be passed as a second argument to the Akno constructor or the first and only argument to the akno jQuery plugin.
+            <div class="row">
+                <div class="col-sm-6">
+                    <h4 class='small'>Constructor</h4>
+    <pre class="prettyprint">
+    <code class="lang-js">
+    var akno = new Akno(document.getElementById('signupDialog'), {
+            effect: 'newspaper',
+            header: 'Please Signup'
+        });</code>
+    </pre>
+                </div>
+                <div class="col-sm-6">
+                    <h4 class='small'>jQuery</h4>
+    <pre class="prettyprint">
+    <code class="lang-js">
+    $('#signupDialog').akno({
+            effect: 'newspaper',
+            header: 'Please Signup'
+        });</code>
+    </pre>
+                </div>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th style="width: 70px;">Name</th>
+                        <th style="width: 70px;">Type</th>
+                        <th style="width: 100px;">Default</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>header</td>
+                        <td>String</td>
+                        <td></td>
+                        <td>Defines the header text.</td>
+                    </tr>
+                    <tr>
+                        <td>effect</td>
+                        <td>String</td>
+                        <td>scale-up</td>
+                        <td>
+                            Open effect for the akno.
+                            <h3 class="small">Supported values:</h3>
+                            <ul>
+                                <li>scale-up</li>
+                                <li>slide-in-right</li>
+                                <li>slide-in-bottom</li>
+                                <li>newspaper</li>
+                                <li>fall</li>
+                                <li>side-fall</li>
+                                <li>sticky-top</li>
+                                <li>flip-hor</li>
+                                <li>sign</li>
+                                <li>scale-down</li>
+                                <li>just-me</li>
+                                <li>split</li>
+                                <li>rotate-bottom</li>
+                                <li>rotate-left</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>open</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>Shows the akno when initialized.</td>
+                    </tr>
+                </tbody>
+              </table>
+            </div>
+            
+            <h3>Methods</h3>
+            <h6>open</h6>
+            <p>Opens the akno.</p>
+            <h6>close</h6>
+            <p>Closes the akno.</p>
+            <small><strong>Please Note:</strong> When used as a jQuery plugin, any method can be called supplying the method name to the plugin <code>$('#dialog').akno('close');</code>.</small>
+
+            <h3>Events</h3>
+            <div class="table-responsive">
+              <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th style="width: 155px;">Name</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>akno-open</td>
+                        <td>This event is triggered when the akno has been made visible.<br><small>All animations and transitions are completed.</small></td>
+                    </tr>
+                    <tr>
+                        <td>akno-close</td>
+                        <td>This event is triggered when the akno has been hidden.<br><small>All animations and transitions are completed.</small></td>
+                    </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h2 id="demo">Just show me already!</h2>
+            <div class="row">
+                <div class="col-xs-7">
                     <button class='btn btn-primary action-open' type="button" data-effect='scale-up'>Scale Up</button>
+                    <button class='btn btn-primary action-open' type="button" data-effect='scale-down'>Scale Down</button>
                     <button class='btn btn-primary action-open' type="button" data-effect='slide-in-right'>Slide In (Right)</button>
                     <button class='btn btn-primary action-open' type="button" data-effect='slide-in-bottom'>Slide In (Bottom)</button>
                     <button class='btn btn-primary action-open' type="button" data-effect='newspaper'>Newspaper</button>
@@ -78,7 +228,6 @@
                     <button class='btn btn-primary action-open' type="button" data-effect='flip-hor'>Horizontal Flip</button>
                     <button class='btn btn-primary action-open' type="button" data-effect='flip-vert'>Vertical Flip</button>
                     <button class='btn btn-primary action-open' type="button" data-effect='sign'>Sign</button>
-                    <button class='btn btn-primary action-open' type="button" data-effect='scale-down'>Scale Down</button>
                     <button class='btn btn-primary action-open' type="button" data-effect='just-me'>Just Me</button>
                     <button class='btn btn-primary action-open' type="button" data-effect='split'>Split</button>
                     <button class='btn btn-primary action-open' type="button" data-effect='rotate-bottom'>Rotate Bottom</button>
@@ -86,9 +235,12 @@
                 </div>
             </div>
 
-            <h3>License</h3>
+            <h2>License</h2>
             <div class="row">
-                <div class="col-xs-12"><p>MIT</p></div>
+                <div class="col-xs-12">
+                    <p>Copyright (c) 2013 Siarhei Khilko.</p>
+                    <p>Licensed under the MIT License.</p>
+                </div>
             </div>
         </div>
         <footer>
@@ -120,6 +272,7 @@
         </div>
 
         <script src="dist/scripts/akno.min.js"></script>
+        <script src="//google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
 
         <script>
             (function() {
