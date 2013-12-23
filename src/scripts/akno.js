@@ -113,40 +113,6 @@ function setFocus(container) {
     container.focus();
 }
 
-function addClass(element, value) {
-    if(element.classList) {
-        element.classList.add(value);
-        return;
-    }
-
-    var current = ' ';
-    if(element.className) {
-        current = (' ' + element.className + ' ').replace(REGEX_CLASS_SEPARATOR, ' ');
-    }
-
-    if( current.indexOf(' ' + value + ' ') < 0 ) {
-        current += value + ' ';
-    }
-    element.className = current.trim();
-}
-
-function removeClass(element, value) {
-    if(element.classList) {
-        element.classList.remove(value);
-        return;
-    }
-
-    var current = ' ';
-    if(element.className) {
-        current = (' ' + element.className + ' ').replace(REGEX_CLASS_SEPARATOR, ' ');
-    }
-
-    if(current.indexOf(' ' + value + ' ') >= 0) {
-        current = current.replace(' ' + value + ' ', ' ');
-    }
-    element.className = value ? current.trim() : '';
-}
-
 function applyDefaults(options, defaults) {
     var result = {};
     var key;
@@ -220,16 +186,8 @@ function Akno(element, options) {
 }
 
 Akno.prototype.open = function() {
-    if(TRANSITION_END_EVENT) {
-        this._on(TRANSITION_END_EVENT, this.dialog, this._openAnimationHandler);
-    }
-
-    addClass(this.dialog, 'akno-state-visible');
-    // set focus manually in case transitions are not supported
-    if(!TRANSITION_END_EVENT) {
-        this._initFocus();
-        this._trigger('akno-open');
-    }
+    this._on(TRANSITION_END_EVENT, this.dialog, this._openAnimationHandler);
+    this.dialog.classList.add('akno-state-visible');
 };
 
 Akno.prototype.close = function() {
@@ -241,7 +199,7 @@ Akno.prototype.close = function() {
         }
         this._lastActive = null;
     }
-    removeClass(this.dialog, 'akno-state-visible');
+    this.dialog.classList.remove('akno-state-visible');
     this._trigger('akno-close');
 };
 
