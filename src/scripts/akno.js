@@ -21,7 +21,6 @@ var _uid = 1;
 var TRANSITION_END_EVENT = getTransitionEndEventName();
 var KEY_CODE_ESCAPE = 27;
 var TAB_CODE_ESCAPE = 9;
-var REGEX_CLASS_SEPARATOR = /[\t\r\n\f]/g;
 var UID = 'aknouid';
 
 // TODO need additional configuration in some cases:
@@ -46,6 +45,9 @@ var EFFECTS = {
 
 var aknoInstances = 0;
 
+function isFunction(object) {
+    return (object && object.constructor && object.call && object.apply);
+}
 
 // TODO need to check parents as well
 function isVisible(element) {
@@ -164,7 +166,10 @@ var defaults = {
  * @param {Object} options
  *
  * Events:
+ * - akno-before-open
  * - akno-open
+ * - akno-before-close
+ * - akno-close
  */
 function Akno(element, options) {
     this._handlers = {};
@@ -186,11 +191,22 @@ function Akno(element, options) {
 }
 
 Akno.prototype.open = function() {
+    if(this._isOpen()) {
+        return;
+    }
+
+    this._trigger('akno-before-open');
     this._on(TRANSITION_END_EVENT, this.dialog, this._openAnimationHandler);
     this.dialog.classList.add('akno-state-visible');
 };
 
-Akno.prototype.close = function() {
+
+Akno.prototype.close = function(closeCallback) {
+    if(!this._isOpen()) {
+        return;
+    }
+
+    this._trigger('akno-before-close');
     if (this._lastActive) {
         this._lastActive.focus();
         // last active element can be unfocusable
@@ -199,17 +215,39 @@ Akno.prototype.close = function() {
         }
         this._lastActive = null;
     }
+
+    var closeAnimationHandler = function() {
+        this._off(TRANSITION_END_EVENT, this.dialog, closeAnimationHandler);
+        if(isFunction(closeCallback)) {
+            closeCallback.call(this);
+        }
+        this._trigger('akno-close');
+
+    }.bind(this);
+
+    this._on(TRANSITION_END_EVENT, this.dialog, closeAnimationHandler);
     this.dialog.classList.remove('akno-state-visible');
-    this._trigger('akno-close');
 };
 
 Akno.prototype.destroy = function() {
+    if(this._isOpen()) {
+        this.close(this._destroy);
+    } else {
+        this._destroy();
+    }
+};
+
+Akno.prototype._destroy = function() {
     // put the element back on its initial place
     this._originalPosition.parent.insertBefore(this.element, this._originalPosition.next);
     this._handlers = null;
     this._destroyOverlay();
     document.body.removeChild(this.dialog);
     aknoInstances--;
+};
+
+Akno.prototype._isOpen = function() {
+    return this.dialog.classList.contains('akno-state-visible');
 };
 
 Akno.prototype._render = function() {

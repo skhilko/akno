@@ -13,19 +13,27 @@
          * Opens the dialog.
          * Due to css transitions used on dialog open, we have to use an async callback to proceed with test assertions.
          */
-        function openDialog (id, options, callback) {
+        function openDialog (id, options, openCallback, closeCallback) {
             if(typeof options === 'function') {
-                callback = options;
+                closeCallback = openCallback;
+                openCallback = options;
                 options = null;
             }
             var akno = new Akno(document.getElementById(id), options);
             var openHandler = function() {
                 akno.element.removeEventListener('akno-open', openHandler);
-                if (callback) {
-                    callback();
+                if (openCallback) {
+                    openCallback();
+                }
+            };
+            var closeHandler = function() {
+                akno.element.removeEventListener('akno-close', closeHandler);
+                if (closeCallback) {
+                    closeCallback();
                 }
             };
             akno.element.addEventListener('akno-open', openHandler);
+            akno.element.addEventListener('akno-close', closeHandler);
 
             return akno;
         }
@@ -94,6 +102,7 @@
                     var sibling = element.previousElementSibling;
                     var dialog = openDialog('modal_no_inputs', function() {
                         dialog.destroy();
+                    }, function() {
                         expect(sibling.nextElementSibling).to.be.equal(element);
                         done();
                     });
@@ -106,6 +115,7 @@
 
                     var dialog = openDialog('modal_no_inputs', function() {
                         dialog.destroy();
+                    }, function() {
                         expect(parent.firstChild).to.be.equal(element);
                         // revert dom structure
                         document.body.insertBefore(element, oldSibling);
@@ -125,6 +135,7 @@
             it('should remove overlay element from DOM', function(done) {
                 var dialog = openDialog('modal_no_inputs', function() {
                     dialog.destroy();
+                }, function() {
                     expect($('.akno-overlay').length).to.be.equal(0);
                     done();
                 });
@@ -133,27 +144,8 @@
             it('should remove dialog wrapper element from DOM', function(done) {
                 var dialog = openDialog('modal_no_inputs', function() {
                     dialog.destroy();
+                }, function() {
                     expect($('.akno-modal').length).to.be.equal(0);
-                    done();
-                });
-            });
-
-            it('should remove attached event handlers', function(done) {
-                // Close method is executed in the handlers which should be removed on destroy.
-                // Overwriting the method to add an assertion.
-                var oldClose = Akno.prototype.close;
-                Akno.prototype.close = function() {
-                    oldClose.call(this);
-                    // intentionaly failing the test
-                    expect(false, 'event is not removed').to.be.true;
-                };
-
-                var dialog = openDialog('modal_no_inputs', function() {
-                    dialog.destroy();
-                    $('#modal_1').simulate('keydown', {keyCode: $.simulate.keyCode.ESCAPE});
-                    $('#modal_1_close').simulate('click');
-
-                    Akno.prototype.close = oldClose;
                     done();
                 });
             });
@@ -278,10 +270,23 @@
                 dialog.destroy();
             });
 
+            it('triggers "akno-before-open" event when the akno is about to be open', function(done) {
+                var element = document.getElementById('modal_no_inputs');
+                var openHandler = function(ev) {
+                    expect(ev.target).to.be.equal(element);
+                    expect(isVisible($('.akno-modal'))).to.be.false;
+                    document.body.removeEventListener('akno-before-open', openHandler);
+                    done();
+                };
+                document.body.addEventListener('akno-before-open', openHandler);
+                dialog = openDialog('modal_no_inputs');
+            });
+
             it('triggers "akno-open" event when the akno is shown', function(done) {
                 var element = document.getElementById('modal_no_inputs');
                 var openHandler = function(ev) {
                     expect(ev.target).to.be.equal(element);
+                    expect(isVisible($('.akno-modal'))).to.be.true;
                     document.body.removeEventListener('akno-open', openHandler);
                     done();
                 };
@@ -289,10 +294,25 @@
                 dialog = openDialog('modal_no_inputs');
             });
 
+            it('triggers "akno-before-close" event when the akno is about to be closed', function(done) {
+                var element = document.getElementById('modal_no_inputs');
+                var closeHandler = function(ev) {
+                    expect(ev.target).to.be.equal(element);
+                    expect(isVisible($('.akno-modal'))).to.be.true;
+                    document.body.removeEventListener('akno-before-close', closeHandler);
+                    done();
+                };
+                document.body.addEventListener('akno-before-close', closeHandler);
+                dialog = openDialog('modal_no_inputs', function() {
+                    dialog.close();
+                });
+            });
+
             it('triggers "akno-close" event when the akno is hidden', function(done) {
                 var element = document.getElementById('modal_no_inputs');
                 var closeHandler = function(ev) {
                     expect(ev.target).to.be.equal(element);
+                    expect(isVisible($('.akno-modal'))).to.be.false;
                     document.body.removeEventListener('akno-close', closeHandler);
                     done();
                 };
