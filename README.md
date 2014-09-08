@@ -5,10 +5,10 @@ Yet another JS modal dialog.
 To get started, check out this [demo](http://skhilko.github.com/akno#demo) to see it in action!
 
 Browser support:
-- IE 9+ (no effects)
-- FF 22+ (min for effects)
-- Chrome 28+ (min for effects)
-- Opera 16+ (min for effects)
+- IE 10+
+- FF 22+
+- Chrome 28+
+- Opera 16+
 
 How do I use it?
 ----------------
@@ -30,6 +30,9 @@ To build akno locally please run:
 
 The result will appear in `dist` directory.
 
+Credits
+-------
+Akno is inspired by and uses [Nifty Modal Window Effects](http://tympanus.net/codrops/2013/06/25/nifty-modal-window-effects/) created by Mary Lou on Codprops.
 
 License
 -------
