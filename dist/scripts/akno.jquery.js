@@ -4,10 +4,11 @@
 
 function getTransitionEndEventName() {
     var transitions = {
-        'transition':'transitionend',
-        'OTransition':'oTransitionEnd',
-        'MozTransition':'transitionend',
-        'WebkitTransition':'webkitTransitionEnd'
+        'transition':        'transitionend',
+        'WebkitTransition':  'webkitTransitionEnd',
+        'MozTransition':     'transitionend',
+        'msTransition':      'MSTransitionEnd',
+        'OTransition':       'oTransitionEnd'
     };
     var transition;
     for(transition in transitions){

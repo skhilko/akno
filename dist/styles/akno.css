@@ -160,7 +160,7 @@
   transform: scale(0) rotate(720deg);
 }
 
-/* line 46, ../../src/styles/_effects.scss */
+/* line 45, ../../src/styles/_effects.scss */
 
 .akno-state-visible.akno-fx-newspaper ~ .akno-overlay,
 .akno-fx-newspaper .akno-content {
@@ -390,7 +390,7 @@
   background: #fff;
 }
 
-/* line 184, ../../src/styles/_effects.scss */
+/* line 183, ../../src/styles/_effects.scss */
 
 .akno-fx-just-me .akno-content h3,
 .akno-fx-just-me .akno-content {
@@ -433,7 +433,6 @@
 }
 
 @-webkit-keyframes slit {
-  /* line 210, ../../src/styles/_effects.scss */
   50% {
     opacity: 1;
     -webkit-transform: translateZ(-250px) rotateY(89deg);
@@ -442,7 +441,6 @@
     animation-timing-function: ease-in;
   }
 
-  /* line 215, ../../src/styles/_effects.scss */
   100% {
     opacity: 1;
     -webkit-transform: translateZ(0) rotateY(0deg);
@@ -451,7 +449,6 @@
 }
 
 @keyframes slit {
-  /* line 210, ../../src/styles/_effects.scss */
   50% {
     opacity: 1;
     -webkit-transform: translateZ(-250px) rotateY(89deg);
@@ -460,7 +457,6 @@
     animation-timing-function: ease-in;
   }
 
-  /* line 215, ../../src/styles/_effects.scss */
   100% {
     opacity: 1;
     -webkit-transform: translateZ(0) rotateY(0deg);
