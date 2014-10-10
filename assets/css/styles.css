@@ -1,7 +1,10 @@
+html, body {
+  font-size: 100%;
+}
+
 body {
     background-color: #FFF;
     color: #34495e;
-    font-size: 18px;
     font-family: "Lato", Helvetica, Arial, sans-serif;
     line-height: 1.72222;
     -webkit-transition: background-color 2s ease-out;
@@ -44,12 +47,11 @@ h6,
 .h5,
 .h6 {
   color: inherit;
-  font-weight: 700;
   font-family: "Lato", Helvetica, Arial, sans-serif;
   line-height: 1.1;
 }
 
-h1,
+/*h1,
 h2,
 h3 {
   margin-top: 30px;
@@ -81,7 +83,7 @@ h5 {
 }
 h6 {
   font-size: 24px;
-}
+}*/
 
 blockquote {
   margin: 0 0 30px;
@@ -333,7 +335,6 @@ header h1 {
 header h1 small {
     display: block;
     padding-top: 5px;
-    font-weight: 700;
     font-size: 22px;
 }
 
