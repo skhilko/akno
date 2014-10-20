@@ -7,6 +7,7 @@ description: >
 baseurl: "" # the subpath of your site, e.g. /blog/
 url: "http://skhilko.github.io/akno/" # the base hostname & protocol for your site
 github_username:  skhilko
+include:      ["assets"]
 
 # Build settings
 markdown: kramdown
