@@ -1,0 +1,6 @@
+---
+- name: open
+  description: Opens the akno.
+
+- name: close
+  description: Closes the akno.

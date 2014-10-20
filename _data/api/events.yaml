@@ -1,0 +1,14 @@
+---
+- name: akno-before-open
+  description: This event is triggered immediately when open method is called.
+
+- name: akno-open
+  description: This event is triggered when the akno was opened.
+               All animations and transitions are completed.
+
+- name: akno-before-close
+  description: This event is triggered immediately when close method is called.
+
+- name: akno-close
+  description: This event is triggered when the akno was hidden.
+               All animations and transitions are completed.

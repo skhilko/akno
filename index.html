@@ -1,316 +1,206 @@
-<!doctype html>
+---
+layout: default
+active_menu: documentation
+---
+
+<header class="hero">
+    <div class="row">
+        <div class="large-8 columns">
+            <h1>Akno</h1>
+            <h3 class="subheader">Simple, fast and beautiful modal windows</h3>
+        </div>
+        <div class="large-4 columns">
+            <blockquote class='translation'>
+                <div>
+                    <b>akno</b> /aknó/, <i>n.</i>
+                    <a class='language' href='http://en.wikipedia.org/wiki/Belarus' target="blank">Belarusian</a>
+                </div>
+                <div>1. window</div>
+            </blockquote>
+            <ul class="button-toolbar small-block-grid-2">
+                <li><a class="small button secondary" href="https://github.com/skhilko/akno/archive/master.tar.gz" rel="nofollow">Download</a></li>
+                <li><a class="small button secondary icon-container" href="https://github.com/skhilko/akno">GitHub</a></li>
+            </ul>
+        </div>
+    </div>
+</header>
+<div class="row">
+    <div class="large-8 columns">
+        <h2 id="features">Features</h2>
+        <ul class="disc">
+            <li><strong>CSS transitions.</strong> Let the GPU do the heavy lifting.</li>
+            <li><strong>Multiple instances at a time.</strong> Supports showing more than one akno at a time.</li>
+            <li><strong>No dependencies.</strong> jQuery is supported, but not required.</li>
+            <li><strong>Smart tabulation.</strong> Ensures that tabulation cycles through the elements within the akno.</li>
+        </ul>
+        <h2 id="demos">Demos</h2>
+        <ul class="demo-buttons-container medium-block-grid-3 small-block-grid-2">
+            <li><button class="button-akno action-open" type="button" data-effect="scale-up">Scale Up</button></li>
+            <li><button class="button-akno action-open" type="button" data-effect="scale-down">Scale Down</button></li>
+            <li><button class="button-akno action-open" type="button" data-effect="slide-in-right">Slide In (Right)</button></li>
+            <li><button class="button-akno action-open" type="button" data-effect="slide-in-bottom">Slide In (Bottom)</button></li>
+            <li><button class="button-akno action-open" type="button" data-effect="newspaper">Newspaper</button></li>
+            <li><button class="button-akno action-open" type="button" data-effect="fall">Fall</button></li>
+            <li><button class="button-akno action-open" type="button" data-effect="side-fall">Side Fall</button></li>
+            <li><button class="button-akno action-open" type="button" data-effect="sticky-top">Sticky Top</button></li>
+            <li><button class="button-akno action-open" type="button" data-effect="flip-hor">Horizontal Flip</button></li>
+            <li><button class="button-akno action-open" type="button" data-effect="flip-vert">Vertical Flip</button></li>
+            <li><button class="button-akno action-open" type="button" data-effect="sign">Sign</button></li>
+            <li><button class="button-akno action-open" type="button" data-effect="just-me">Just Me</button></li>
+            <li><button class="button-akno action-open" type="button" data-effect="split">Split</button></li>
+            <li><button class="button-akno action-open" type="button" data-effect="rotate-bottom">Rotate Bottom</button></li>
+            <li><button class="button-akno action-open" type="button" data-effect="rotate-left">Rotate Left</button></li>
+        </ul>
+        <h2 id="usage">Usage</h2>
+        <p>Using Akno is really simple. It has a pure JavaScript API, plus an optional jQuery plugin.</p>
+        <div class="tabs" data-tab>
+            <div class="tab-title active"><a href="#usage-vanilla">Vanilla JS</a></div>
+            <div class="tab-title"><a href="#usage-jquery">jQuery</a></div>
+        </div>
+        <div class="tabs-content">
+            <div class="content active" id="usage-vanilla">
+                <p>Include the plugin on the page.</p>
+
+{% highlight html %}
+<!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href='//fonts.googleapis.com/css?family=Lato:300,400,400italic,700,700italic' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
-        <!-- <link rel="stylesheet" href="assets/css/bootstrap.min.css"> -->
-        <link rel="stylesheet" href="assets/css/fontello.css">
-        <link rel="stylesheet" href="assets/css/styles.css">
-        <link rel="stylesheet" href="dist/styles/akno.min.css">
-    </head>
-    <body>
-        <!--[if lt IE 9]>
-        <div class="row">
-            <div class="alert alert-danger">
-                <strong>Oh snap!</strong> You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.
-            </div>
-        </div>
-        <![endif]-->
-        <div class="poster">AKNO</div>
-        <div class='container'>
-            <header>
-                <div class="row header-line">
-                    <div class="col-sm-7 col-md-8">
-                        <h1>
-                            Akno
-                            <small>Simple, fast and beautiful modal windows</small>
-                        </h1>
-                    </div>
-                    <div class="col-sm-5 col-md-4">
-                        <blockquote class='translation'>
-                            <p>
-                                <b>akno</b> /aknó/, <i>n.</i>
-                                <a class='language' href='http://en.wikipedia.org/wiki/Belarus' target="blank">Belarusian</a>
-                            </p>
-                            <p>1. window</p>
-                        </blockquote>
-                        <div class="btn-group gh-btn-group">
-                            <a href="https://github.com/skhilko/akno/archive/master.tar.gz" rel="nofollow" class="btn btn-inverse btn-embossed">
-                                Download<br>
-                                <strong>ZIP File</strong>
-                            </a>
-                            <a href="https://github.com/skhilko/akno/archive/master.tar.gz" rel="nofollow" class="btn btn-inverse btn-embossed">
-                                Download<br>
-                                <strong>TAR Ball</strong>
-                            </a>
-                            <a href="https://github.com/skhilko/akno" class="btn btn-inverse btn-embossed gh-link">
-                                &nbsp;<br>&nbsp;
-                                <i class="icon-github-circled"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </header>
-
-            <div class="row">
-                <div class="col-sm-4">
-                    <div class="tile tile-html-five">
-                        <div class="badge badge-html-five"><i class="icon-rocket"></i></div>
-                        <h3>Fast</h3>
-                        <p>Uses css transitions to reveal a window.<br>Let the browser optimize painting and compositing here.</p>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="tile tile-light">
-                        <div class="badge badge-light"><i class="icon-feather"></i></div>
-                        <h3>Light</h3>
-                        <p>No dependencies.<br>jQuery is supported, but not required.</p>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="tile tile-smart">
-                        <div class="badge badge-smart"><i class="icon-lightbulb"></i></div>
-                        <h3>Smart</h3>
-                        <p>Captures the focus and ensures that tabbing cycles through the elements within the dialog.</p>
-                    </div>
-                </div>
-            </div>
-
-
-            <h2>How do I use it?</h2>
-
-            <h3>General Usage</h3>
-            <p>Include <code>akno.min.js</code> and <code>akno.min.css</code> on the page. That will load the Akno object into the global object.</p>
-            <div class="row">
-                <div class="col-sm-6">
-    <pre class="prettyprint">
-    <code class="lang-js">
-    var akno = new Akno(document.getElementById('signupDialog'));
-    // ... somewhere later
-    akno.close();</code>
-    </pre>
-                </div>
-            </div>
-            <h3>jQuery</h3>
-            <p>Include <code>akno.jquery.min.js</code> and <code>akno.min.css</code>. jQuery must be defined before Akno.</p>
-            <div class="row">
-                <div class="col-sm-6">
-    <pre class="prettyprint">
-    <code class="lang-js">
-    $('#signupDialog').akno();
-    // ... somewhere later
-    $('#signupDialog').akno('close');</code>
-    </pre>
-                </div>
-            </div>
-
-            <h2 id="api">What APIs are available?</h2>
-            <h3>Options</h3>
-            Options object can be passed as a second argument to the Akno constructor or the first and only argument to the akno jQuery plugin.
-            <div class="row">
-                <div class="col-sm-6">
-                    <h4 class='small'>Constructor</h4>
-    <pre class="prettyprint">
-    <code class="lang-js">
-    var akno = new Akno(document.getElementById('signupDialog'), {
-            effect: 'newspaper',
-            header: 'Please Signup'
-        });</code>
-    </pre>
-                </div>
-                <div class="col-sm-6">
-                    <h4 class='small'>jQuery</h4>
-    <pre class="prettyprint">
-    <code class="lang-js">
-    $('#signupDialog').akno({
-            effect: 'newspaper',
-            header: 'Please Signup'
-        });</code>
-    </pre>
-                </div>
-            </div>
-            <div class="table-responsive">
-              <table class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th style="width: 70px;">Name</th>
-                        <th style="width: 70px;">Type</th>
-                        <th style="width: 100px;">Default</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>header</td>
-                        <td>String</td>
-                        <td></td>
-                        <td>Defines the header text.</td>
-                    </tr>
-                    <tr>
-                        <td>effect</td>
-                        <td>String</td>
-                        <td>scale-up</td>
-                        <td>
-                            Open effect for the akno.
-                            <h3 class="small">Supported values:</h3>
-                            <ul>
-                                <li>scale-up</li>
-                                <li>slide-in-right</li>
-                                <li>slide-in-bottom</li>
-                                <li>newspaper</li>
-                                <li>fall</li>
-                                <li>side-fall</li>
-                                <li>sticky-top</li>
-                                <li>flip-hor</li>
-                                <li>sign</li>
-                                <li>scale-down</li>
-                                <li>just-me</li>
-                                <li>split</li>
-                                <li>rotate-bottom</li>
-                                <li>rotate-left</li>
-                            </ul>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>open</td>
-                        <td>Boolean</td>
-                        <td>true</td>
-                        <td>Shows the akno when initialized.</td>
-                    </tr>
-                </tbody>
-              </table>
-            </div>
-            
-            <h3>Methods</h3>
-            <h6>open</h6>
-            <p>Opens the akno.</p>
-            <h6>close</h6>
-            <p>Closes the akno.</p>
-            <small><strong>Please Note:</strong> When used as a jQuery plugin, any method can be called supplying the method name to the plugin <code>$('#dialog').akno('close');</code>.</small>
-
-            <h3>Events</h3>
-            <div class="table-responsive">
-              <table class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th style="width: 155px;">Name</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>akno-before-open</td>
-                        <td>This event is triggered immediately when <code>open</code> method is called.</td>
-                    </tr>
-                    <tr>
-                        <td>akno-open</td>
-                        <td>This event is triggered when the akno has been opened.<br><small>All animations and transitions are completed.</small></td>
-                    </tr>
-                    <tr>
-                        <td>akno-before-close</td>
-                        <td>This event is triggered immediately when <code>close</code> method is called.</td>
-                    </tr>
-                    <tr>
-                        <td>akno-close</td>
-                        <td>This event is triggered when the akno has been hidden.<br><small>All animations and transitions are completed.</small></td>
-                    </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <h2 id="demo">Just show me already!</h2>
-            <div class="row">
-                <div class="col-xs-7">
-                    <button class='btn btn-primary action-open' type="button" data-effect='scale-up'>Scale Up</button>
-                    <button class='btn btn-primary action-open' type="button" data-effect='scale-down'>Scale Down</button>
-                    <button class='btn btn-primary action-open' type="button" data-effect='slide-in-right'>Slide In (Right)</button>
-                    <button class='btn btn-primary action-open' type="button" data-effect='slide-in-bottom'>Slide In (Bottom)</button>
-                    <button class='btn btn-primary action-open' type="button" data-effect='newspaper'>Newspaper</button>
-                    <button class='btn btn-primary action-open' type="button" data-effect='fall'>Fall</button>
-                    <button class='btn btn-primary action-open' type="button" data-effect='side-fall'>Side Fall</button>
-                    <button class='btn btn-primary action-open' type="button" data-effect='sticky-top'>Sticky Top</button>
-                    <button class='btn btn-primary action-open' type="button" data-effect='flip-hor'>Horizontal Flip</button>
-                    <button class='btn btn-primary action-open' type="button" data-effect='flip-vert'>Vertical Flip</button>
-                    <button class='btn btn-primary action-open' type="button" data-effect='sign'>Sign</button>
-                    <button class='btn btn-primary action-open' type="button" data-effect='just-me'>Just Me</button>
-                    <button class='btn btn-primary action-open' type="button" data-effect='split'>Split</button>
-                    <button class='btn btn-primary action-open' type="button" data-effect='rotate-bottom'>Rotate Bottom</button>
-                    <button class='btn btn-primary action-open' type="button" data-effect='rotate-left'>Rotate Left</button>
-                </div>
-            </div>
-
-            <h2>License</h2>
-            <div class="row">
-                <div class="col-xs-12">
-                    <p>Copyright (c) 2013 Siarhei Khilko.</p>
-                    <p>Licensed under the MIT License.</p>
-                </div>
-            </div>
-        </div>
-        <footer>
-           <div class="container">
-               <div class="row">
-                   <div class="col-sm-6">
-                       <p>Built and designed with love by Siarhei Khilko.</p>
-                       <p>Code licensed under <a href="http://opensource.org/licenses/mit-license.php">MIT License</a>.</p>
-                   </div>
-                   <div class="col-sm-6">
-                       <iframe src="http://ghbtns.com/github-btn.html?user=skhilko&repo=akno&type=watch&count=true"
-                           allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
-                       <iframe src="http://ghbtns.com/github-btn.html?user=skhilko&repo=akno&type=fork&count=true"
-                           allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
-                   </div>
-               </div>
-           </div>
-        </footer>
-        <div class="hidden">
-            <div id="modal_1">
-                <p>This is a modal window. You can do the following things with it:</p>
-                <ul>
-                    <li><strong>Read:</strong> Modal windows will probably tell you something important so don't forget to read what it says.</li>
-                    <li><strong>Look:</strong> modal windows enjoy a certain kind of attention; just look at it and appreciate its presence.</li>
-                    <li><strong>Close:</strong> click on the button below to close the modal.</li>
-                </ul>
-                <button class="btn btn-default akno-action-close">Close me!</button>
-            </div>
-        </div>
-
-        <script src="dist/scripts/akno.min.js"></script>
-        <script src="//google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
-
-        <script>
-            (function() {
-                var akno;
-                var modalElement = document.getElementById('modal_1');
-                document.body.addEventListener("click", function(ev) {
-                    var target = ev.target;
-                    if(target.className.indexOf('action-open') >= 0) {
-                        if(akno) {
-                            akno.destroy()
-                            akno = null;
-                        }
-                        akno = new Akno(modalElement, {
-                            effect: target.getAttribute('data-effect')
-                        });
-                    }
-                }, false);
-
-                setTimeout(function() {
-                    document.body.className = 'fade-in';
-                }, 25);
-            })();
-
-            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-            ga('create', 'UA-46567424-1', 'skhilko.github.io');
-            ga('send', 'pageview');
-        </script>
-    </body>
+  <head>
+    <script src="dist/scripts/akno.min.js"></script>
+    <link rel="stylesheet" href="dist/styles/akno.min.css">
+  </head>
 </html>
+{% endhighlight %}
+
+                <p>This will load the Akno object into the global window object.</p>
+
+{% highlight javascript %}
+var akno = new Akno(document.getElementById('dialog'));
+// ... somewhere later
+akno.close();
+{% endhighlight %}
+
+            </div>
+            <div class="content" id="usage-jquery">
+                <p>Include the plugin on the page after jQuery reference.</p>
+
+{% highlight html %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="jquery.min.js"></script>
+    <script src="dist/scripts/akno.jquery.min.js"></script>
+    <link rel="stylesheet" href="dist/styles/akno.min.css">
+  </head>
+</html>
+{% endhighlight %}
+
+                <p>Then use the plugin.</p>
+
+{% highlight javascript %}
+$('#signupDialog').akno();
+// ... somewhere later
+$('#signupDialog').akno('close');
+{% endhighlight %}
+
+            </div>
+        </div>
+
+        <section class="api-section">
+            <h2 id="api">API</h2>
+            <nav class="api-navigation panel">
+                <div class="row">
+                    <div class="medium-4 columns">
+                        <section>
+                        <h3>Options</h3>
+                            <ul class="no-bullet">
+                                {% for option in site.data.api.options %}
+                                <li><a href="#option-{{ option.name }}">{{ option.name }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </section>
+                    </div>
+                    <div class="medium-4 columns">
+                        <section>
+                        <h3>Methods</h3>
+                            <ul class="no-bullet">
+                                {% for method in site.data.api.methods %}
+                                <li><a href="#method-{{ method.name }}">{{ method.name }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </section>
+                    </div>
+                    <div class="medium-4 columns">
+                        <section>
+                        <h3>Events</h3>
+                            <ul class="no-bullet">
+                                {% for event in site.data.api.events %}
+                                <li><a href="#event-{{ event.name }}">{{ event.name }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </section>
+                    </div>
+                </div>
+            </nav>
+        </section>
+
+        <h3>Options</h3>
+        {% for option in site.data.api.options %}
+        <section class="panel api-section">
+            <header><h5 id="option-{{ option.name }}" class="section-title">{{ option.name }}</h5></header>
+            <p>{{ option.description }}</p>
+            <div class="api-group">
+                <label>Type</label>{{ option.type }}
+            </div>
+            <div class="api-group">
+                <label>Default</label>{{ option.default }}
+            </div>
+            {% if option.supported_values %}
+            <div class="api-group">
+                <label>Supported Values</label>
+                <ul>
+                    {% for supported_value in option.supported_values %}
+                    <li>{{ supported_value }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </section>
+        {% endfor %}
+
+        <h3>Methods</h3>
+        {% for method in site.data.api.methods %}
+        <section class="panel api-section">
+            <header><h5 id="method-{{ method.name }}" class="section-title">{{ method.name }}</h5></header>
+            <p>{{ method.description }}</p>
+        </section>
+        {% endfor %}
+
+        <h3>Events</h3>
+        {% for event in site.data.api.events %}
+        <section class="panel api-section">
+            <header><h5 id="event-{{ event.name }}" class="section-title">{{ event.name }}</h5></header>
+            <p>{{ event.description }}</p>
+        </section>
+        {% endfor %}
+    </div>
+    <div class="large-4 columns">
+        <ul class="side-nav" role="menu">
+           <li role="menuitem"><a href="#features">Features</a></li>
+           <li role="menuitem"><a href="#demos">Demos</a></li>
+           <li role="menuitem"><a href="#usage">Usage</a></li>
+           <li role="menuitem"><a href="#api">API</a></li>
+        </ul>
+    </div>
+</div>
+
+<div style="display: none">
+    <div id="demo-akno">
+        <p>This is a modal window. You can do the following things with it:</p>
+        <ul>
+            <li><strong>Read:</strong> Modal windows will probably tell you something important so don't forget to read what it says.</li>
+            <li><strong>Look:</strong> modal windows enjoy a certain kind of attention; just look at it and appreciate its presence.</li>
+            <li><strong>Close:</strong> click on the button below to close the modal.</li>
+        </ul>
+        <button class="secondary akno-action-close">Close me!</button>
+    </div>
+</div>

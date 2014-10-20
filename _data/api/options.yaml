@@ -1,0 +1,31 @@
+---
+- name: open
+  type: Boolean
+  default: true
+  description: Defines if the akno should be shown upon initialization.
+
+- name: title
+  type: String
+  default: n/a
+  description: Specifies the title of the akno.
+               Header will not rendered in case the parameter is not provided.
+
+- name: effect
+  type: String
+  default: scale-up
+  supported_values:
+    - scale-up
+    - slide-in-right
+    - slide-in-bottom
+    - newspaper
+    - fall
+    - side-fall
+    - sticky-top
+    - flip-hor
+    - sign
+    - scale-down
+    - just-me
+    - split
+    - rotate-bottom
+    - rotate-left
+  description: Specifies how to animate the akno.
