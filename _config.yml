@@ -4,7 +4,7 @@ email: siarhei.khilko@gmail.com
 description: >
   Akno is a JavaScript widget for creating simple, fast and beautiful modal windows.
   jQuery is supported but not required.
-baseurl: "" # the subpath of your site, e.g. /blog/
+baseurl: "/akno" # the subpath of your site, e.g. /blog/
 url: "http://skhilko.github.io/akno" # the base hostname & protocol for your site
 github_username:  skhilko
 
