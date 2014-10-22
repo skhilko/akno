@@ -46,8 +46,8 @@ var EFFECTS = {
 
 var aknoInstances = 0;
 
-function isFunction(object) {
-    return (object && object.constructor && object.call && object.apply);
+function isFunction(value) {
+    return typeof value === 'function';
 }
 
 // TODO need to check parents as well
@@ -162,7 +162,7 @@ var defaults = {
  * - effect {String}, default 'scale-up' - effect to be used to show the dialog.
  * - header {String}, optional - header text. Header is not rendered in case the parameter is not provided.
  * - open {Boolean}, default `true` - if set to `true`, the akno will open upon initialization.
- * 
+ *
  * @param {Element} element
  * @param {Object} options
  *
@@ -269,7 +269,7 @@ Akno.prototype._render = function() {
     // TODO content should include action buttons
     this.content = content;
 
-    // ensure the dialog is rendered before all service elements to make selectors work 
+    // ensure the dialog is rendered before all service elements to make selectors work
     this.dialog = document.body.insertBefore(wrapper.firstChild, document.body.firstChild);
 
     // force repaint for transformations to kick in immediately

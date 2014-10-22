@@ -36,7 +36,7 @@ $.fn[pluginName] = function(options) {
             var instance = $.data(this, dataKey);
             if (instance instanceof Plugin) {
                 // call with akno instance if not on the plugin
-                if(typeof instance[options] !== 'function' && typeof instance.akno[options] === 'function') {
+                if(!isFunction(instance[options]) && isFunction(instance.akno[options])) {
                     instance = instance.akno;
                 }
                 instance[options].apply(instance, Array.prototype.slice.call(args, 1));
