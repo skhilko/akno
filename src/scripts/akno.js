@@ -239,8 +239,14 @@ Akno.prototype.destroy = function() {
 };
 
 Akno.prototype._destroy = function() {
-    // put the element back on its initial place
-    this._originalPosition.parent.insertBefore(this.element, this._originalPosition.next);
+    // revert our changes
+    var overrides = this._overrides;
+    var element = this.element;
+    if (overrides.hasOwnProperty('display')) {
+        element.style.display = overrides.display;
+    }
+    overrides.parent.insertBefore(element, overrides.next);
+
     this._handlers = null;
     this._destroyOverlay();
     document.body.removeChild(this.dialog);
@@ -253,10 +259,16 @@ Akno.prototype._isOpen = function() {
 
 Akno.prototype._render = function() {
     var element = this.element;
-    this._originalPosition = {
+
+    this._overrides = {
         parent: element.parentNode,
         next: element.nextElementSibling
     };
+
+    var originalDisplayStyle = getComputedStyle(element).getPropertyValue('display');
+    if(originalDisplayStyle === 'none') {
+        this._overrides.display = element.style.display;
+    }
 
     var wrapper = document.createElement('div');
     wrapper.innerHTML = tmpl.dialog({
@@ -265,6 +277,11 @@ Akno.prototype._render = function() {
     });
     var content = wrapper.querySelector('.akno-body');
     content.appendChild(element);
+
+    // update visibility if needed
+    if(originalDisplayStyle === 'none') {
+        element.style.display = 'block';
+    }
 
     // TODO content should include action buttons
     this.content = content;

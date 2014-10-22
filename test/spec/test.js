@@ -1,4 +1,4 @@
-/*global describe, expect, it, afterEach, Akno */
+/*global describe, expect, it, xit, afterEach, before, after, Akno*/
 // jshint expr: true
 'use strict';
 (function () {
@@ -6,7 +6,7 @@
         var dialog;
 
         function isVisible (el) {
-            return el.css('visibility') !== 'hidden';
+            return el.css('visibility') !== 'hidden' && el.css('display') !== 'none';
         }
 
         /**
@@ -335,6 +335,54 @@
                     expect(isVisible($('.akno-modal'))).to.be.false;
                     done();
                 });
+            });
+        });
+
+        describe('visibility of the target element', function() {
+            before(function() {
+                expect(isVisible($('#modal_no_inputs'))).to.be.false;
+            });
+
+            it('should display the target element in case it was hidden via `style` attribute', function(done) {
+                dialog = openDialog('modal_no_inputs', function() {
+                    expect(isVisible($('#modal_no_inputs'))).to.be.true;
+                    done();
+                });
+            });
+
+            after(function() {
+                // TODO runs as it is `afterAll` failing the next test
+                if(dialog) {
+                    dialog.close();
+                    dialog.destroy();
+                }
+            });
+
+            xit('should display the target element in case it was hidden via a style rule', function(/*done*/) {
+
+            });
+
+
+            before(function() {
+                var targetElement = document.getElementById('modal_with_inputs');
+                targetElement.style.display = 'inline-block';
+                // the element is hidden via parent element
+                expect(getComputedStyle(targetElement.parentNode).getPropertyValue('display')).to.be.equal('none');
+            });
+
+            it('should not modify the original display value', function(done) {
+                dialog = openDialog('modal_with_inputs', function() {
+                    dialog.close();
+                    dialog.destroy();
+                    // TODO remove this line when `after` is fixed
+                    dialog = null;
+                    expect(document.getElementById('modal_with_inputs').style.display).to.be.equal('inline-block');
+                    done();
+                });
+            });
+
+            after(function() {
+                document.getElementById('modal_with_inputs').style.display = '';
             });
         });
     });
