@@ -253,12 +253,11 @@
                 it('should define the base z-index of all Aknos on the page', function(done) {
                     dialog = openDialog('modal_no_inputs', {effect: null}, function() {
                         expect($('#akno_overlay').css('zIndex')).to.be.equal('10');
-                        dialog.close();
-                        dialog.destroy();
 
                         Akno.zIndex = 100;
-                        dialog = openDialog('modal_no_inputs', {effect: null}, function() {
-                            expect($('#akno_overlay').css('zIndex')).to.be.equal('100');
+                        var secondDialog = openDialog('modal_with_inputs', function() {
+                            expect($('#modal_with_inputs').closest('.akno-modal').css('zIndex')).to.be.equal('100');
+                            secondDialog.destroy();
                             done();
                         });
                     });
