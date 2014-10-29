@@ -3,6 +3,7 @@
 'use strict';
 (function () {
     describe('Akno', function () {
+
         var dialog;
 
         function isVisible (el) {
@@ -247,6 +248,22 @@
                     done();
                 });
             });
+
+            describe('zIndex', function() {
+                it('should define the base z-index of all Aknos on the page', function(done) {
+                    dialog = openDialog('modal_no_inputs', {effect: null}, function() {
+                        expect($('#akno_overlay').css('zIndex')).to.be.equal('10');
+                        dialog.close();
+                        dialog.destroy();
+
+                        Akno.zIndex = 100;
+                        dialog = openDialog('modal_no_inputs', {effect: null}, function() {
+                            expect($('#akno_overlay').css('zIndex')).to.be.equal('100');
+                            done();
+                        });
+                    });
+                });
+            });
         });
 
         describe('open effect', function() {
@@ -334,6 +351,19 @@
                     $(document.activeElement).simulate('keydown', {keyCode: $.simulate.keyCode.ESCAPE});
                     expect(isVisible($('.akno-modal'))).to.be.false;
                     done();
+                });
+            });
+
+            it('should display the second modal on top of the first one', function(done) {
+                dialog = openDialog('modal_no_inputs', function() {
+                    var zIndexFirst = $('#modal_no_inputs').closest('.akno-modal').css('zIndex');
+
+                    var secondDialog = openDialog('modal_with_inputs', function() {
+                        var zIndexSecond = $('#modal_with_inputs').closest('.akno-modal').css('zIndex');
+                        expect(parseInt(zIndexSecond, 10)).to.be.greaterThan(parseInt(zIndexFirst, 10));
+                        secondDialog.destroy();
+                        done();
+                    });
                 });
             });
         });

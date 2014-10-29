@@ -120,12 +120,16 @@ function applyDefaults(options, defaults) {
     var result = {};
     var key;
     for(key in options) {
-        result[key] = options[key];
+        if (options.hasOwnProperty(key)) {
+            result[key] = options[key];
+        }
     }
     // add missing defaults
     for(key in defaults) {
-        if(result[key] === undefined) {
-            result[key] = defaults[key];
+        if (defaults.hasOwnProperty(key)) {
+            if(result[key] === undefined) {
+                result[key] = defaults[key];
+            }
         }
     }
     return result;
@@ -150,11 +154,8 @@ function getUid(object) {
 // Akno Component
 // --------------
 
-var defaults = {
-    effect: 'scale-up',
-    open: true
-};
 
+//TODO reuse akno instance when initialized twice on the same element
 /**
  * [Akno description]
  *
@@ -175,12 +176,13 @@ var defaults = {
 function Akno(element, options) {
     this._handlers = {};
 
-    this.options = applyDefaults(options, this.defaults);
+    this.options = applyDefaults(options, Akno.defaults);
     this.element = element;
+
+    this._createOverlay();
     this._render();
     this.closeButton = element.querySelector('.akno-action-close');
 
-    this._createOverlay();
     this._on('click', this.closeButton, this.close);
     this._on('keydown', this.dialog, this._escKeyHandler);
     this._on('keydown', this.dialog, this._tabKeyHandler);
@@ -201,12 +203,11 @@ Akno.prototype.open = function() {
     this.dialog.classList.add('akno-state-visible');
 };
 
-
 Akno.prototype.close = function(closeCallback) {
     if(!this._isOpen()) {
         return;
     }
-
+    //TODO check for false and prevent akno close
     this._trigger('akno-before-close');
     if (this._lastActive) {
         this._lastActive.focus();
@@ -250,6 +251,7 @@ Akno.prototype._destroy = function() {
     this._handlers = null;
     this._destroyOverlay();
     document.body.removeChild(this.dialog);
+    Akno.zIndex--;
     aknoInstances--;
 };
 
@@ -288,6 +290,7 @@ Akno.prototype._render = function() {
 
     // ensure the dialog is rendered before all service elements to make selectors work
     this.dialog = document.body.insertBefore(wrapper.firstChild, document.body.firstChild);
+    this.dialog.style.zIndex = Akno.zIndex++;
 
     // force repaint for transformations to kick in immediately
     // jshint -W030
@@ -339,6 +342,7 @@ Akno.prototype._createOverlay = function() {
     if (!aknoInstances) {
         overlay = document.createElement('div');
         overlay.id = 'akno_overlay';
+        overlay.style.zIndex = Akno.zIndex++;
         overlay.className = 'akno-overlay';
         document.body.appendChild(overlay);
     } else {
@@ -355,6 +359,7 @@ Akno.prototype._initFocus = function() {
 Akno.prototype._destroyOverlay = function() {
     if (aknoInstances === 1) {
         document.body.removeChild(this.overlay);
+        Akno.zIndex--;
     }
 };
 
@@ -392,4 +397,15 @@ Akno.prototype._tabKeyHandler = function(ev) {
     }
 };
 
-Akno.prototype.defaults = defaults;
+
+
+// Global defaults
+//
+
+Akno.defaults = {
+    effect: 'scale-up',
+    open: true
+};
+
+// Base z-index for all Aknos
+Akno.zIndex = 10;

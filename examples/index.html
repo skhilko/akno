@@ -9,7 +9,7 @@
         <title></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+        <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
         <link rel="stylesheet" href="assets/css/bootstrap.min.css">
         <link rel="stylesheet" href="assets/css/fontello.css">
         <link rel="stylesheet" href="assets/css/styles.css">
@@ -17,7 +17,7 @@
     </head>
     <body>
         <div class="poster">AKNO</div>
-        <div class='container'>
+        <div class="container">
             <!--[if lt IE 9]>
                 <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
             <![endif]-->
@@ -30,21 +30,22 @@
                         </h1>
                     </div>
                     <div class="col-sm-5 col-md-4">
-                        <blockquote class='translation'>
+                        <blockquote class="translation">
                             <p>
                                 <b>akno</b> /aknó/, <i>n.</i>
-                                <a class='language' href='http://en.wikipedia.org/wiki/Belarus' target="blank">Belarusian</a>
-                                <a class='language' target="blank">Belarusian</a>
+                                <a class="language" href="http://en.wikipedia.org/wiki/Belarus" target="blank">Belarusian</a>
+                                <a class="language" target="blank">Belarusian</a>
                             </p>
                             <p>1. window</p>
                         </blockquote>
                     </div>
                 </div>
             </header>
-            <h3>Use Cases</h3>
+            <h3>Features</h3>
             <div class="row">
                 <div class="col-xs-12">
-                    <button id="open_inputs" class='btn btn-primary' type="button">Input Form</button>
+                    <button id="open_inputs" class="action-open btn btn-primary" type="button" data-target="modal_with_inputs">Input Form</button>
+                    <button class="action-open btn btn-primary" type="button" data-target="modal_multiple">Multiple Aknos</button>
                 </div>
             </div>
 
@@ -52,21 +53,21 @@
             <h3>Effects</h3>
             <div class="row">
                 <div class="col-xs-12">
-                    <button class='btn btn-primary action-open' type="button" data-effect='scale-up'>Scale Up</button>
-                    <button class='btn btn-primary action-open' type="button" data-effect='slide-in-right'>Slide In (Right)</button>
-                    <button class='btn btn-primary action-open' type="button" data-effect='slide-in-bottom'>Slide In (Bottom)</button>
-                    <button class='btn btn-primary action-open' type="button" data-effect='newspaper'>Newspaper</button>
-                    <button class='btn btn-primary action-open' type="button" data-effect='fall'>Fall</button>
-                    <button class='btn btn-primary action-open' type="button" data-effect='side-fall'>Side Fall</button>
-                    <button class='btn btn-primary action-open' type="button" data-effect='sticky-top'>Sticky Top</button>
-                    <button class='btn btn-primary action-open' type="button" data-effect='flip-hor'>Horizontal Flip</button>
-                    <button class='btn btn-primary action-open' type="button" data-effect='flip-vert'>Vertical Flip</button>
-                    <button class='btn btn-primary action-open' type="button" data-effect='sign'>Sign</button>
-                    <button class='btn btn-primary action-open' type="button" data-effect='scale-down'>Scale Down</button>
-                    <button class='btn btn-primary action-open' type="button" data-effect='just-me'>Just Me</button>
-                    <button class='btn btn-primary action-open' type="button" data-effect='split'>Split</button>
-                    <button class='btn btn-primary action-open' type="button" data-effect='rotate-bottom'>Rotate Bottom</button>
-                    <button class='btn btn-primary action-open' type="button" data-effect='rotate-left'>Rotate Left</button>
+                    <button class="btn btn-primary action-open" type="button" data-target="modal_1" data-effect="scale-up">Scale Up</button>
+                    <button class="btn btn-primary action-open" type="button" data-target="modal_1" data-effect="slide-in-right">Slide In (Right)</button>
+                    <button class="btn btn-primary action-open" type="button" data-target="modal_1" data-effect="slide-in-bottom">Slide In (Bottom)</button>
+                    <button class="btn btn-primary action-open" type="button" data-target="modal_1" data-effect="newspaper">Newspaper</button>
+                    <button class="btn btn-primary action-open" type="button" data-target="modal_1" data-effect="fall">Fall</button>
+                    <button class="btn btn-primary action-open" type="button" data-target="modal_1" data-effect="side-fall">Side Fall</button>
+                    <button class="btn btn-primary action-open" type="button" data-target="modal_1" data-effect="sticky-top">Sticky Top</button>
+                    <button class="btn btn-primary action-open" type="button" data-target="modal_1" data-effect="flip-hor">Horizontal Flip</button>
+                    <button class="btn btn-primary action-open" type="button" data-target="modal_1" data-effect="flip-vert">Vertical Flip</button>
+                    <button class="btn btn-primary action-open" type="button" data-target="modal_1" data-effect="sign">Sign</button>
+                    <button class="btn btn-primary action-open" type="button" data-target="modal_1" data-effect="scale-down">Scale Down</button>
+                    <button class="btn btn-primary action-open" type="button" data-target="modal_1" data-effect="just-me">Just Me</button>
+                    <button class="btn btn-primary action-open" type="button" data-target="modal_1" data-effect="split">Split</button>
+                    <button class="btn btn-primary action-open" type="button" data-target="modal_1" data-effect="rotate-bottom">Rotate Bottom</button>
+                    <button class="btn btn-primary action-open" type="button" data-target="modal_1" data-effect="rotate-left">Rotate Left</button>
                 </div>
             </div>
 
@@ -90,28 +91,39 @@
         <div id="modal_1" style="display: none">
             <p>This is a modal window. You can do the following things with it:</p>
             <ul>
-                <li><strong>Read:</strong> Modal windows will probably tell you something important so don't forget to read what it says.</li>
+                <li><strong>Read:</strong> Modal windows will probably tell you something important so don"t forget to read what it says.</li>
                 <li><strong>Look:</strong> modal windows enjoy a certain kind of attention; just look at it and appreciate its presence.</li>
                 <li><strong>Close:</strong> click on the button below to close the modal.</li>
             </ul>
-            <button class="btn btn-default akno-action-close">Close me!</button>
+            <button type="button" class="btn btn-default akno-action-close">Close me!</button>
         </div>
         <div class="hidden">
             <div id="modal_with_inputs">
                 <form action="">
                     <div class="form-group">
-                        <label for="first_name">First Name:</label><input id='first_name' type="text" class='form-control'>
-                        <label for="last_name">Last Name:</label><input id='last_name' type="text" class='form-control'>
+                        <label for="first_name">First Name:</label><input id="first_name" type="text" class="form-control">
+                        <label for="last_name">Last Name:</label><input id="last_name" type="text" class="form-control">
                         <label for="gender">Gender:</label>
-                        <select id='gender' class='form-control'>
+                        <select id="gender" class="form-control">
                             <option value="">Please Select</option>
                             <option value="male">Male</option>
                             <option value="female">Feale</option>
                         </select>
-                        <label for="lmiddle_name">Middle Name:</label><input id='middle_name' type="text" class='form-control'>
+                        <label for="lmiddle_name">Middle Name:</label><input id="middle_name" type="text" class="form-control">
                     </div>
                 </form>
-                <button class="btn btn-default akno-action-close">Close me!</button>
+                <button type="button" class="btn btn-default akno-action-close">Close me!</button>
+            </div>
+        </div>
+        <div class="hidden">
+            <div id="modal_multiple">
+                <p>I can open more Aknos</p>
+                <button type="button" class="btn btn-secondary action-open" data-target="modal_multiple_2">Open More</button>
+                <button type="button" class="btn btn-default akno-action-close">Close me!</button>
+            </div>
+            <div id="modal_multiple_2">
+                <p>I'm one more Akno</p>
+                <button type="button" class="btn btn-default akno-action-close">Close me!</button>
             </div>
         </div>
 
@@ -119,37 +131,25 @@
 
         <script>
             (function() {
-                var akno;
-                var modalElement = document.getElementById('modal_1');
-                document.body.addEventListener("click", function(ev) {
-                    var target = ev.target;
-                    if(target.className.indexOf('action-open') >= 0) {
-                        if(akno) {
-                            akno.destroy()
-                            akno = null;
-                        }
-                        akno = new Akno(modalElement, {
-                            effect: target.getAttribute('data-effect'),
+                var instances = [];
+                document.body.addEventListener('click', function(ev) {
+                    var triggerEl = ev.target;
+                    var el = document.getElementById(triggerEl.dataset.target);
+                    if(triggerEl.classList.contains('action-open')) {
+                        instances.push(new Akno(el, {
+                            effect: triggerEl.dataset.effect,
                             header: 'Listen Carefully'
-                        });
+                        }));
+                        window.aknoInst = instances[0];
                     }
                 }, false);
 
-
-                document.getElementById('open_inputs').addEventListener("click", function(ev) {
-                    if(akno) {
-                        akno.destroy()
-                        akno = null;
+                document.body.addEventListener('akno-close', function(ev) {
+                    if(instances.length) {
+                        instances.pop().destroy()
                     }
-                    akno = new Akno(document.getElementById('modal_with_inputs'), {
-                        header: 'Inputs Example'
-                    });
                 }, false);
 
-
-                setTimeout(function() {
-                    document.body.className = 'fade-in';
-                }, 25);
             })();
         </script>
     </body>
