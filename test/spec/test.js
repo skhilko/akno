@@ -71,6 +71,20 @@
                     });
                 });
             });
+
+            it('can be cancelled if #preventDefault() is called on "akno-before-open"', function(done) {
+                var beforeOpenHandler = function(ev) {
+                    ev.preventDefault();
+                    document.body.removeEventListener('akno-before-open', beforeOpenHandler);
+                    // give the akno a chance to open, which should not happen anyway
+                    setTimeout(function() {
+                        expect(isVisible($('.akno-modal'))).to.be.false;
+                        done();
+                    }, 0);
+                };
+                document.body.addEventListener('akno-before-open', beforeOpenHandler);
+                dialog = openDialog('modal_no_inputs');
+            });
         });
 
         describe('#close()', function() {
@@ -92,6 +106,22 @@
                     expect(isVisible($('.akno-overlay'))).to.be.false;
                     done();
                 });
+            });
+
+            it('can be cancelled if #preventDefault() is called on "akno-before-close"', function(done) {
+                var beforeCloseHandler = function(ev) {
+                    ev.preventDefault();
+                    document.body.removeEventListener('akno-before-close', beforeCloseHandler);
+                    // give the akno a chance to close, which should not happen anyway
+                    setTimeout(function() {
+                        expect(isVisible($('.akno-modal'))).to.be.true;
+                        dialog.close();
+                        done();
+                    }, 0);
+                };
+                document.body.addEventListener('akno-before-close', beforeCloseHandler);
+                dialog = openDialog('modal_no_inputs');
+                dialog.close();
             });
         });
 
