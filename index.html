@@ -107,13 +107,14 @@ $('#signupDialog').akno('close');
 
         <section class="api-section">
             <h2 id="api">API</h2>
+            <h3>Instance</h3>
             <nav class="api-navigation panel">
                 <div class="row">
                     <div class="medium-4 columns">
                         <section>
-                        <h3>Options</h3>
+                            <h3>Options</h3>
                             <ul class="no-bullet">
-                                {% for option in site.data.api.options %}
+                                {% for option in site.data.api.options.instance %}
                                 <li><a href="#option-{{ option.name }}">{{ option.name }}</a></li>
                                 {% endfor %}
                             </ul>
@@ -121,7 +122,7 @@ $('#signupDialog').akno('close');
                     </div>
                     <div class="medium-4 columns">
                         <section>
-                        <h3>Methods</h3>
+                            <h3>Methods</h3>
                             <ul class="no-bullet">
                                 {% for method in site.data.api.methods %}
                                 <li><a href="#method-{{ method.name }}">{{ method.name }}</a></li>
@@ -131,7 +132,7 @@ $('#signupDialog').akno('close');
                     </div>
                     <div class="medium-4 columns">
                         <section>
-                        <h3>Events</h3>
+                            <h3>Events</h3>
                             <ul class="no-bullet">
                                 {% for event in site.data.api.events %}
                                 <li><a href="#event-{{ event.name }}">{{ event.name }}</a></li>
@@ -144,7 +145,7 @@ $('#signupDialog').akno('close');
         </section>
 
         <h3>Options</h3>
-        {% for option in site.data.api.options %}
+        {% for option in site.data.api.options.instance %}
         <section class="panel api-section">
             <header><h5 id="option-{{ option.name }}" class="section-title">{{ option.name }}</h5></header>
             <p>{{ option.description }}</p>

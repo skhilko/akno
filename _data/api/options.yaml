@@ -1,4 +1,6 @@
 ---
+instance:
+
 - name: open
   type: Boolean
   default: true
@@ -29,3 +31,11 @@
     - rotate-bottom
     - rotate-left
   description: Specifies how to animate the akno.
+
+global:
+
+- name: zIndex
+  type: Number
+  default: 10
+  description: Determines the base z-index of all Aknos on the page.
+               Please increase if the Akno does not appear above other elements on the page.
