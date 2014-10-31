@@ -1,4 +1,4 @@
-/*global describe, expect, it, xit, afterEach, before, after, Akno*/
+/*global describe, expect, it, afterEach, before, after, Akno*/
 // jshint expr: true
 'use strict';
 (function () {
@@ -95,6 +95,7 @@
             it('should hide the dialog', function(done) {
                 dialog = openDialog('modal_no_inputs', function() {
                     dialog.close();
+                }, function() {
                     expect(isVisible($('.akno-modal'))).to.be.false;
                     done();
                 });
@@ -103,6 +104,7 @@
             it('should hide the overlay', function(done) {
                 dialog = openDialog('modal_no_inputs', function() {
                     dialog.close();
+                }, function() {
                     expect(isVisible($('.akno-overlay'))).to.be.false;
                     done();
                 });
@@ -128,40 +130,73 @@
         describe('#destroy()', function() {
 
             describe('initial position', function() {
-                it('should return dom element to the initial position in case the element had siblings', function(done) {
-                    var element = document.getElementById('modal_no_inputs');
-                    var sibling = element.previousElementSibling;
-                    var dialog = openDialog('modal_no_inputs', function() {
-                        dialog.destroy();
-                    }, function() {
-                        expect(sibling.nextElementSibling).to.be.equal(element);
-                        done();
+
+                describe('the target element has siblings', function() {
+
+                    before(function() {
+                        var template = '<div class="generated-sibling">';
+                        $('#modal_no_inputs')
+                            .before(template)
+                            .after(template);
+                    });
+
+                    it('should return dom element to the initial position in case the element had siblings', function(done) {
+                        var dialog = openDialog('modal_no_inputs', function() {
+                            dialog.destroy();
+                        }, function() {
+                            var el = $('#modal_no_inputs');
+                            expect(el.prev().hasClass('generated-sibling')).to.be.true;
+                            expect(el.next().hasClass('generated-sibling')).to.be.true;
+                            done();
+                        });
+                    });
+
+                    after(function() {
+                        $('.generated-sibling').remove();
                     });
                 });
 
-                it('should return dom element to the initial position in case the element didn\'t have siblings', function(done) {
-                    var element = document.getElementById('modal_no_inputs');
-                    var oldSibling = element.nextElementSibling;
-                    var parent = createParent(element);
+                describe('the target element doesn\'t have siblings', function() {
 
-                    var dialog = openDialog('modal_no_inputs', function() {
-                        dialog.destroy();
-                    }, function() {
-                        expect(parent.firstChild).to.be.equal(element);
-                        // revert dom structure
-                        document.body.insertBefore(element, oldSibling);
-                        document.body.removeChild(parent);
-                        done();
+                    before(function() {
+                        var template = '<div class="generated-parent">';
+                        $('#modal_no_inputs').wrap(template);
+                    });
+
+                    it('should return dom element to the initial position', function(done) {
+                        var dialog = openDialog('modal_no_inputs', function() {
+                            dialog.destroy();
+                        }, function() {
+                            expect($('#modal_no_inputs').parent().hasClass('generated-parent')).to.be.true;
+                            done();
+                        });
+                    });
+
+                    after(function() {
+                        $('#modal_no_inputs').unwrap();
                     });
                 });
             });
 
-            function createParent (element) {
-                var parent = document.createElement('div');
-                parent.appendChild(element);
-                document.body.appendChild(parent);
-                return parent;
-            }
+            describe('the target element has an initial display value', function() {
+
+                before(function() {
+                    $('#modal_no_inputs').css('display', 'inline-block');
+                });
+
+                it('should not modify the original display value', function(done) {
+                    var dialog = openDialog('modal_no_inputs', function() {
+                            dialog.destroy();
+                        }, function() {
+                            expect($('#modal_no_inputs').css('display')).to.be.equal('inline-block');
+                            done();
+                        });
+                });
+
+                after(function() {
+                    $('#modal_no_inputs').css('display', '');
+                });
+            });
 
             it('should remove overlay element from DOM', function(done) {
                 var dialog = openDialog('modal_no_inputs', function() {
@@ -398,50 +433,62 @@
         });
 
         describe('visibility of the target element', function() {
-            before(function() {
-                expect(isVisible($('#modal_no_inputs'))).to.be.false;
-            });
-
-            it('should display the target element in case it was hidden via `style` attribute', function(done) {
-                dialog = openDialog('modal_no_inputs', function() {
-                    expect(isVisible($('#modal_no_inputs'))).to.be.true;
-                    done();
-                });
-            });
-
-            after(function() {
-                // TODO runs as it is `afterAll` failing the next test
-                if(dialog) {
-                    dialog.close();
+            afterEach(function() {
+                if (dialog) {
                     dialog.destroy();
                 }
             });
 
-            xit('should display the target element in case it was hidden via a style rule', function(/*done*/) {
+            describe('the target element is hidden via a style attribute', function() {
+                before(function() {
+                    $('#modal_no_inputs')
+                        .css('display', 'none')
+                        .parent().removeClass('hidden');
 
-            });
+                    // make sure that the preparation went fine
+                    expect(isVisible($('#modal_no_inputs'))).to.be.false;
+                });
 
+                it('should show the target element', function(done) {
+                    dialog = openDialog('modal_no_inputs', function() {
+                        expect(isVisible($('#modal_no_inputs'))).to.be.true;
+                        done();
+                    });
+                });
 
-            before(function() {
-                var targetElement = document.getElementById('modal_with_inputs');
-                targetElement.style.display = 'inline-block';
-                // the element is hidden via parent element
-                expect(getComputedStyle(targetElement.parentNode).getPropertyValue('display')).to.be.equal('none');
-            });
-
-            it('should not modify the original display value', function(done) {
-                dialog = openDialog('modal_with_inputs', function() {
-                    dialog.close();
-                    dialog.destroy();
-                    // TODO remove this line when `after` is fixed
-                    dialog = null;
-                    expect(document.getElementById('modal_with_inputs').style.display).to.be.equal('inline-block');
-                    done();
+                after(function(done) {
+                    $('#modal_no_inputs').one('akno-close', function() {
+                        $(this)
+                            .css('display', '')
+                            .parent().addClass('hidden');
+                        done();
+                    });
                 });
             });
 
-            after(function() {
-                document.getElementById('modal_with_inputs').style.display = '';
+            describe('the target element is hidden via a stylesheet rule', function() {
+                before(function() {
+                    document.getElementById('localStyles').sheet.insertRule('#modal_no_inputs { display: none; }', 0);
+                    $('#modal_no_inputs')
+                        .parent().removeClass('hidden');
+                    // make sure that the preparation went fine
+                    expect(isVisible($('#modal_no_inputs'))).to.be.false;
+                });
+
+                it('should show the target element', function(done) {
+                    dialog = openDialog('modal_no_inputs', function() {
+                        expect(isVisible($('#modal_no_inputs'))).to.be.true;
+                        done();
+                    });
+                });
+
+                after(function(done) {
+                    $('#modal_no_inputs').one('akno-close', function() {
+                        document.getElementById('localStyles').sheet.deleteRule(0);
+                        $(this).parent().addClass('hidden');
+                        done();
+                    });
+                });
             });
         });
     });

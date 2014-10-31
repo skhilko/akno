@@ -4,7 +4,7 @@
 (function () {
     describe('Akno jQuery Plugin', function () {
         function isVisible (el) {
-            return el.css('visibility') !== 'hidden';
+            return el.css('visibility') !== 'hidden' && el.css('display') !== 'none';
         }
 
         /**
