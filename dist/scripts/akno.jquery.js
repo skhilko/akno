@@ -199,7 +199,11 @@ Akno.prototype.open = function() {
         return;
     }
 
-    this._trigger('akno-before-open');
+    var cancelled = !this._trigger('akno-before-open');
+    if (cancelled) {
+        return;
+    }
+
     this._on(TRANSITION_END_EVENT, this.dialog, this._openAnimationHandler);
     this.dialog.classList.add('akno-state-visible');
 };
@@ -208,8 +212,12 @@ Akno.prototype.close = function(closeCallback) {
     if(!this._isOpen()) {
         return;
     }
-    //TODO check for false and prevent akno close
-    this._trigger('akno-before-close');
+
+    var cancelled = !this._trigger('akno-before-close');
+    if (cancelled) {
+        return;
+    }
+
     if (this._lastActive) {
         this._lastActive.focus();
         // last active element can be unfocusable
@@ -335,7 +343,7 @@ Akno.prototype._off = function(eventName, element, handler) {
 Akno.prototype._trigger = function(eventName) {
     var event = document.createEvent('CustomEvent');
     event.initEvent(eventName, true, true);
-    this.element.dispatchEvent(event);
+    return this.element.dispatchEvent(event);
 };
 
 Akno.prototype._createOverlay = function() {
