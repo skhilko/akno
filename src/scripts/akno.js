@@ -23,6 +23,15 @@ var TRANSITION_END_EVENT = getTransitionEndEventName();
 var KEY_CODE_ESCAPE = 27;
 var TAB_CODE_ESCAPE = 9;
 var UID = 'aknouid';
+var SCROLLBAR_WIDTH = (function() {
+    var scrollDiv = document.createElement('div');
+    scrollDiv.className = 'scrollbar-measure';
+    document.body.appendChild(scrollDiv);
+
+    var width = scrollDiv.offsetWidth - scrollDiv.clientWidth;
+    document.body.removeChild(scrollDiv);
+    return width;
+})();
 
 // TODO need additional configuration in some cases:
 // - add additional container class on page conten but not the dialog itself
@@ -55,6 +64,10 @@ function isVisible(element) {
     if(window.getComputedStyle(element).visibility !== 'hidden') {
         return element.offsetWidth > 0 && element.offsetHeight > 0;
     }
+}
+
+function hasVerticalScroll (element) {
+    return element.scrollHeight > element.clientHeight;
 }
 
 /**
@@ -203,6 +216,21 @@ Akno.prototype.open = function() {
         return;
     }
 
+    // remove the scroll only for the first akno
+    if (aknoInstances === 1) {
+        this.hasViewportScroll = hasVerticalScroll(document.documentElement);
+        if (this.hasViewportScroll) {
+            var bodyStyles = document.body.style;
+            this._overrides.body = {
+                paddingRight: bodyStyles.paddingRight,
+                overflow: bodyStyles.overflow
+            };
+
+            bodyStyles.paddingRight = SCROLLBAR_WIDTH + 'px';
+            bodyStyles.overflow = 'hidden';
+        }
+    }
+
     this._on(TRANSITION_END_EVENT, this.dialog, this._openAnimationHandler);
     this.dialog.classList.add('akno-state-visible');
 };
@@ -231,8 +259,16 @@ Akno.prototype.close = function(closeCallback) {
         if(isFunction(closeCallback)) {
             closeCallback.call(this);
         }
-        this._trigger('akno-close');
 
+        // revert the scroll override only for the first akno
+        if (aknoInstances === 1 && this.hasViewportScroll) {
+            var bodyStyles = document.body.style;
+            var originalStyles = this._overrides.body;
+            bodyStyles.paddingRight = originalStyles.paddingRight;
+            bodyStyles.overflow = originalStyles.overflow;
+        }
+
+        this._trigger('akno-close');
     }.bind(this);
 
     this._on(TRANSITION_END_EVENT, this.dialog, closeAnimationHandler);
