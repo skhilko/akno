@@ -10,6 +10,55 @@
             return el.css('visibility') !== 'hidden' && el.css('display') !== 'none';
         }
 
+
+        // TODO ideally implement or find an 'eventually' chai plugun
+        // which would hide the `repeat` implementation.
+        // Eg. expect(isVisible($('.akno-modal'))).to.be.eventually.true;
+
+        /**
+         * Repeatedly executes the provided assertion for a maximum time of 1 sec. until the assertion returns true.
+         * Fails after 1 second.
+         *
+         * @param  {Function} assertion a function which checks for a specific condition.
+         *                              Should return `true` when the condition is satisfied.
+         * @param  {String} errorMsg    an error message to display when failed
+         * @return {$.Deferred}         a deferred object which is resolved when the assertion
+         */
+        function repeat (assertion, errorMsg) {
+            var loopInterval;
+            var timeoutInterval;
+            var deferred = $.Deferred();
+
+            // first synchronious check to avoid timeout delays
+            if (assertion()) {
+                deferred.resolve();
+                return deferred.promise();
+            }
+
+            (function loop () {
+                loopInterval = setTimeout(function() {
+                    if (assertion()) {
+                        clearTimeout(loopInterval);
+                        clearTimeout(timeoutInterval);
+                        deferred.resolve();
+                        return;
+                    }
+                    loop();
+                }, 10);
+            })();
+
+            if (deferred.state() === 'pending') {
+                timeoutInterval = setTimeout(function() {
+                    if (loopInterval) {
+                        clearTimeout(loopInterval);
+                        deferred.reject(new Error(errorMsg));
+                    }
+                }, 1000);
+            }
+
+            return deferred.promise();
+        }
+
         /**
          * Opens the dialog.
          * Due to css transitions used on dialog open, we have to use an async callback to proceed with test assertions.
@@ -20,29 +69,50 @@
                 openCallback = options;
                 options = null;
             }
-            var akno = new Akno(document.getElementById(id), options);
+
+            var el = document.getElementById(id);
             var openHandler = function() {
-                akno.element.removeEventListener('akno-open', openHandler);
+                el.removeEventListener('akno-open', openHandler);
                 if (openCallback) {
                     openCallback();
                 }
             };
             var closeHandler = function() {
-                akno.element.removeEventListener('akno-close', closeHandler);
+                el.removeEventListener('akno-close', closeHandler);
                 if (closeCallback) {
                     closeCallback();
                 }
             };
-            akno.element.addEventListener('akno-open', openHandler);
-            akno.element.addEventListener('akno-close', closeHandler);
+            el.addEventListener('akno-open', openHandler);
+            el.addEventListener('akno-close', closeHandler);
+            var akno = new Akno(el, options);
 
             return akno;
         }
 
-        describe('#open()', function() {
-            afterEach(function() {
-                dialog.close();
+        /**
+         * Destroys the akno.
+         * Due to css transitions, the akno is not immediately hidden.
+         * We need to handle `close` event to make sure the transitions has settled.
+         */
+        function destroyAkno (dialog, done) {
+            if (dialog) {
                 dialog.destroy();
+                repeat(function() {
+                    // check the existence of the generated wrapper in the dom
+                    // if removed, consider the akno to be destroyed
+                    return dialog.dialog.parentNode === null;
+                }, 'cannot destroy the akno').done(done);
+            } else {
+                done();
+            }
+        }
+
+
+
+        describe('.open()', function() {
+            afterEach(function(done) {
+                destroyAkno(dialog, done);
             });
 
             it('should show the dialog', function(done) {
@@ -72,13 +142,13 @@
                 });
             });
 
-            it('can be cancelled if #preventDefault() is called on "akno-before-open"', function(done) {
+            it('can be cancelled if .preventDefault() is called on "akno-before-open"', function(done) {
                 var beforeOpenHandler = function(ev) {
                     ev.preventDefault();
                     document.body.removeEventListener('akno-before-open', beforeOpenHandler);
-                    // give the akno a chance to open, which should not happen anyway
+                    // give the akno a chance to close, which should not happen anyway
                     setTimeout(function() {
-                        expect(isVisible($('.akno-modal'))).to.be.false;
+                        expect(!isVisible($('.akno-modal'))).to.be.true;
                         done();
                     }, 0);
                 };
@@ -87,17 +157,19 @@
             });
         });
 
-        describe('#close()', function() {
-            afterEach(function() {
-                dialog.destroy();
+
+        describe('.close()', function() {
+            afterEach(function(done) {
+                destroyAkno(dialog, done);
             });
 
             it('should hide the dialog', function(done) {
                 dialog = openDialog('modal_no_inputs', function() {
                     dialog.close();
                 }, function() {
-                    expect(isVisible($('.akno-modal'))).to.be.false;
-                    done();
+                    repeat(function() {
+                        return !isVisible($('.akno-modal'));
+                    }, 'akno should not be visible').always(done);
                 });
             });
 
@@ -105,34 +177,57 @@
                 dialog = openDialog('modal_no_inputs', function() {
                     dialog.close();
                 }, function() {
-                    expect(isVisible($('.akno-overlay'))).to.be.false;
-                    done();
+                    repeat(function() {
+                        return !isVisible($('.akno-overlay'));
+                    }, 'overlay should not be visible').always(done);
                 });
             });
 
-            it('can be cancelled if #preventDefault() is called on "akno-before-close"', function(done) {
+            it('can be cancelled if .preventDefault() is called on "akno-before-close"', function(done) {
                 var beforeCloseHandler = function(ev) {
                     ev.preventDefault();
                     document.body.removeEventListener('akno-before-close', beforeCloseHandler);
                     // give the akno a chance to close, which should not happen anyway
                     setTimeout(function() {
                         expect(isVisible($('.akno-modal'))).to.be.true;
-                        dialog.close();
                         done();
                     }, 0);
                 };
                 document.body.addEventListener('akno-before-close', beforeCloseHandler);
-                dialog = openDialog('modal_no_inputs');
-                dialog.close();
+                dialog = openDialog('modal_no_inputs', function() {
+                    dialog.close();
+                });
             });
         });
 
-        describe('#destroy()', function() {
+
+        describe('.destroy()', function() {
+
+            it('should remove overlay element from DOM', function(done) {
+                var dialog = openDialog('modal_no_inputs', function() {
+                    dialog.destroy();
+                }, function() {
+                    repeat(function() {
+                        return $('.akno-overlay').length === 0;
+                    }, 'overlay should be destroyed').always(done);
+                });
+            });
+
+            it('should remove dialog wrapper element from DOM', function(done) {
+                var dialog = openDialog('modal_no_inputs', function() {
+                    dialog.destroy();
+                }, function() {
+                    repeat(function() {
+                        return $('.akno-modal').length === 0;
+                    }, 'dialog wrapper should be destroyed').always(done);
+                });
+            });
+
 
             describe('initial position', function() {
 
-                describe('the target element has siblings', function() {
 
+                describe('the target element has siblings', function() {
                     before(function() {
                         var template = '<div class="generated-sibling">';
                         $('#modal_no_inputs')
@@ -140,14 +235,14 @@
                             .after(template);
                     });
 
-                    it('should return dom element to the initial position in case the element had siblings', function(done) {
+                    it('should return the target element to the initial position', function(done) {
                         var dialog = openDialog('modal_no_inputs', function() {
                             dialog.destroy();
                         }, function() {
                             var el = $('#modal_no_inputs');
-                            expect(el.prev().hasClass('generated-sibling')).to.be.true;
-                            expect(el.next().hasClass('generated-sibling')).to.be.true;
-                            done();
+                            repeat(function() {
+                                return el.prev().hasClass('generated-sibling') && el.next().hasClass('generated-sibling');
+                            }, 'dialog should be placed between old siblings').always(done);
                         });
                     });
 
@@ -156,19 +251,21 @@
                     });
                 });
 
-                describe('the target element doesn\'t have siblings', function() {
 
+                describe('the target element doesn\'t have siblings', function() {
                     before(function() {
                         var template = '<div class="generated-parent">';
                         $('#modal_no_inputs').wrap(template);
                     });
 
-                    it('should return dom element to the initial position', function(done) {
+                    it('should return the target element to the initial position', function(done) {
                         var dialog = openDialog('modal_no_inputs', function() {
                             dialog.destroy();
                         }, function() {
-                            expect($('#modal_no_inputs').parent().hasClass('generated-parent')).to.be.true;
-                            done();
+                            var el = $('#modal_no_inputs');
+                            repeat(function() {
+                                return el.parent().hasClass('generated-parent');
+                            }, 'dialog should be placed into its old parent').always(done);
                         });
                     });
 
@@ -178,8 +275,8 @@
                 });
             });
 
-            describe('the target element has an initial display value', function() {
 
+            describe('the target element has an initial display value', function() {
                 before(function() {
                     $('#modal_no_inputs').css('display', 'inline-block');
                 });
@@ -198,35 +295,48 @@
                 });
             });
 
-            it('should remove overlay element from DOM', function(done) {
-                var dialog = openDialog('modal_no_inputs', function() {
-                    dialog.destroy();
-                }, function() {
-                    expect($('.akno-overlay').length).to.be.equal(0);
-                    done();
-                });
-            });
 
-            it('should remove dialog wrapper element from DOM', function(done) {
-                var dialog = openDialog('modal_no_inputs', function() {
-                    dialog.destroy();
-                }, function() {
-                    expect($('.akno-modal').length).to.be.equal(0);
-                    done();
+            describe('akno is open', function() {
+                beforeEach(function(done) {
+                    dialog = openDialog('modal_no_inputs', function() {
+                        done();
+                    });
                 });
+
+                it('should allow "akno-close" event to complete', function(done) {
+                    $(dialog.element).one('akno-close', function() {
+                        expect(true).to.be.true;
+                        done();
+                    });
+                    dialog.destroy();
+                });
+
+
+                describe('.close() is called just before .destroy()', function() {
+
+                    it('should allow "akno-close" event to complete', function(done) {
+                        $(dialog.element).one('akno-close', function() {
+                            expect(true).to.be.true;
+                            done();
+                        });
+                        dialog.close();
+                        dialog.destroy();
+                    });
+
+                });
+
             });
         });
 
         describe('focus', function() {
-            afterEach(function() {
-                dialog.destroy();
+            afterEach(function(done) {
+                destroyAkno(dialog, done);
             });
 
             it('should be given to the first tabbable element within the dialog on open', function(done) {
                 var anchorElement = document.getElementById('modal_anchor');
                 dialog = openDialog('modal_with_inputs', function() {
                     expect(document.activeElement).to.be.equal(anchorElement);
-                    dialog.close();
                     done();
                 });
             });
@@ -237,9 +347,8 @@
                 var elementWithAutofocus = document.getElementById('modal_input_2');
                 dialog = openDialog('modal_with_inputs', function() {
                     expect(document.activeElement).to.be.equal(elementWithAutofocus);
-                    dialog.close();
 
-                    document.getElementById('modal_input_2').autofocus = false;
+                    elementWithAutofocus.autofocus = false;
                     done();
                 });
             });
@@ -247,7 +356,6 @@
             it('should be given to the dialog element when there is no focusable elements within the dialog', function(done) {
                 dialog = openDialog('modal_no_inputs', function() {
                     expect(document.activeElement).to.be.equal(dialog.dialog);
-                    dialog.close();
                     done();
                 });
             });
@@ -280,16 +388,14 @@
                     expect(document.activeElement).to.be.equal(document.getElementById('modal_anchor'));
                     $('#modal_anchor').simulate('keydown', {keyCode: $.simulate.keyCode.TAB, shiftKey: true});
                     expect(document.activeElement).to.be.equal(document.getElementById('modal_1_close'));
-                    dialog.close();
                     done();
                 });
             });
         });
 
         describe('default initialization option', function() {
-            afterEach(function() {
-                dialog.close();
-                dialog.destroy();
+            afterEach(function(done) {
+                destroyAkno(dialog, done);
             });
 
             it('should be applied when an initialization option is not supplied', function(done) {
@@ -307,33 +413,33 @@
                 });
             });
 
-            it('should not override `null` value options', function(done) {
-                dialog = openDialog('modal_no_inputs', {effect: null}, function() {
-                    expect(dialog.options.effect).to.be.null;
-                    done();
-                });
+            it('should not override `null` value options', function() {
+                dialog = openDialog('modal_no_inputs', {effect: null});
+                expect(dialog.options.effect).to.be.null;
             });
 
             describe('zIndex', function() {
-                it('should define the base z-index of all Aknos on the page', function(done) {
-                    dialog = openDialog('modal_no_inputs', {effect: null}, function() {
-                        expect($('#akno_overlay').css('zIndex')).to.be.equal('10');
+                var secondDialog;
+                it('should be possible to define base z-index value of all Aknos on the page', function(done) {
+                    dialog = openDialog('modal_no_inputs', {effect: null});
+                    expect($('#akno_overlay').css('zIndex')).to.be.equal('10');
 
-                        Akno.zIndex = 100;
-                        var secondDialog = openDialog('modal_with_inputs', function() {
-                            expect($('#modal_with_inputs').closest('.akno-modal').css('zIndex')).to.be.equal('100');
-                            secondDialog.destroy();
-                            done();
-                        });
+                    Akno.zIndex = 100;
+                    secondDialog = openDialog('modal_with_inputs', function() {
+                        expect($('#modal_with_inputs').closest('.akno-modal').css('zIndex')).to.be.equal('100');
+                        done();
                     });
+                });
+
+                after(function(done) {
+                    destroyAkno(secondDialog, done);
                 });
             });
         });
 
         describe('open effect', function() {
-            afterEach(function() {
-                dialog.close();
-                dialog.destroy();
+            afterEach(function(done) {
+                destroyAkno(dialog, done);
             });
 
             it('should be applied as a class on dialog element', function(done) {
@@ -346,21 +452,23 @@
         });
 
         describe('events', function() {
-            afterEach(function() {
-                dialog.close();
-                dialog.destroy();
+            afterEach(function(done) {
+                destroyAkno(dialog, done);
             });
 
             it('triggers "akno-before-open" event when the akno is about to be open', function(done) {
                 var element = document.getElementById('modal_no_inputs');
+                var beforeOpenHandled;
                 var openHandler = function(ev) {
                     expect(ev.target).to.be.equal(element);
                     expect(isVisible($('.akno-modal'))).to.be.false;
                     document.body.removeEventListener('akno-before-open', openHandler);
-                    done();
+                    beforeOpenHandled = true;
                 };
                 document.body.addEventListener('akno-before-open', openHandler);
-                dialog = openDialog('modal_no_inputs');
+                dialog = openDialog('modal_no_inputs', function() {
+                    done(!beforeOpenHandled ? new Error('failed to handle "akno-before-open"') : null);
+                });
             });
 
             it('triggers "akno-open" event when the akno is shown', function(done) {
@@ -405,9 +513,8 @@
         });
 
         describe('behavior', function() {
-            afterEach(function() {
-                dialog.close();
-                dialog.destroy();
+            afterEach(function(done) {
+                destroyAkno(dialog, done);
             });
 
             it('should be closed on "esc" key press', function(done) {
@@ -433,10 +540,8 @@
         });
 
         describe('visibility of the target element', function() {
-            afterEach(function() {
-                if (dialog) {
-                    dialog.destroy();
-                }
+            afterEach(function (done) {
+                destroyAkno(dialog, done);
             });
 
             describe('the target element is hidden via a style attribute', function() {
@@ -456,21 +561,17 @@
                     });
                 });
 
-                after(function(done) {
-                    $('#modal_no_inputs').one('akno-close', function() {
-                        $(this)
-                            .css('display', '')
-                            .parent().addClass('hidden');
-                        done();
-                    });
+                after(function() {
+                    $('#modal_no_inputs')
+                        .css('display', '')
+                        .parent().addClass('hidden');
                 });
             });
 
             describe('the target element is hidden via a stylesheet rule', function() {
                 before(function() {
                     document.getElementById('localStyles').sheet.insertRule('#modal_no_inputs { display: none; }', 0);
-                    $('#modal_no_inputs')
-                        .parent().removeClass('hidden');
+                    $('#modal_no_inputs').parent().removeClass('hidden');
                     // make sure that the preparation went fine
                     expect(isVisible($('#modal_no_inputs'))).to.be.false;
                 });
@@ -482,12 +583,133 @@
                     });
                 });
 
-                after(function(done) {
-                    $('#modal_no_inputs').one('akno-close', function() {
-                        document.getElementById('localStyles').sheet.deleteRule(0);
-                        $(this).parent().addClass('hidden');
+                after(function() {
+                    document.getElementById('localStyles').sheet.deleteRule(0);
+                    $('#modal_no_inputs').parent().addClass('hidden');
+                });
+            });
+        });
+
+        describe('viewport scrollbar', function() {
+            function isViewportScrollExists() {
+                var viewport = document.documentElement;
+                return viewport.scrollHeight > viewport.clientHeight;
+            }
+
+            function assertScrollbarHidden () {
+                // we use 'overflow: hidden' on body element to remove the scroll bar
+                expect(getComputedStyle(document.body).overflow).to.be.equal('hidden');
+            }
+
+            afterEach(function(done) {
+                destroyAkno(dialog, done);
+            });
+
+            describe('vertical scrollbar exists', function() {
+                before(function() {
+                    $('<div id="spreader" style="height:2000px;">').appendTo(document.body);
+                    expect(isViewportScrollExists()).to.be.true;
+                });
+
+                it('should be hidden when the akno is open', function(done) {
+                    dialog = openDialog('modal_no_inputs', function() {
+                        assertScrollbarHidden();
+
+                        // the content is padded for the width of the removed scroll bar
+                        var rightPadding = getComputedStyle(document.body).paddingRight;
+                        rightPadding = parseInt(rightPadding.slice(0, -2), 10);
+                        expect(rightPadding).to.be.greaterThan(0);
                         done();
                     });
+                });
+
+                describe('body element has initial `overflow` value', function() {
+                    before(function() {
+                        document.body.style.overflow = 'auto';
+                    });
+
+                    it('should be reverted to the original value when the akno is closed', function(done) {
+                        dialog = openDialog('modal_no_inputs', function() {
+                            dialog.close();
+                        }, function() {
+                            expect(document.body.style.overflow).to.be.equal('auto');
+                            done();
+                        });
+                    });
+
+                    after(function() {
+                        document.body.style.overflow = '';
+                    });
+                });
+
+                describe('body element has initial `padding` value', function() {
+                    before(function() {
+                        document.body.style.paddingRight = '1px';
+                    });
+
+                    it('should be reverted to the original value when the akno is closed', function(done) {
+                        dialog = openDialog('modal_no_inputs', function() {
+                            dialog.close();
+                        }, function() {
+                            expect(document.body.style.paddingRight).to.be.equal('1px');
+                            done();
+                        });
+                    });
+
+                    after(function() {
+                        document.body.style.paddingRight = '';
+                    });
+                });
+
+                describe('second akno is open simultaneously', function() {
+                    var secondAkno;
+                    before(function(done) {
+                        dialog = openDialog('modal_no_inputs', function() {
+                            secondAkno = openDialog('modal_with_inputs', function() {
+                                done();
+                            });
+                        });
+                    });
+
+                    it('should not show the scrollbar when closed', function(done) {
+                        $(secondAkno.element).one('akno-close', function() {
+                            assertScrollbarHidden();
+                        });
+                        $(dialog.element).one('akno-close', function() {
+                            expect(getComputedStyle(document.body).overflow).to.be.not.equal('hidden');
+                            done();
+                        });
+                        secondAkno.close();
+                        dialog.close();
+                    });
+
+                    after(function(done) {
+                        destroyAkno(secondAkno, done);
+                    });
+                });
+
+                after(function() {
+                    $('#spreader').remove();
+                });
+            });
+
+            describe('vertical scrollbar does not exist', function() {
+                before(function() {
+                    document.body.style.overflow = 'hidden';
+                });
+
+                describe('body element has initial `overflow` value', function() {
+                    it('should not be changed when the akno is opened', function(done) {
+                        dialog = openDialog('modal_no_inputs', function() {
+                            expect(getComputedStyle(document.body).overflow).to.be.equal('hidden');
+                            expect(document.body.style.paddingRight).to.be.equal('');
+                            done();
+                        });
+                    });
+                });
+
+                after(function() {
+                    document.body.style.overflow = '';
                 });
             });
         });
