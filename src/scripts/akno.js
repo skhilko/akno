@@ -195,6 +195,7 @@ function Akno(element, options) {
 
     this.options = applyDefaults(options, Akno.defaults);
     this.element = element;
+    this._isAnimated = this.options.effect in EFFECTS;
 
     this._createOverlay();
     this._render();
@@ -235,11 +236,22 @@ Akno.prototype.open = function() {
         }
     }
 
-    this._on(TRANSITION_END_EVENT, this.dialog, this._openAnimationHandler);
     this.dialog.classList.add('akno-state-visible');
+    if (this._isAnimated) {
+        this._on(TRANSITION_END_EVENT, this.dialog, this._open);
+    } else {
+        this._open();
+    }
 };
 
-Akno.prototype.close = function(closeCallback) {
+Akno.prototype._open = function() {
+    this._off(TRANSITION_END_EVENT, this.dialog, this._open);
+    this._initFocus();
+    visibleAknoInstances++;
+    this._trigger('akno-open');
+};
+
+Akno.prototype.close = function() {
     if(!this._isOpen()) {
         return;
     }
@@ -248,6 +260,8 @@ Akno.prototype.close = function(closeCallback) {
     if (cancelled) {
         return;
     }
+
+    this._stateClosing = true;
 
     if (this._lastActive) {
         this._lastActive.focus();
@@ -258,31 +272,41 @@ Akno.prototype.close = function(closeCallback) {
         this._lastActive = null;
     }
 
-    var closeAnimationHandler = function() {
-        this._off(TRANSITION_END_EVENT, this.dialog, closeAnimationHandler);
-
-        // revert the scroll override only when closing the last visible akno
-        if (visibleAknoInstances === 1 && this.hasViewportScroll) {
-            var bodyStyles = document.body.style;
-            var originalStyles = this._overrides.body;
-            bodyStyles.paddingRight = originalStyles.paddingRight;
-            bodyStyles.overflow = originalStyles.overflow;
-        }
-        visibleAknoInstances--;
-
-        if(isFunction(closeCallback)) {
-            closeCallback.call(this);
-        }
-        this._trigger('akno-close');
-    }.bind(this);
-
-    this._on(TRANSITION_END_EVENT, this.dialog, closeAnimationHandler);
     this.dialog.classList.remove('akno-state-visible');
+    if (this._isAnimated) {
+        this._on(TRANSITION_END_EVENT, this.dialog, this._close);
+    } else {
+        this._close();
+    }
+};
+
+Akno.prototype._close = function() {
+    this._off(TRANSITION_END_EVENT, this.dialog, this._close);
+
+    // revert the scroll override only when closing the last visible akno
+    if (visibleAknoInstances === 1 && this.hasViewportScroll) {
+        var bodyStyles = document.body.style;
+        var originalStyles = this._overrides.body;
+        bodyStyles.paddingRight = originalStyles.paddingRight;
+        bodyStyles.overflow = originalStyles.overflow;
+    }
+
+    visibleAknoInstances--;
+    this._stateClosing = false;
+
+    this._trigger('akno-close');
 };
 
 Akno.prototype.destroy = function() {
-    if(this._isOpen()) {
-        this.close(this._destroy);
+    if (this._stateClosing) {
+        this._on(TRANSITION_END_EVENT, this.dialog, this._destroy);
+    } else if(this._isOpen()) {
+        this.close();
+        if (this._isAnimated) {
+            this._on(TRANSITION_END_EVENT, this.dialog, this._destroy);
+        } else {
+            this._destroy();
+        }
     } else {
         this._destroy();
     }
@@ -410,13 +434,6 @@ Akno.prototype._destroyOverlay = function() {
         document.body.removeChild(this.overlay);
         Akno.zIndex--;
     }
-};
-
-Akno.prototype._openAnimationHandler = function() {
-    this._off(TRANSITION_END_EVENT, this.dialog, this._openAnimationHandler);
-    this._initFocus();
-    visibleAknoInstances++;
-    this._trigger('akno-open');
 };
 
 Akno.prototype._escKeyHandler = function(ev) {
