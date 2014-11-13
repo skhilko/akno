@@ -74,6 +74,10 @@ function hasViewportScroll () {
     return body.style.overflow !== 'hidden' && documentElement.scrollHeight > documentElement.clientHeight;
 }
 
+function notVisibilityTransition (event) {
+    return event && event.propertyName !== 'visibility';
+}
+
 /**
  * Return tabbable elements within a container.
  * @param  {Element} container
@@ -244,7 +248,11 @@ Akno.prototype.open = function() {
     }
 };
 
-Akno.prototype._open = function() {
+Akno.prototype._open = function(ev) {
+    if (notVisibilityTransition(ev)) {
+        return;
+    }
+
     this._off(TRANSITION_END_EVENT, this.dialog, this._open);
     this._initFocus();
     visibleAknoInstances++;
@@ -280,7 +288,11 @@ Akno.prototype.close = function() {
     }
 };
 
-Akno.prototype._close = function() {
+Akno.prototype._close = function(ev) {
+    if (notVisibilityTransition(ev)) {
+        return;
+    }
+
     this._off(TRANSITION_END_EVENT, this.dialog, this._close);
 
     // revert the scroll override only when closing the last visible akno
@@ -312,7 +324,11 @@ Akno.prototype.destroy = function() {
     }
 };
 
-Akno.prototype._destroy = function() {
+Akno.prototype._destroy = function(ev) {
+    if (notVisibilityTransition(ev)) {
+        return;
+    }
+
     // revert our changes
     var overrides = this._overrides;
     var element = this.element;
