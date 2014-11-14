@@ -18,7 +18,7 @@
     <body>
         <div class="poster">AKNO</div>
         <div class="container">
-            <!--[if lt IE 9]>
+            <!--[if lt IE 10]>
                 <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
             <![endif]-->
             <header>
@@ -65,7 +65,7 @@
                     <button class="btn btn-primary action-open" type="button" data-target="modal_1" data-effect="sign">Sign</button>
                     <button class="btn btn-primary action-open" type="button" data-target="modal_1" data-effect="scale-down">Scale Down</button>
                     <button class="btn btn-primary action-open" type="button" data-target="modal_1" data-effect="just-me">Just Me</button>
-                    <button class="btn btn-primary action-open" type="button" data-target="modal_1" data-effect="split">Split</button>
+                    <button class="btn btn-primary action-open" type="button" data-target="modal_1" data-effect="slit">Slit</button>
                     <button class="btn btn-primary action-open" type="button" data-target="modal_1" data-effect="rotate-bottom">Rotate Bottom</button>
                     <button class="btn btn-primary action-open" type="button" data-target="modal_1" data-effect="rotate-left">Rotate Left</button>
                 </div>
@@ -134,10 +134,10 @@
                 var instances = [];
                 document.body.addEventListener('click', function(ev) {
                     var triggerEl = ev.target;
-                    var el = document.getElementById(triggerEl.dataset.target);
+                    var el = document.getElementById(triggerEl.getAttribute('data-target'));
                     if(triggerEl.classList.contains('action-open')) {
                         instances.push(new Akno(el, {
-                            effect: triggerEl.dataset.effect,
+                            effect: triggerEl.getAttribute('data-effect'),
                             header: 'Listen Carefully'
                         }));
                         window.aknoInst = instances[0];

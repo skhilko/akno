@@ -23,6 +23,16 @@ var TRANSITION_END_EVENT = getTransitionEndEventName();
 var KEY_CODE_ESCAPE = 27;
 var TAB_CODE_ESCAPE = 9;
 var UID = 'aknouid';
+var SCROLLBAR_WIDTH = (function() {
+    var scrollDiv = document.createElement('div');
+    // inline styles to avoid dependencies on external stylesheets
+    scrollDiv.style.cssText = 'width:90px;height:90px;overflow:scroll;position:absolute;top:-9999px;';
+    document.body.appendChild(scrollDiv);
+
+    var width = scrollDiv.offsetWidth - scrollDiv.clientWidth;
+    document.body.removeChild(scrollDiv);
+    return width;
+})();
 
 // TODO need additional configuration in some cases:
 // - add additional container class on page conten but not the dialog itself
@@ -39,12 +49,13 @@ var EFFECTS = {
         'sign': 'akno-fx-sign',
         'scale-down': 'akno-fx-scale-down',
         'just-me': 'akno-fx-just-me',
-        'split': 'akno-fx-split',
+        'slit': 'akno-fx-slit',
         'rotate-bottom': 'akno-fx-rotate-bottom',
         'rotate-left': 'akno-fx-rotate-left'
     };
 
 var aknoInstances = 0;
+var visibleAknoInstances = 0;
 
 function isFunction(value) {
     return typeof value === 'function';
@@ -55,6 +66,22 @@ function isVisible(element) {
     if(window.getComputedStyle(element).visibility !== 'hidden') {
         return element.offsetWidth > 0 && element.offsetHeight > 0;
     }
+}
+
+function hasViewportScroll () {
+    var documentElement = document.documentElement;
+    var body = document.body;
+    return body.style.overflow !== 'hidden' && documentElement.scrollHeight > documentElement.clientHeight;
+}
+
+/**
+ * Verifies if the givent event is `transitionend` for `opacity`.
+ *
+ * It is used to filter out `transitionend` events for other transitioning properties
+ * when the akno is open or close.
+ */
+function isOpenOrCloseTransition (event) {
+    return !event || (event.propertyName === 'opacity' && event.target.classList.contains('akno-content'));
 }
 
 /**
@@ -178,6 +205,7 @@ function Akno(element, options) {
 
     this.options = applyDefaults(options, Akno.defaults);
     this.element = element;
+    this._isAnimated = this.options.effect in EFFECTS;
 
     this._createOverlay();
     this._render();
@@ -203,11 +231,46 @@ Akno.prototype.open = function() {
         return;
     }
 
-    this._on(TRANSITION_END_EVENT, this.dialog, this._openAnimationHandler);
-    this.dialog.classList.add('akno-state-visible');
+    // remove the scroll only for the first akno
+    if (!visibleAknoInstances) {
+        this.hasViewportScroll = hasViewportScroll();
+        if (this.hasViewportScroll) {
+            var bodyStyles = document.body.style;
+            this._overrides.body = {
+                paddingRight: bodyStyles.paddingRight,
+                overflow: bodyStyles.overflow
+            };
+
+            bodyStyles.paddingRight = SCROLLBAR_WIDTH + 'px';
+            bodyStyles.overflow = 'hidden';
+        }
+    }
+
+    if (this._isAnimated) {
+        this._on(TRANSITION_END_EVENT, this.dialog, this._open);
+        var dialog = this.dialog;
+        // with this timeout the transitions start to suddenly work in FF
+        setTimeout(function() {
+            dialog.classList.add('akno-state-visible');
+        }, 0);
+    } else {
+        this.dialog.classList.add('akno-state-visible');
+        this._open();
+    }
 };
 
-Akno.prototype.close = function(closeCallback) {
+Akno.prototype._open = function(ev) {
+    if (!isOpenOrCloseTransition(ev)) {
+        return;
+    }
+
+    this._off(TRANSITION_END_EVENT, this.dialog, this._open);
+    this._initFocus();
+    visibleAknoInstances++;
+    this._trigger('akno-open');
+};
+
+Akno.prototype.close = function() {
     if(!this._isOpen()) {
         return;
     }
@@ -216,6 +279,8 @@ Akno.prototype.close = function(closeCallback) {
     if (cancelled) {
         return;
     }
+
+    this._stateClosing = true;
 
     if (this._lastActive) {
         this._lastActive.focus();
@@ -226,28 +291,56 @@ Akno.prototype.close = function(closeCallback) {
         this._lastActive = null;
     }
 
-    var closeAnimationHandler = function() {
-        this._off(TRANSITION_END_EVENT, this.dialog, closeAnimationHandler);
-        if(isFunction(closeCallback)) {
-            closeCallback.call(this);
-        }
-        this._trigger('akno-close');
+    if (this._isAnimated) {
+        this._on(TRANSITION_END_EVENT, this.dialog, this._close);
+        this.dialog.classList.remove('akno-state-visible');
+    } else {
+        this.dialog.classList.remove('akno-state-visible');
+        this._close();
+    }
+};
 
-    }.bind(this);
+Akno.prototype._close = function(ev) {
+    if (!isOpenOrCloseTransition(ev)) {
+        return;
+    }
 
-    this._on(TRANSITION_END_EVENT, this.dialog, closeAnimationHandler);
-    this.dialog.classList.remove('akno-state-visible');
+    this._off(TRANSITION_END_EVENT, this.dialog, this._close);
+
+    // revert the scroll override only when closing the last visible akno
+    if (visibleAknoInstances === 1 && this.hasViewportScroll) {
+        var bodyStyles = document.body.style;
+        var originalStyles = this._overrides.body;
+        bodyStyles.paddingRight = originalStyles.paddingRight;
+        bodyStyles.overflow = originalStyles.overflow;
+    }
+
+    visibleAknoInstances--;
+    this._stateClosing = false;
+
+    this._trigger('akno-close');
 };
 
 Akno.prototype.destroy = function() {
-    if(this._isOpen()) {
-        this.close(this._destroy);
+    if (this._stateClosing) {
+        this._on(TRANSITION_END_EVENT, this.dialog, this._destroy);
+    } else if(this._isOpen()) {
+        this.close();
+        if (this._isAnimated) {
+            this._on(TRANSITION_END_EVENT, this.dialog, this._destroy);
+        } else {
+            this._destroy();
+        }
     } else {
         this._destroy();
     }
 };
 
-Akno.prototype._destroy = function() {
+Akno.prototype._destroy = function(ev) {
+    if (!isOpenOrCloseTransition(ev)) {
+        return;
+    }
+
     // revert our changes
     var overrides = this._overrides;
     var element = this.element;
@@ -369,12 +462,6 @@ Akno.prototype._destroyOverlay = function() {
         document.body.removeChild(this.overlay);
         Akno.zIndex--;
     }
-};
-
-Akno.prototype._openAnimationHandler = function() {
-    this._off(TRANSITION_END_EVENT, this.dialog, this._openAnimationHandler);
-    this._initFocus();
-    this._trigger('akno-open');
 };
 
 Akno.prototype._escKeyHandler = function(ev) {
