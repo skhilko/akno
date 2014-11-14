@@ -1,7 +1,7 @@
 /* General styles for the modal */
 
 /*
-	Styles for the html/body for special modal where we want 3d effects
+    Styles for the html/body for special modal where we want 3d effects
 */
 
 /* line 6, ../../src/styles/_base.scss */
@@ -408,14 +408,14 @@
 
 /* line 195, ../../src/styles/_effects.scss */
 
-.akno-fx-split.akno-modal {
+.akno-fx-slit.akno-modal {
   -webkit-perspective: 1300px;
   perspective: 1300px;
 }
 
 /* line 199, ../../src/styles/_effects.scss */
 
-.akno-fx-split .akno-content {
+.akno-fx-slit .akno-content {
   opacity: 0;
   -webkit-transform: translateZ(-3000px) rotateY(90deg);
   transform: translateZ(-3000px) rotateY(90deg);
@@ -425,7 +425,7 @@
 
 /* line 205, ../../src/styles/_effects.scss */
 
-.akno-state-visible.akno-fx-split .akno-content {
+.akno-state-visible.akno-fx-slit .akno-content {
   -webkit-animation: slit .7s forwards ease-out;
   animation: slit .7s forwards ease-out;
 }
