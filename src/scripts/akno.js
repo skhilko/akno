@@ -74,8 +74,14 @@ function hasViewportScroll () {
     return body.style.overflow !== 'hidden' && documentElement.scrollHeight > documentElement.clientHeight;
 }
 
-function notVisibilityTransition (event) {
-    return event && event.propertyName !== 'visibility';
+/**
+ * Verifies if the givent event is `transitionend` for `opacity`.
+ *
+ * It is used to filter out `transitionend` events for other transitioning properties
+ * when the akno is open or close.
+ */
+function isOpenOrCloseTransition (event) {
+    return !event || (event.propertyName === 'opacity' && event.target.classList.contains('akno-content'));
 }
 
 /**
@@ -240,16 +246,21 @@ Akno.prototype.open = function() {
         }
     }
 
-    this.dialog.classList.add('akno-state-visible');
     if (this._isAnimated) {
         this._on(TRANSITION_END_EVENT, this.dialog, this._open);
+        var dialog = this.dialog;
+        // with this timeout the transitions start to suddenly work in FF
+        setTimeout(function() {
+            dialog.classList.add('akno-state-visible');
+        }, 0);
     } else {
+        this.dialog.classList.add('akno-state-visible');
         this._open();
     }
 };
 
 Akno.prototype._open = function(ev) {
-    if (notVisibilityTransition(ev)) {
+    if (!isOpenOrCloseTransition(ev)) {
         return;
     }
 
@@ -280,16 +291,17 @@ Akno.prototype.close = function() {
         this._lastActive = null;
     }
 
-    this.dialog.classList.remove('akno-state-visible');
     if (this._isAnimated) {
         this._on(TRANSITION_END_EVENT, this.dialog, this._close);
+        this.dialog.classList.remove('akno-state-visible');
     } else {
+        this.dialog.classList.remove('akno-state-visible');
         this._close();
     }
 };
 
 Akno.prototype._close = function(ev) {
-    if (notVisibilityTransition(ev)) {
+    if (!isOpenOrCloseTransition(ev)) {
         return;
     }
 
@@ -325,7 +337,7 @@ Akno.prototype.destroy = function() {
 };
 
 Akno.prototype._destroy = function(ev) {
-    if (notVisibilityTransition(ev)) {
+    if (!isOpenOrCloseTransition(ev)) {
         return;
     }
 
