@@ -192,17 +192,17 @@
 }
 
 /* Effect 13: 3D slit */
-.akno-fx-split.akno-modal {
+.akno-fx-slit.akno-modal {
 	perspective: 1300px;
 }
 
-.akno-fx-split .akno-content {
+.akno-fx-slit .akno-content {
 	opacity: 0;
 	transform: translateZ(-3000px) rotateY(90deg);
 	transform-style: preserve-3d;
 }
 
-.akno-state-visible.akno-fx-split .akno-content {
+.akno-state-visible.akno-fx-slit .akno-content {
 	animation: slit .7s forwards ease-out;
 }
 

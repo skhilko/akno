@@ -49,7 +49,7 @@ var EFFECTS = {
         'sign': 'akno-fx-sign',
         'scale-down': 'akno-fx-scale-down',
         'just-me': 'akno-fx-just-me',
-        'split': 'akno-fx-split',
+        'slit': 'akno-fx-slit',
         'rotate-bottom': 'akno-fx-rotate-bottom',
         'rotate-left': 'akno-fx-rotate-left'
     };
