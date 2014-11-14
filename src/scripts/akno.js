@@ -57,10 +57,6 @@ var EFFECTS = {
 var aknoInstances = 0;
 var visibleAknoInstances = 0;
 
-function isFunction(value) {
-    return typeof value === 'function';
-}
-
 // TODO need to check parents as well
 function isVisible(element) {
     if(window.getComputedStyle(element).visibility !== 'hidden') {
