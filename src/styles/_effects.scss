@@ -8,207 +8,219 @@
 
 
 /* Effect 1: Fade in and scale up */
-.akno-fx-scale-up .akno-content {
-    opacity: 0;
-    transform: scale(0.7);
-    @include base-transitions();
-}
+.akno-fx-scale-up {
+    .akno-content {
+        opacity: 0;
+        transform: scale(0.7);
+        @include base-transitions();
+    }
 
-.akno-state-visible.akno-fx-scale-up .akno-content {
-    opacity: 1;
-    transform: scale(1);
+    &.akno-state-visible .akno-content {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 /* Effect 2: Slide from the right */
-.akno-fx-slide-in-right .akno-content {
-    opacity: 0;
-    transform: translateX(20%);
-    @include base-transitions(cubic-bezier(0.25, 0.5, 0.5, 0.9));
-}
+.akno-fx-slide-in-right {
+    .akno-content {
+        opacity: 0;
+        transform: translateX(20%);
+        @include base-transitions(cubic-bezier(0.25, 0.5, 0.5, 0.9));
+    }
 
-.akno-state-visible.akno-fx-slide-in-right .akno-content {
-    opacity: 1;
-    transform: translateX(0);
+    &.akno-state-visible .akno-content {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 /* Effect 3: Slide from the bottom */
-.akno-fx-slide-in-bottom .akno-content {
-    opacity: 0;
-    transform: translateY(20%);
-    @include base-transitions();
-}
+.akno-fx-slide-in-bottom {
+    .akno-content {
+        opacity: 0;
+        transform: translateY(20%);
+        @include base-transitions();
+    }
 
-.akno-state-visible.akno-fx-slide-in-bottom .akno-content {
-    opacity: 1;
-    transform: translateY(0);
+    &.akno-state-visible .akno-content {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Effect 4: Newspaper */
-.akno-fx-newspaper .akno-content {
-    opacity: 0;
-    transform: scale(0) rotate(720deg);
-    @include base-transitions();
-}
+.akno-fx-newspaper {
+    .akno-content {
+        opacity: 0;
+        transform: scale(0) rotate(720deg);
+        @include base-transitions();
+    }
 
-.akno-fx-newspaper,
-.akno-fx-newspaper .akno-content,
-.akno-state-visible.akno-fx-newspaper ~ .akno-overlay {
-    transition-duration: .5s;
-}
+    &,
+    .akno-content,
+    &.akno-state-visible ~ .akno-overlay {
+        transition-duration: .5s;
+    }
 
-.akno-state-visible.akno-fx-newspaper .akno-content {
-    opacity: 1;
-    transform: scale(1) rotate(0deg);
+    &.akno-state-visible .akno-content {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
 }
 
 /* Effect 5: fall */
-.akno-fx-fall.akno-modal {
+.akno-fx-fall {
     perspective: 1300px;
-}
 
-.akno-fx-fall .akno-content {
-    opacity: 0;
-    transform: translateZ(600px) rotateX(20deg);
-    transform-style: preserve-3d;
-    @include base-transitions(ease-in);
-}
+    .akno-content {
+        opacity: 0;
+        transform: translateZ(600px) rotateX(20deg);
+        transform-style: preserve-3d;
+        @include base-transitions(ease-in);
+    }
 
-.akno-state-visible.akno-fx-fall .akno-content {
-    opacity: 1;
-    transform: translateZ(0px) rotateX(0deg);
+    &.akno-state-visible .akno-content {
+        opacity: 1;
+        transform: translateZ(0px) rotateX(0deg);
+    }
 }
 
 /* Effect 6: side fall */
-.akno-fx-side-fall.akno-modal {
+.akno-fx-side-fall {
     perspective: 1300px;
-}
 
-.akno-fx-side-fall .akno-content {
-    opacity: 0;
-    transform: translate(30%) translateZ(600px) rotate(10deg);
-    transform-style: preserve-3d;
-    @include base-transitions(ease-in);
-}
+    .akno-content {
+        opacity: 0;
+        transform: translate(30%) translateZ(600px) rotate(10deg);
+        transform-style: preserve-3d;
+        @include base-transitions(ease-in);
+    }
 
-.akno-state-visible.akno-fx-side-fall .akno-content {
-    opacity: 1;
-    transform: translate(0%) translateZ(0) rotate(0deg);
+    &.akno-state-visible .akno-content {
+        opacity: 1;
+        transform: translate(0%) translateZ(0) rotate(0deg);
+    }
 }
 
 /* Effect 7:  slide and stick to top */
-.akno-fx-sticky-top{
+.akno-fx-sticky-top {
     top: 0;
     transform: translateX(-50%);
-}
 
-.akno-fx-sticky-top .akno-content {
-    opacity: 0;
-    transform: translateY(-200%);
-    @include base-transitions();
-}
+    .akno-content {
+        opacity: 0;
+        transform: translateY(-200%);
+        @include base-transitions();
+    }
 
-.akno-state-visible.akno-fx-sticky-top .akno-content {
-    border-radius: 0 0 3px 3px;
-    opacity: 1;
-    transform: translateY(0%);
+    &.akno-state-visible .akno-content {
+        border-radius: 0 0 3px 3px;
+        opacity: 1;
+        transform: translateY(0%);
+    }
 }
 
 /* Effect 8: 3D flip horizontal */
-.akno-fx-flip-hor.akno-modal {
+.akno-fx-flip-hor {
     perspective: 1300px;
-}
 
-.akno-fx-flip-hor .akno-content {
-    opacity: 0;
-    transform: rotateY(-70deg);
-    transform-style: preserve-3d;
-    @include base-transitions();
-}
+    .akno-content {
+        opacity: 0;
+        transform: rotateY(-70deg);
+        transform-style: preserve-3d;
+        @include base-transitions();
+    }
 
-.akno-state-visible.akno-fx-flip-hor .akno-content {
-    opacity: 1;
-    transform: rotateY(0deg);
+    &.akno-state-visible .akno-content {
+        opacity: 1;
+        transform: rotateY(0deg);
+    }
 }
 
 /* Effect 9: 3D flip vertical */
-.akno-fx-flip-vert.akno-modal {
+.akno-fx-flip-vert {
     perspective: 1300px;
-}
 
-.akno-fx-flip-vert .akno-content {
-    opacity: 0;
-    transform: rotateX(-70deg);
-    transform-style: preserve-3d;
-    @include base-transitions();
-}
+    .akno-content {
+        opacity: 0;
+        transform: rotateX(-70deg);
+        transform-style: preserve-3d;
+        @include base-transitions();
+    }
 
-.akno-state-visible.akno-fx-flip-vert .akno-content {
-    opacity: 1;
-    transform: rotateX(0deg);
+    &.akno-state-visible .akno-content {
+        opacity: 1;
+        transform: rotateX(0deg);
+    }
 }
 
 /* Effect 10: 3D sign */
-.akno-fx-sign.akno-modal {
+.akno-fx-sign {
     perspective: 1300px;
-}
 
-.akno-fx-sign .akno-content {
-    opacity: 0;
-    transform: rotateX(-60deg);
-    transform-origin: 50% 0;
-    transform-style: preserve-3d;
-    @include base-transitions();
-}
+    .akno-content {
+        opacity: 0;
+        transform: rotateX(-60deg);
+        transform-origin: 50% 0;
+        transform-style: preserve-3d;
+        @include base-transitions();
+    }
 
-.akno-state-visible.akno-fx-sign .akno-content {
-    opacity: 1;
-    transform: rotateX(0deg);
+    &.akno-state-visible .akno-content {
+        opacity: 1;
+        transform: rotateX(0deg);
+    }
 }
 
 /* Effect 11: Super scaled */
-.akno-fx-scale-down .akno-content {
-    opacity: 0;
-    transform: scale(2);
-    @include base-transitions();
-}
+.akno-fx-scale-down {
+    .akno-content {
+        opacity: 0;
+        transform: scale(2);
+        @include base-transitions();
+    }
 
-.akno-state-visible.akno-fx-scale-down .akno-content {
-    opacity: 1;
-    transform: scale(1);
+    &.akno-state-visible .akno-content {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 /* Effect 12:  Just me */
 // TODO need to remove dependency on theme styles in Just Me effect
-.akno-fx-just-me .akno-content {
-    opacity: 0;
-    transform: scale(0.8);
-    border: none;
-    @include base-transitions();
-}
+.akno-fx-just-me {
+    .akno-content {
+        opacity: 0;
+        transform: scale(0.8);
+        border: none;
+        @include base-transitions();
+    }
 
-.akno-fx-just-me ~ .akno-overlay {
-    background: #fff;
-}
+    ~ .akno-overlay {
+        background: #fff;
+    }
 
-.akno-state-visible.akno-fx-just-me .akno-content {
-    opacity: 1;
-    transform: scale(1);
+    &.akno-state-visible .akno-content {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 
 /* Effect 13: 3D slit */
-.akno-fx-slit.akno-modal {
+.akno-fx-slit {
     perspective: 1300px;
-}
 
-.akno-fx-slit .akno-content {
-    opacity: 0;
-    transform: translateZ(-3000px) rotateY(90deg);
-    transform-style: preserve-3d;
-}
+    .akno-content {
+        opacity: 0;
+        transform: translateZ(-3000px) rotateY(90deg);
+        transform-style: preserve-3d;
+    }
 
-.akno-state-visible.akno-fx-slit .akno-content {
-    animation: slit .7s forwards ease-out;
+    &.akno-state-visible .akno-content {
+        animation: slit .7s forwards ease-out;
+    }
 }
 
 @keyframes slit {
@@ -224,39 +236,39 @@
 }
 
 /* Effect 14:  3D Rotate from bottom */
-.akno-fx-rotate-bottom.akno-modal {
+.akno-fx-rotate-bottom {
     perspective: 1300px;
-}
 
-.akno-fx-rotate-bottom .akno-content {
-    opacity: 0;
-    transform: translateY(100%) rotateX(90deg);
-    transform-origin: 0 100%;
-    transform-style: preserve-3d;
-    @include base-transitions(ease-out);
-}
+    .akno-content {
+        opacity: 0;
+        transform: translateY(100%) rotateX(90deg);
+        transform-origin: 0 100%;
+        transform-style: preserve-3d;
+        @include base-transitions(ease-out);
+    }
 
-.akno-state-visible.akno-fx-rotate-bottom .akno-content {
-    opacity: 1;
-    transform: translateY(0%) rotateX(0deg);
+    &.akno-state-visible .akno-content {
+        opacity: 1;
+        transform: translateY(0%) rotateX(0deg);
+    }
 }
 
 /* Effect 15:  3D Rotate in from left */
-.akno-fx-rotate-left.akno-modal {
+.akno-fx-rotate-left {
     perspective: 1300px;
-}
 
-.akno-fx-rotate-left .akno-content {
-    opacity: 0;
-    transform: translateZ(100px) translateX(-30%) rotateY(90deg);
-    transform-origin: 0 100%;
-    transform-style: preserve-3d;
-    @include base-transitions();
-}
+    .akno-content {
+        opacity: 0;
+        transform: translateZ(100px) translateX(-30%) rotateY(90deg);
+        transform-origin: 0 100%;
+        transform-style: preserve-3d;
+        @include base-transitions();
+    }
 
-.akno-state-visible.akno-fx-rotate-left .akno-content {
-    opacity: 1;
-    transform: translateZ(0px) translateX(0%) rotateY(0deg);
+    &.akno-state-visible .akno-content {
+        opacity: 1;
+        transform: translateZ(0px) translateX(0%) rotateY(0deg);
+    }
 }
 
 /* Effect 16:  Blur
