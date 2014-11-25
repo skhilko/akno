@@ -7,23 +7,24 @@
     <style id="localStyles">
 
         /* speeding up tests */
-        .akno-content {
-            -webkit-transition: all 1ms !important;
-            -moz-transition: all 1ms !important;
-            -o-transition: all 1ms !important;
-            -ms-transition: all 1ms !important;
-            transition: all 1ms !important;
+        .test-page .akno-modal {
+            -webkit-transition: visibility .1s linear;
+            transition: visibility .1s linear;
         }
 
-        /*
-            it's not critical to disable transitions on overlay element during tests, but helps to run assertions on overlay
-         */
-        .akno-overlay {
-            -webkit-transition: none !important;
-            -moz-transition: none !important;
-            -o-transition: none !important;
-            -ms-transition: none !important;
-            transition: none !important;
+        .test-page .akno-content {
+            -webkit-transition: opacity .1s, -webkit-transform .1s;
+            transition: opacity .1s, transform .1s;
+        }
+
+        .test-page .akno-overlay {
+            -webkit-transition: visibility 0s linear .1s, opacity .1s;
+             transition: visibility 0s linear .1s, opacity .1s;
+        }
+
+        .test-page .akno-state-visible ~ .akno-overlay {
+          -webkit-transition: visibility 0s linear 0s, opacity .1s;
+          transition: visibility 0s linear 0s, opacity .1s;
         }
 
         #modal_input_hidden_1 {
@@ -40,7 +41,7 @@
         }
     </style>
 </head>
-<body>
+<body class="test-page">
     <div id="mocha"></div>
 
     <div class="hidden">

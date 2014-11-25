@@ -38,8 +38,10 @@
             });
 
             it('should hide the dialog on "close" call', function() {
+                element.one('akno-close', function() {
+                    expect(isVisible($('.akno-modal'))).to.be.false;
+                });
                 element.akno('close');
-                expect(isVisible($('.akno-modal'))).to.be.false;
             });
 
             it('should cleanup jQuery data on "destroy" call', function() {

@@ -522,7 +522,7 @@
             it('should be closed on "esc" key press', function(done) {
                 dialog = openDialog('modal_no_inputs', function() {
                     $(document.activeElement).simulate('keydown', {keyCode: $.simulate.keyCode.ESCAPE});
-                    expect(isVisible($('.akno-modal'))).to.be.false;
+                }, function() {
                     done();
                 });
             });
@@ -678,8 +678,9 @@
                             assertScrollbarHidden();
                         });
                         $(dialog.element).one('akno-close', function() {
-                            expect(getComputedStyle(document.body).overflow).to.be.not.equal('hidden');
-                            done();
+                            repeat(function() {
+                                return getComputedStyle(document.body).overflow !== 'hidden';
+                            }, 'overflow value was not reverted').done(done);
                         });
                         secondAkno.close();
                         dialog.close();
