@@ -72,13 +72,13 @@ function hasViewportScroll () {
 }
 
 /**
- * Verifies if the givent event is `transitionend` for `opacity`.
+ * Verifies if the givent event is `transitionend` for `visibility`.
  *
  * It is used to filter out `transitionend` events for other transitioning properties
  * when the akno is open or close.
  */
 function isOpenOrCloseTransition (event) {
-    return !event || (event.propertyName === 'opacity' && event.target.classList.contains('akno-content'));
+    return !event || (event.propertyName === 'visibility' && event.target.classList.contains('akno-modal'));
 }
 
 /**
