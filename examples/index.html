@@ -16,36 +16,15 @@
         <link rel="stylesheet" href="styles/akno.css">
     </head>
     <body>
-        <div class="poster">AKNO</div>
         <div class="container">
             <!--[if lt IE 10]>
                 <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
             <![endif]-->
-            <header>
-                <div class="row header-line">
-                    <div class="col-sm-7 col-md-8">
-                        <h1>
-                            Akno
-                            <small>Simple, fast and beautiful modal windows</small>
-                        </h1>
-                    </div>
-                    <div class="col-sm-5 col-md-4">
-                        <blockquote class="translation">
-                            <p>
-                                <b>akno</b> /aknó/, <i>n.</i>
-                                <a class="language" href="http://en.wikipedia.org/wiki/Belarus" target="blank">Belarusian</a>
-                                <a class="language" target="blank">Belarusian</a>
-                            </p>
-                            <p>1. window</p>
-                        </blockquote>
-                    </div>
-                </div>
-            </header>
             <h3>Features</h3>
             <div class="row">
                 <div class="col-xs-12">
-                    <button id="open_inputs" class="action-open btn btn-primary" type="button" data-target="modal_with_inputs">Input Form</button>
-                    <button class="action-open btn btn-primary" type="button" data-target="modal_multiple">Multiple Aknos</button>
+                    <button id="open_inputs" class="action-open btn btn-primary" type="button" data-target="modal_with_inputs" data-effect="scale-up">Input Form</button>
+                    <button class="action-open btn btn-primary" type="button" data-target="modal_multiple" data-effect="scale-up">Multiple Aknos</button>
                 </div>
             </div>
 
@@ -118,7 +97,7 @@
         <div class="hidden">
             <div id="modal_multiple">
                 <p>I can open more Aknos</p>
-                <button type="button" class="btn btn-secondary action-open" data-target="modal_multiple_2">Open More</button>
+                <button type="button" class="btn btn-secondary action-open" data-target="modal_multiple_2" data-effect="scale-up">Open More</button>
                 <button type="button" class="btn btn-default akno-action-close">Close me!</button>
             </div>
             <div id="modal_multiple_2">
