@@ -349,6 +349,9 @@ Akno.prototype._destroy = function(ev) {
     this._handlers = null;
     this._destroyOverlay();
     document.body.removeChild(this.dialog);
+    this.content = null;
+    this.dialog = null;
+
     Akno.zIndex--;
     aknoInstances--;
 };
@@ -457,6 +460,7 @@ Akno.prototype._initFocus = function() {
 Akno.prototype._destroyOverlay = function() {
     if (aknoInstances === 1) {
         document.body.removeChild(this.overlay);
+        this.overlay = null;
         Akno.zIndex--;
     }
 };
