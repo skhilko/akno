@@ -97,11 +97,12 @@
          */
         function destroyAkno (dialog, done) {
             if (dialog) {
+                var dialogWrapper = dialog.dialog;
                 dialog.destroy();
                 repeat(function() {
                     // check the existence of the generated wrapper in the dom
                     // if removed, consider the akno to be destroyed
-                    return dialog.dialog.parentNode === null;
+                    return dialogWrapper.parentNode === null;
                 }, 'cannot destroy the akno').done(done);
             } else {
                 done();
