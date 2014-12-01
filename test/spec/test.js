@@ -13,7 +13,7 @@
 
         // TODO ideally implement or find an 'eventually' chai plugun
         // which would hide the `repeat` implementation.
-        // Eg. expect(isVisible($('.akno-modal'))).to.be.eventually.true;
+        // Eg. expect(isVisible($('.akno-dialog'))).to.be.eventually.true;
 
         /**
          * Repeatedly executes the provided assertion for a maximum time of 1 sec. until the assertion returns true.
@@ -118,7 +118,7 @@
 
             it('should show the dialog', function(done) {
                 dialog = openDialog('modal_no_inputs', function() {
-                    expect(isVisible($('.akno-modal'))).to.be.true;
+                    expect(isVisible($('.akno-dialog'))).to.be.true;
                     done();
                 });
             });
@@ -149,7 +149,7 @@
                     document.body.removeEventListener('akno-before-open', beforeOpenHandler);
                     // give the akno a chance to close, which should not happen anyway
                     setTimeout(function() {
-                        expect(!isVisible($('.akno-modal'))).to.be.true;
+                        expect(!isVisible($('.akno-dialog'))).to.be.true;
                         done();
                     }, 0);
                 };
@@ -169,7 +169,7 @@
                     dialog.close();
                 }, function() {
                     repeat(function() {
-                        return !isVisible($('.akno-modal'));
+                        return !isVisible($('.akno-dialog'));
                     }, 'akno should not be visible').always(done);
                 });
             });
@@ -190,7 +190,7 @@
                     document.body.removeEventListener('akno-before-close', beforeCloseHandler);
                     // give the akno a chance to close, which should not happen anyway
                     setTimeout(function() {
-                        expect(isVisible($('.akno-modal'))).to.be.true;
+                        expect(isVisible($('.akno-dialog'))).to.be.true;
                         done();
                     }, 0);
                 };
@@ -219,7 +219,7 @@
                     dialog.destroy();
                 }, function() {
                     repeat(function() {
-                        return $('.akno-modal').length === 0;
+                        return $('.akno-dialog').length === 0;
                     }, 'dialog wrapper should be destroyed').always(done);
                 });
             });
@@ -550,7 +550,7 @@
 
                     Akno.zIndex = 100;
                     secondDialog = openDialog('modal_with_inputs', function() {
-                        var zIndex = $('#modal_with_inputs').closest('.akno-modal').css('zIndex');
+                        var zIndex = $('#modal_with_inputs').closest('.akno-dialog').css('zIndex');
                         expect(String(zIndex)).to.be.equal('100');
                         done();
                     });
@@ -569,7 +569,7 @@
 
             it('should be applied as a class on dialog element', function(done) {
                 dialog = openDialog('modal_no_inputs', {effect: 'slide-in-right'}, function() {
-                    var modalWrapper = $('.akno-modal');
+                    var modalWrapper = $('.akno-dialog');
                     expect(modalWrapper.hasClass('akno-fx-slide-in-right')).to.be.true;
                     done();
                 });
@@ -586,7 +586,7 @@
                 var beforeOpenHandled;
                 var openHandler = function(ev) {
                     expect(ev.target).to.be.equal(element);
-                    expect(isVisible($('.akno-modal'))).to.be.false;
+                    expect(isVisible($('.akno-dialog'))).to.be.false;
                     document.body.removeEventListener('akno-before-open', openHandler);
                     beforeOpenHandled = true;
                 };
@@ -600,7 +600,7 @@
                 var element = document.getElementById('modal_no_inputs');
                 var openHandler = function(ev) {
                     expect(ev.target).to.be.equal(element);
-                    expect(isVisible($('.akno-modal'))).to.be.true;
+                    expect(isVisible($('.akno-dialog'))).to.be.true;
                     document.body.removeEventListener('akno-open', openHandler);
                     done();
                 };
@@ -612,7 +612,7 @@
                 var element = document.getElementById('modal_no_inputs');
                 var closeHandler = function(ev) {
                     expect(ev.target).to.be.equal(element);
-                    expect(isVisible($('.akno-modal'))).to.be.true;
+                    expect(isVisible($('.akno-dialog'))).to.be.true;
                     document.body.removeEventListener('akno-before-close', closeHandler);
                     done();
                 };
@@ -626,7 +626,7 @@
                 var element = document.getElementById('modal_no_inputs');
                 var closeHandler = function(ev) {
                     expect(ev.target).to.be.equal(element);
-                    expect(isVisible($('.akno-modal'))).to.be.false;
+                    expect(isVisible($('.akno-dialog'))).to.be.false;
                     document.body.removeEventListener('akno-close', closeHandler);
                     done();
                 };
@@ -652,10 +652,10 @@
 
             it('should display the second modal on top of the first one', function(done) {
                 dialog = openDialog('modal_no_inputs', function() {
-                    var zIndexFirst = $('#modal_no_inputs').closest('.akno-modal').css('zIndex');
+                    var zIndexFirst = $('#modal_no_inputs').closest('.akno-dialog').css('zIndex');
 
                     var secondDialog = openDialog('modal_with_inputs', function() {
-                        var zIndexSecond = $('#modal_with_inputs').closest('.akno-modal').css('zIndex');
+                        var zIndexSecond = $('#modal_with_inputs').closest('.akno-dialog').css('zIndex');
                         expect(parseInt(zIndexSecond, 10)).to.be.greaterThan(parseInt(zIndexFirst, 10));
                         secondDialog.destroy();
                         done();

@@ -77,7 +77,7 @@ function hasViewportScroll () {
  * when the akno is open or close.
  */
 function isOpenOrCloseTransition (event) {
-    return !event || (event.propertyName === 'visibility' && event.target.classList.contains('akno-modal'));
+    return !event || (event.propertyName === 'visibility' && event.target.classList.contains('akno-dialog'));
 }
 
 
