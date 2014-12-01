@@ -329,6 +329,90 @@
             });
         });
 
+        describe('action buttons', function() {
+            afterEach(function(done) {
+                destroyAkno(dialog, done);
+            });
+
+            it('should be possible to define custom action buttons for the akno', function(done) {
+                dialog = openDialog('modal_no_inputs', {
+                    buttons: [
+                        {
+                            text: 'Action 1'
+                        },
+                        {
+                            text: 'Action 2'
+                        }
+                    ]
+                }, function() {
+                    expect($('.akno-state-open .akno-footer button')).to.have.length(2);
+                    done();
+                });
+            });
+
+            it('should be possible to display names for action buttons', function(done) {
+                dialog = openDialog('modal_no_inputs', {
+                    buttons: [
+                        {
+                            text: 'Action 1'
+                        }
+                    ]
+                }, function() {
+                    expect($('.akno-state-open .akno-footer button').text()).to.be.equal('Action 1');
+                    done();
+                });
+            });
+
+            it('should be possible to define class names for action buttons', function(done) {
+                dialog = openDialog('modal_no_inputs', {
+                    buttons: [
+                        {
+                            text: 'Action 1',
+                            className: 'custom-action'
+                        }
+                    ]
+                }, function() {
+                    expect($('.akno-state-open .akno-footer .custom-action')).to.have.length(1);
+                    done();
+                });
+            });
+
+            describe('click event handler', function() {
+                it('should be executed when clicked on an action button', function(done) {
+                    dialog = openDialog('modal_no_inputs', {
+                        buttons: [
+                            {
+                                text: 'Action 1',
+                                action: function() {
+                                    expect(true).to.be.ok;
+                                    done();
+                                }
+                            }
+                        ]
+                    }, function() {
+                        $('.akno-state-open .akno-footer button').simulate('click');
+                    });
+                });
+
+                it('should have the akno instance as `this` execution context', function(done) {
+                    dialog = openDialog('modal_no_inputs', {
+                        buttons: [
+                            {
+                                text: 'Action 1',
+                                action: function() {
+                                    expect(this).to.be.equal(dialog);
+                                    done();
+                                }
+                            }
+                        ]
+                    }, function() {
+                        $('.akno-state-open .akno-footer button').simulate('click');
+                    });
+                });
+            });
+
+        });
+
         describe('focus', function() {
             afterEach(function(done) {
                 destroyAkno(dialog, done);
