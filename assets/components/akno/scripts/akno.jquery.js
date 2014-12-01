@@ -78,7 +78,7 @@ function hasViewportScroll () {
  * when the akno is open or close.
  */
 function isOpenOrCloseTransition (event) {
-    return !event || (event.propertyName === 'visibility' && event.target.classList.contains('akno-modal'));
+    return !event || (event.propertyName === 'visibility' && event.target.classList.contains('akno-dialog'));
 }
 
 /**
@@ -115,29 +115,12 @@ function getTabbables(container, first) {
     return tabbables;
 }
 
-/*
- * Sets focus in the following order:
- * 1. first content element with autofocus attribute
- * 2. first tabbable element within the content of the dialog
- * 3. first tabbable action button
- * 4. TODO close button
- * 5. dialog element itself
- */
-function setFocus(container) {
-    // TODO use content container as a context element
-    var autofocus = container.querySelector('[autofocus]');
-    if(autofocus) {
-        autofocus.focus();
-        return;
-    }
-
+function focusFirstTabbable (container) {
     var tabbable = getTabbables(container, true);
     if(tabbable.length) {
         tabbable[0].focus();
-        return;
+        return true;
     }
-
-    container.focus();
 }
 
 function applyDefaults(options, defaults) {
@@ -187,6 +170,11 @@ function getUid(object) {
  * - effect {String}, default 'scale-up' - effect to be used to show the dialog.
  * - header {String}, optional - header text. Header is not rendered in case the parameter is not provided.
  * - open {Boolean}, default `true` - if set to `true`, the akno will open upon initialization.
+ * - buttons {Array}, optional - an array of objects in the following format:
+ *     {
+ *         text: 'button text',
+ *         action: function
+ *     }
  *
  * @param {Element} element
  * @param {Object} options
@@ -206,9 +194,8 @@ function Akno(element, options) {
 
     this._createOverlay();
     this._render();
-    this.closeButton = element.querySelector('.akno-action-close');
 
-    this._on('click', this.closeButton, this.close);
+    this._on('click', this.dialog, this._closeClickHandler);
     this._on('keydown', this.dialog, this._escKeyHandler);
     this._on('keydown', this.dialog, this._tabKeyHandler);
     aknoInstances++;
@@ -243,15 +230,15 @@ Akno.prototype.open = function() {
         }
     }
 
+    var dialog = this.dialog;
     if (this._isAnimated) {
-        this._on(TRANSITION_END_EVENT, this.dialog, this._open);
-        var dialog = this.dialog;
+        this._on(TRANSITION_END_EVENT, dialog, this._open);
         // with this timeout the transitions start to suddenly work in FF
         setTimeout(function() {
-            dialog.classList.add('akno-state-visible');
+            dialog.classList.add('akno-state-open');
         }, 0);
     } else {
-        this.dialog.classList.add('akno-state-visible');
+        dialog.classList.add('akno-state-open');
         this._open();
     }
 };
@@ -290,9 +277,9 @@ Akno.prototype.close = function() {
 
     if (this._isAnimated) {
         this._on(TRANSITION_END_EVENT, this.dialog, this._close);
-        this.dialog.classList.remove('akno-state-visible');
+        this.dialog.classList.remove('akno-state-open');
     } else {
-        this.dialog.classList.remove('akno-state-visible');
+        this.dialog.classList.remove('akno-state-open');
         this._close();
     }
 };
@@ -349,7 +336,6 @@ Akno.prototype._destroy = function(ev) {
     this._handlers = null;
     this._destroyOverlay();
     document.body.removeChild(this.dialog);
-    this.content = null;
     this.dialog = null;
 
     Akno.zIndex--;
@@ -357,11 +343,14 @@ Akno.prototype._destroy = function(ev) {
 };
 
 Akno.prototype._isOpen = function() {
-    return this.dialog.classList.contains('akno-state-visible');
+    return this.dialog.classList.contains('akno-state-open');
 };
 
 Akno.prototype._render = function() {
     var element = this.element;
+    var options = this.options;
+    var buttons = options.buttons;
+    var hasButtons = this.hasButtons = !!(buttons && buttons.length);
 
     this._overrides = {
         parent: element.parentNode,
@@ -375,19 +364,34 @@ Akno.prototype._render = function() {
 
     var wrapper = document.createElement('div');
     wrapper.innerHTML = tmpl.dialog({
-        header: this.options.header,
-        effect: EFFECTS[this.options.effect]
+        header: options.header,
+        effect: EFFECTS[options.effect],
+        hasButtons: hasButtons
     });
-    var content = wrapper.querySelector('.akno-body');
-    content.appendChild(element);
+    wrapper.querySelector('.akno-body').appendChild(element);
+
+    if (hasButtons) {
+        var footer = wrapper.querySelector('.akno-footer');
+
+        buttons.forEach(function(config) {
+            var button = document.createElement('button');
+            button.type = 'button';
+            button.textContent = config.text;
+            if(config.className) {
+                button.className = config.className;
+            }
+            if(config.action) {
+                button.addEventListener('click', config.action.bind(this));
+            }
+
+            footer.appendChild(button);
+        }, this);
+    }
 
     // update visibility if needed
     if(originalDisplayStyle === 'none') {
         element.style.display = 'block';
     }
-
-    // TODO content should include action buttons
-    this.content = content;
 
     // ensure the dialog is rendered before all service elements to make selectors work
     this.dialog = document.body.insertBefore(wrapper.firstChild, document.body.firstChild);
@@ -452,9 +456,41 @@ Akno.prototype._createOverlay = function() {
     this.overlay = overlay;
 };
 
+/**
+ * Sets focus in the following order:
+ * 1. first content element with autofocus attribute
+ * 2. first tabbable element within the content of the dialog
+ * 3. first tabbable action button
+ * 4. 'x' close button
+ * 5. dialog element itself
+ */
 Akno.prototype._initFocus = function() {
+    var dialog = this.dialog;
     this._lastActive = document.activeElement;
-    setFocus(this.dialog);
+
+    var autofocus = this.element.querySelector('[autofocus]');
+    if(autofocus) {
+        autofocus.focus();
+        return;
+    }
+
+    if(focusFirstTabbable(this.element)) {
+        return;
+    }
+
+    if(this.hasButtons) {
+        if(focusFirstTabbable(dialog.querySelector('.akno-footer'))) {
+            return;
+        }
+    }
+
+    var closeButton = dialog.querySelector('.akno-action-close');
+    if(closeButton && isVisible(closeButton)) {
+        closeButton.focus();
+        return;
+    }
+
+    dialog.focus();
 };
 
 Akno.prototype._destroyOverlay = function() {
@@ -473,10 +509,16 @@ Akno.prototype._escKeyHandler = function(ev) {
     }
 };
 
+Akno.prototype._closeClickHandler = function(ev) {
+    if (ev.target.classList.contains('akno-action-close')) {
+        this.close();
+    }
+};
+
 Akno.prototype._tabKeyHandler = function(ev) {
     if (ev.keyCode === TAB_CODE_ESCAPE) {
         // content + buttons
-        var tabbables = getTabbables(this.content);
+        var tabbables = getTabbables(this.dialog);
         if(tabbables.length) {
             var first = tabbables[0];
             var last  = tabbables[tabbables.length - 1];
@@ -511,7 +553,7 @@ function encodeHTMLSource() {  var encodeHTMLRules = { "&": "&#38;", "<": "&#60;
 String.prototype.encodeHTML=encodeHTMLSource();
 var tmpl = {};
   tmpl['dialog']=function anonymous(it) {
-var out='<div class="akno-modal '+(it.effect || '')+'" tabindex="-1"><div class="akno-content">';if(it.header){out+='<h1>'+(it.header||'').toString().encodeHTML()+'</h1>';}out+='<div class="akno-body"></div></div></div>';return out;
+var out='<div class="akno-dialog '+(it.effect || '')+'" tabindex="-1"><div class="akno-content"><div class="akno-header"><button type="button" class="akno-action-close">×</button>';if(it.header){out+='<h2>'+(it.header||'').toString().encodeHTML()+'</h2>';}out+='</div><div class="akno-body"></div>';if(it.hasButtons){out+='<div class="akno-footer"></div>';}out+='</div></div>';return out;
 };
 return tmpl;})();
 window.Akno = Akno;

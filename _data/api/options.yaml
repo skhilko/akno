@@ -1,6 +1,25 @@
 ---
 instance:
 
+- name: buttons
+  type: Array
+  default: not set
+  description: >
+            <p>Specifies which buttons should be provided on the akno.</p>
+            <p>Each array element is a configuration object defining the text, the class name, and the click handler to set on the button.</p>
+            <p>Format:
+              <pre>
+                {
+                  text: 'Display Name',
+                  className: 'optional-class-name-1 class-name-2',
+                  action: function() {
+                    // click event handler
+                    // `this` context is the akno instance.
+                  }
+                }
+              </pre></p>
+
+
 - name: open
   type: Boolean
   default: true
@@ -8,7 +27,7 @@ instance:
 
 - name: title
   type: String
-  default: n/a
+  default: not set
   description: Specifies the title of the akno.
                Header will not rendered in case the parameter is not provided.
 
