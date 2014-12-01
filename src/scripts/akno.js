@@ -80,15 +80,6 @@ function isOpenOrCloseTransition (event) {
     return !event || (event.propertyName === 'visibility' && event.target.classList.contains('akno-dialog'));
 }
 
-
-function focusFirstTabbable (container) {
-    var tabbable = getTabbables(container, true);
-    if(tabbable.length) {
-        tabbable[0].focus();
-        return true;
-    }
-}
-
 /**
  * Return tabbable elements within a container.
  * @param  {Element} container
@@ -123,6 +114,13 @@ function getTabbables(container, first) {
     return tabbables;
 }
 
+function focusFirstTabbable (container) {
+    var tabbable = getTabbables(container, true);
+    if(tabbable.length) {
+        tabbable[0].focus();
+        return true;
+    }
+}
 
 function applyDefaults(options, defaults) {
     var result = {};

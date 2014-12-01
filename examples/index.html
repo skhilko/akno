@@ -102,9 +102,14 @@
                             effect: triggerEl.getAttribute('data-effect'),
                             header: 'Listen Carefully',
                             buttons: [{
-                                text: 'Click',
+                                text: 'OK',
                                 action: function() {
-                                    alert('Clicked!');
+                                    alert('OK');
+                                }
+                            }, {
+                                text: 'Cancel',
+                                action: function() {
+                                    alert('Cancel');
                                 }
                             }]
                         }));

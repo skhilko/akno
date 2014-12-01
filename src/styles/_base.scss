@@ -1,5 +1,7 @@
 /* General styles for the modal */
 
+$content-padding: 1.5em !default;
+
 @mixin clearfix() {
     &:before,
     &:after {
@@ -63,7 +65,9 @@
         float: right;
         border: none;
         padding: 0;
+        margin: 0;
         background-color: transparent;
+        color: #212121;
     }
 }
 
@@ -74,5 +78,22 @@
     margin: 0 auto;
     background: #fff;
     border: 1px solid #bdc3c7;
-    padding: 1.5em;
+    padding: $content-padding;
+}
+
+.akno-footer {
+    margin: $content-padding/2 -#{$content-padding} -#{$content-padding} -#{$content-padding};
+    padding: 1em $content-padding $content-padding;
+    margin-top: $content-padding;
+    text-align: center;
+
+    button {
+        display: inline-block;
+        text-align: center;
+        margin: 0 0 0 1em;
+
+        &:first-child {
+            margin-left: 0;
+        }
+    }
 }
