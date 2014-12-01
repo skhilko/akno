@@ -41,11 +41,11 @@
                 opacity .3s;
 }
 
-.akno-state-visible {
+.akno-state-open {
     visibility: visible;
 }
 
-.akno-state-visible ~ .akno-overlay {
+.akno-state-open ~ .akno-overlay {
     visibility: visible;
     opacity: 1;
     transition: visibility 0s linear 0s,

@@ -364,7 +364,7 @@
 
             describe('akno doesn\'t contain focusable elements and a close button', function() {
                 before(function() {
-                    document.getElementById('localStyles').sheet.insertRule('.akno-state-visible .akno-action-close { display: none; }', 0);
+                    document.getElementById('localStyles').sheet.insertRule('.akno-state-open .akno-action-close { display: none; }', 0);
                 });
 
                 it('focus should be given to the akno wrapper element when the akno is open', function(done) {
@@ -419,7 +419,7 @@
             it('should cycle through dialog focusable elements when focus reaches the last element or the first in case `shift` key is pressed', function(done) {
                 dialog = openDialog('modal_with_inputs', function() {
                     var lastInputEl = $('#modal_input_2');
-                    var closeEl = $('.akno-state-visible .akno-action-close');
+                    var closeEl = $('.akno-state-open .akno-action-close');
 
                     lastInputEl.focus();
                     lastInputEl.simulate('keydown', {keyCode: $.simulate.keyCode.TAB});

@@ -236,10 +236,10 @@ Akno.prototype.open = function() {
         this._on(TRANSITION_END_EVENT, dialog, this._open);
         // with this timeout the transitions start to suddenly work in FF
         setTimeout(function() {
-            dialog.classList.add('akno-state-visible');
+            dialog.classList.add('akno-state-open');
         }, 0);
     } else {
-        dialog.classList.add('akno-state-visible');
+        dialog.classList.add('akno-state-open');
         this._open();
     }
 };
@@ -278,9 +278,9 @@ Akno.prototype.close = function() {
 
     if (this._isAnimated) {
         this._on(TRANSITION_END_EVENT, this.dialog, this._close);
-        this.dialog.classList.remove('akno-state-visible');
+        this.dialog.classList.remove('akno-state-open');
     } else {
-        this.dialog.classList.remove('akno-state-visible');
+        this.dialog.classList.remove('akno-state-open');
         this._close();
     }
 };
@@ -344,7 +344,7 @@ Akno.prototype._destroy = function(ev) {
 };
 
 Akno.prototype._isOpen = function() {
-    return this.dialog.classList.contains('akno-state-visible');
+    return this.dialog.classList.contains('akno-state-open');
 };
 
 Akno.prototype._render = function() {

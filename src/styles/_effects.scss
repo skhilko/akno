@@ -15,7 +15,7 @@
         @include base-transitions();
     }
 
-    &.akno-state-visible .akno-content {
+    &.akno-state-open .akno-content {
         opacity: 1;
         transform: scale(1);
     }
@@ -29,7 +29,7 @@
         @include base-transitions(cubic-bezier(0.25, 0.5, 0.5, 0.9));
     }
 
-    &.akno-state-visible .akno-content {
+    &.akno-state-open .akno-content {
         opacity: 1;
         transform: translateX(0);
     }
@@ -43,7 +43,7 @@
         @include base-transitions();
     }
 
-    &.akno-state-visible .akno-content {
+    &.akno-state-open .akno-content {
         opacity: 1;
         transform: translateY(0);
     }
@@ -59,11 +59,11 @@
 
     &,
     .akno-content,
-    &.akno-state-visible ~ .akno-overlay {
+    &.akno-state-open ~ .akno-overlay {
         transition-duration: .5s;
     }
 
-    &.akno-state-visible .akno-content {
+    &.akno-state-open .akno-content {
         opacity: 1;
         transform: scale(1) rotate(0deg);
     }
@@ -80,7 +80,7 @@
         @include base-transitions(ease-in);
     }
 
-    &.akno-state-visible .akno-content {
+    &.akno-state-open .akno-content {
         opacity: 1;
         transform: translateZ(0px) rotateX(0deg);
     }
@@ -97,7 +97,7 @@
         @include base-transitions(ease-in);
     }
 
-    &.akno-state-visible .akno-content {
+    &.akno-state-open .akno-content {
         opacity: 1;
         transform: translate(0%) translateZ(0) rotate(0deg);
     }
@@ -114,7 +114,7 @@
         @include base-transitions();
     }
 
-    &.akno-state-visible .akno-content {
+    &.akno-state-open .akno-content {
         border-radius: 0 0 3px 3px;
         opacity: 1;
         transform: translateY(0%);
@@ -132,7 +132,7 @@
         @include base-transitions();
     }
 
-    &.akno-state-visible .akno-content {
+    &.akno-state-open .akno-content {
         opacity: 1;
         transform: rotateY(0deg);
     }
@@ -149,7 +149,7 @@
         @include base-transitions();
     }
 
-    &.akno-state-visible .akno-content {
+    &.akno-state-open .akno-content {
         opacity: 1;
         transform: rotateX(0deg);
     }
@@ -167,7 +167,7 @@
         @include base-transitions();
     }
 
-    &.akno-state-visible .akno-content {
+    &.akno-state-open .akno-content {
         opacity: 1;
         transform: rotateX(0deg);
     }
@@ -181,7 +181,7 @@
         @include base-transitions();
     }
 
-    &.akno-state-visible .akno-content {
+    &.akno-state-open .akno-content {
         opacity: 1;
         transform: scale(1);
     }
@@ -201,7 +201,7 @@
         background: #fff;
     }
 
-    &.akno-state-visible .akno-content {
+    &.akno-state-open .akno-content {
         opacity: 1;
         transform: scale(1);
     }
@@ -218,7 +218,7 @@
         transform-style: preserve-3d;
     }
 
-    &.akno-state-visible .akno-content {
+    &.akno-state-open .akno-content {
         animation: slit .7s forwards ease-out;
     }
 }
@@ -247,7 +247,7 @@
         @include base-transitions(ease-out);
     }
 
-    &.akno-state-visible .akno-content {
+    &.akno-state-open .akno-content {
         opacity: 1;
         transform: translateY(0%) rotateX(0deg);
     }
@@ -265,7 +265,7 @@
         @include base-transitions();
     }
 
-    &.akno-state-visible .akno-content {
+    &.akno-state-open .akno-content {
         opacity: 1;
         transform: translateZ(0px) translateX(0%) rotateY(0deg);
     }
@@ -274,11 +274,11 @@
 /* Effect 16:  Blur
  NOTE: As of today, chrome is the only browser which really supports blur filter.
  Disabling for better times.
-.akno-state-visible.akno-fx-blur ~ .akno-overlay {
+.akno-state-open.akno-fx-blur ~ .akno-overlay {
     background: rgba(180,46,32,0.5);
 }
 
-.akno-state-visible.akno-fx-blur ~ .akno-container {
+.akno-state-open.akno-fx-blur ~ .akno-container {
     filter: blur(3px);
 }
 
@@ -287,12 +287,12 @@
     transform: translateY(-5%);
 }
 
-.akno-state-visible.akno-fx-blur ~ .akno-container,
+.akno-state-open.akno-fx-blur ~ .akno-container,
 .akno-fx-blur .akno-content {
     transition: all .3s;
 }
 
-.akno-state-visible.akno-fx-blur .akno-content {
+.akno-state-open.akno-fx-blur .akno-content {
     opacity: 1;
     transform: translateY(0);
 } */
