@@ -342,21 +342,55 @@
                 });
             });
 
-            it('should be given to the first element with "autofocus" attribute within the dialog on open', function(done) {
-                document.getElementById('modal_input_2').autofocus = true;
+            describe('akno contains an element with autofocus attribute', function() {
+                var autofocusEl;
+                before(function() {
+                    autofocusEl = document.getElementById('modal_input_2');
+                    autofocusEl.autofocus = true;
+                });
 
-                var elementWithAutofocus = document.getElementById('modal_input_2');
-                dialog = openDialog('modal_with_inputs', function() {
-                    expect(document.activeElement).to.be.equal(elementWithAutofocus);
+                it('autofocus element should recieve the focus when the akno is open', function(done) {
+                    dialog = openDialog('modal_with_inputs', function() {
+                        expect(document.activeElement).to.be.equal(autofocusEl);
+                        done();
+                    });
+                });
 
-                    elementWithAutofocus.autofocus = false;
-                    done();
+                after(function() {
+                    autofocusEl.autofocus = false;
                 });
             });
 
-            it('should be given to the dialog element when there is no focusable elements within the dialog', function(done) {
+
+            describe('akno doesn\'t contain focusable elements and a close button', function() {
+                before(function() {
+                    document.getElementById('localStyles').sheet.insertRule('.akno-state-visible .akno-action-close { display: none; }', 0);
+                });
+
+                it('focus should be given to the akno wrapper element when the akno is open', function(done) {
+                    dialog = openDialog('modal_no_inputs', function() {
+                        expect(document.activeElement).to.be.equal(dialog.dialog);
+                        done();
+                    });
+                });
+
+                after(function() {
+                    document.getElementById('localStyles').sheet.deleteRule(0);
+                });
+            });
+
+            it('should be given to the first action button when the akno doesn\'t have focusable elements on open', function(done) {
+                dialog = openDialog('modal_no_inputs', {
+                        buttons: [{text: 'Confirm'}]
+                    }, function() {
+                        expect(document.activeElement).to.be.equal($('.akno-footer button:eq(0)', dialog.dialog)[0]);
+                        done();
+                    });
+            });
+
+            it('should be given to the close button when the akno doesn\'t have focusable elements and action buttons on open', function(done) {
                 dialog = openDialog('modal_no_inputs', function() {
-                    expect(document.activeElement).to.be.equal(dialog.dialog);
+                    expect(document.activeElement).to.be.equal($('.akno-action-close', dialog.dialog)[0]);
                     done();
                 });
             });
@@ -384,11 +418,15 @@
 
             it('should cycle through dialog focusable elements when focus reaches the last element or the first in case `shift` key is pressed', function(done) {
                 dialog = openDialog('modal_with_inputs', function() {
-                    $('#modal_1_close').focus();
-                    $('#modal_1_close').simulate('keydown', {keyCode: $.simulate.keyCode.TAB});
-                    expect(document.activeElement).to.be.equal(document.getElementById('modal_anchor'));
-                    $('#modal_anchor').simulate('keydown', {keyCode: $.simulate.keyCode.TAB, shiftKey: true});
-                    expect(document.activeElement).to.be.equal(document.getElementById('modal_1_close'));
+                    var lastInputEl = $('#modal_input_2');
+                    var closeEl = $('.akno-state-visible .akno-action-close');
+
+                    lastInputEl.focus();
+                    lastInputEl.simulate('keydown', {keyCode: $.simulate.keyCode.TAB});
+                    expect(document.activeElement).to.be.equal(closeEl[0]);
+
+                    closeEl.simulate('keydown', {keyCode: $.simulate.keyCode.TAB, shiftKey: true});
+                    expect(document.activeElement).to.be.equal(lastInputEl[0]);
                     done();
                 });
             });
