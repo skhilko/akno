@@ -30,7 +30,7 @@
             it('should show the dialog on "open" call', function(done) {
                 element = $('#modal_no_inputs');
                 openDialog(element, {open: false}, function() {
-                    expect(isVisible($('.akno-modal'))).to.be.true;
+                    expect(isVisible($('.akno-dialog'))).to.be.true;
                     done();
                 });
 
@@ -39,7 +39,7 @@
 
             it('should hide the dialog on "close" call', function() {
                 element.one('akno-close', function() {
-                    expect(isVisible($('.akno-modal'))).to.be.false;
+                    expect(isVisible($('.akno-dialog'))).to.be.false;
                 });
                 element.akno('close');
             });

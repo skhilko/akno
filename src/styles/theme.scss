@@ -1,0 +1,32 @@
+.akno-footer {
+    margin-top: 1.5em;
+    text-align: center;
+
+    button {
+        display: inline-block;
+        padding: .5em 1em;
+        margin-left: 1em;
+        line-height: normal;
+        /* color: #fff;
+        border: 1px solid #9E9E9E;
+        background-color: #008cba; */
+        text-align: center;
+
+
+        // TODO think about default colors
+        /*
+        transition: background-color 300ms ease-out;
+
+        &:hover,
+        &:focus { background-color: $bg-hover; }
+
+        // We control the text color for you based on the background color.
+        color: if($bg-lightness > 70%, $button-font-color-alt, $button-font-color);
+
+        &:hover,
+        &:focus {
+          color: if($bg-hover-lightness > 70%, $button-font-color-alt, $button-font-color);
+        }
+         */
+    }
+}

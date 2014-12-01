@@ -13,7 +13,7 @@
 
         // TODO ideally implement or find an 'eventually' chai plugun
         // which would hide the `repeat` implementation.
-        // Eg. expect(isVisible($('.akno-modal'))).to.be.eventually.true;
+        // Eg. expect(isVisible($('.akno-dialog'))).to.be.eventually.true;
 
         /**
          * Repeatedly executes the provided assertion for a maximum time of 1 sec. until the assertion returns true.
@@ -118,7 +118,7 @@
 
             it('should show the dialog', function(done) {
                 dialog = openDialog('modal_no_inputs', function() {
-                    expect(isVisible($('.akno-modal'))).to.be.true;
+                    expect(isVisible($('.akno-dialog'))).to.be.true;
                     done();
                 });
             });
@@ -149,7 +149,7 @@
                     document.body.removeEventListener('akno-before-open', beforeOpenHandler);
                     // give the akno a chance to close, which should not happen anyway
                     setTimeout(function() {
-                        expect(!isVisible($('.akno-modal'))).to.be.true;
+                        expect(!isVisible($('.akno-dialog'))).to.be.true;
                         done();
                     }, 0);
                 };
@@ -169,7 +169,7 @@
                     dialog.close();
                 }, function() {
                     repeat(function() {
-                        return !isVisible($('.akno-modal'));
+                        return !isVisible($('.akno-dialog'));
                     }, 'akno should not be visible').always(done);
                 });
             });
@@ -190,7 +190,7 @@
                     document.body.removeEventListener('akno-before-close', beforeCloseHandler);
                     // give the akno a chance to close, which should not happen anyway
                     setTimeout(function() {
-                        expect(isVisible($('.akno-modal'))).to.be.true;
+                        expect(isVisible($('.akno-dialog'))).to.be.true;
                         done();
                     }, 0);
                 };
@@ -219,7 +219,7 @@
                     dialog.destroy();
                 }, function() {
                     repeat(function() {
-                        return $('.akno-modal').length === 0;
+                        return $('.akno-dialog').length === 0;
                     }, 'dialog wrapper should be destroyed').always(done);
                 });
             });
@@ -329,6 +329,90 @@
             });
         });
 
+        describe('action buttons', function() {
+            afterEach(function(done) {
+                destroyAkno(dialog, done);
+            });
+
+            it('should be possible to define custom action buttons for the akno', function(done) {
+                dialog = openDialog('modal_no_inputs', {
+                    buttons: [
+                        {
+                            text: 'Action 1'
+                        },
+                        {
+                            text: 'Action 2'
+                        }
+                    ]
+                }, function() {
+                    expect($('.akno-state-open .akno-footer button')).to.have.length(2);
+                    done();
+                });
+            });
+
+            it('should be possible to display names for action buttons', function(done) {
+                dialog = openDialog('modal_no_inputs', {
+                    buttons: [
+                        {
+                            text: 'Action 1'
+                        }
+                    ]
+                }, function() {
+                    expect($('.akno-state-open .akno-footer button').text()).to.be.equal('Action 1');
+                    done();
+                });
+            });
+
+            it('should be possible to define class names for action buttons', function(done) {
+                dialog = openDialog('modal_no_inputs', {
+                    buttons: [
+                        {
+                            text: 'Action 1',
+                            className: 'custom-action'
+                        }
+                    ]
+                }, function() {
+                    expect($('.akno-state-open .akno-footer .custom-action')).to.have.length(1);
+                    done();
+                });
+            });
+
+            describe('click event handler', function() {
+                it('should be executed when clicked on an action button', function(done) {
+                    dialog = openDialog('modal_no_inputs', {
+                        buttons: [
+                            {
+                                text: 'Action 1',
+                                action: function() {
+                                    expect(true).to.be.ok;
+                                    done();
+                                }
+                            }
+                        ]
+                    }, function() {
+                        $('.akno-state-open .akno-footer button').simulate('click');
+                    });
+                });
+
+                it('should have the akno instance as `this` execution context', function(done) {
+                    dialog = openDialog('modal_no_inputs', {
+                        buttons: [
+                            {
+                                text: 'Action 1',
+                                action: function() {
+                                    expect(this).to.be.equal(dialog);
+                                    done();
+                                }
+                            }
+                        ]
+                    }, function() {
+                        $('.akno-state-open .akno-footer button').simulate('click');
+                    });
+                });
+            });
+
+        });
+
         describe('focus', function() {
             afterEach(function(done) {
                 destroyAkno(dialog, done);
@@ -342,21 +426,55 @@
                 });
             });
 
-            it('should be given to the first element with "autofocus" attribute within the dialog on open', function(done) {
-                document.getElementById('modal_input_2').autofocus = true;
+            describe('akno contains an element with autofocus attribute', function() {
+                var autofocusEl;
+                before(function() {
+                    autofocusEl = document.getElementById('modal_input_2');
+                    autofocusEl.autofocus = true;
+                });
 
-                var elementWithAutofocus = document.getElementById('modal_input_2');
-                dialog = openDialog('modal_with_inputs', function() {
-                    expect(document.activeElement).to.be.equal(elementWithAutofocus);
+                it('autofocus element should recieve the focus when the akno is open', function(done) {
+                    dialog = openDialog('modal_with_inputs', function() {
+                        expect(document.activeElement).to.be.equal(autofocusEl);
+                        done();
+                    });
+                });
 
-                    elementWithAutofocus.autofocus = false;
-                    done();
+                after(function() {
+                    autofocusEl.autofocus = false;
                 });
             });
 
-            it('should be given to the dialog element when there is no focusable elements within the dialog', function(done) {
+
+            describe('akno doesn\'t contain focusable elements and a close button', function() {
+                before(function() {
+                    document.getElementById('localStyles').sheet.insertRule('.akno-state-open .akno-action-close { display: none; }', 0);
+                });
+
+                it('focus should be given to the akno wrapper element when the akno is open', function(done) {
+                    dialog = openDialog('modal_no_inputs', function() {
+                        expect(document.activeElement).to.be.equal(dialog.dialog);
+                        done();
+                    });
+                });
+
+                after(function() {
+                    document.getElementById('localStyles').sheet.deleteRule(0);
+                });
+            });
+
+            it('should be given to the first action button when the akno doesn\'t have focusable elements on open', function(done) {
+                dialog = openDialog('modal_no_inputs', {
+                        buttons: [{text: 'Confirm'}]
+                    }, function() {
+                        expect(document.activeElement).to.be.equal($('.akno-footer button:eq(0)', dialog.dialog)[0]);
+                        done();
+                    });
+            });
+
+            it('should be given to the close button when the akno doesn\'t have focusable elements and action buttons on open', function(done) {
                 dialog = openDialog('modal_no_inputs', function() {
-                    expect(document.activeElement).to.be.equal(dialog.dialog);
+                    expect(document.activeElement).to.be.equal($('.akno-action-close', dialog.dialog)[0]);
                     done();
                 });
             });
@@ -384,11 +502,15 @@
 
             it('should cycle through dialog focusable elements when focus reaches the last element or the first in case `shift` key is pressed', function(done) {
                 dialog = openDialog('modal_with_inputs', function() {
-                    $('#modal_1_close').focus();
-                    $('#modal_1_close').simulate('keydown', {keyCode: $.simulate.keyCode.TAB});
-                    expect(document.activeElement).to.be.equal(document.getElementById('modal_anchor'));
-                    $('#modal_anchor').simulate('keydown', {keyCode: $.simulate.keyCode.TAB, shiftKey: true});
-                    expect(document.activeElement).to.be.equal(document.getElementById('modal_1_close'));
+                    var lastInputEl = $('#modal_input_2');
+                    var closeEl = $('.akno-state-open .akno-action-close');
+
+                    lastInputEl.focus();
+                    lastInputEl.simulate('keydown', {keyCode: $.simulate.keyCode.TAB});
+                    expect(document.activeElement).to.be.equal(closeEl[0]);
+
+                    closeEl.simulate('keydown', {keyCode: $.simulate.keyCode.TAB, shiftKey: true});
+                    expect(document.activeElement).to.be.equal(lastInputEl[0]);
                     done();
                 });
             });
@@ -428,7 +550,7 @@
 
                     Akno.zIndex = 100;
                     secondDialog = openDialog('modal_with_inputs', function() {
-                        var zIndex = $('#modal_with_inputs').closest('.akno-modal').css('zIndex');
+                        var zIndex = $('#modal_with_inputs').closest('.akno-dialog').css('zIndex');
                         expect(String(zIndex)).to.be.equal('100');
                         done();
                     });
@@ -447,7 +569,7 @@
 
             it('should be applied as a class on dialog element', function(done) {
                 dialog = openDialog('modal_no_inputs', {effect: 'slide-in-right'}, function() {
-                    var modalWrapper = $('.akno-modal');
+                    var modalWrapper = $('.akno-dialog');
                     expect(modalWrapper.hasClass('akno-fx-slide-in-right')).to.be.true;
                     done();
                 });
@@ -464,7 +586,7 @@
                 var beforeOpenHandled;
                 var openHandler = function(ev) {
                     expect(ev.target).to.be.equal(element);
-                    expect(isVisible($('.akno-modal'))).to.be.false;
+                    expect(isVisible($('.akno-dialog'))).to.be.false;
                     document.body.removeEventListener('akno-before-open', openHandler);
                     beforeOpenHandled = true;
                 };
@@ -478,7 +600,7 @@
                 var element = document.getElementById('modal_no_inputs');
                 var openHandler = function(ev) {
                     expect(ev.target).to.be.equal(element);
-                    expect(isVisible($('.akno-modal'))).to.be.true;
+                    expect(isVisible($('.akno-dialog'))).to.be.true;
                     document.body.removeEventListener('akno-open', openHandler);
                     done();
                 };
@@ -490,7 +612,7 @@
                 var element = document.getElementById('modal_no_inputs');
                 var closeHandler = function(ev) {
                     expect(ev.target).to.be.equal(element);
-                    expect(isVisible($('.akno-modal'))).to.be.true;
+                    expect(isVisible($('.akno-dialog'))).to.be.true;
                     document.body.removeEventListener('akno-before-close', closeHandler);
                     done();
                 };
@@ -504,7 +626,7 @@
                 var element = document.getElementById('modal_no_inputs');
                 var closeHandler = function(ev) {
                     expect(ev.target).to.be.equal(element);
-                    expect(isVisible($('.akno-modal'))).to.be.false;
+                    expect(isVisible($('.akno-dialog'))).to.be.false;
                     document.body.removeEventListener('akno-close', closeHandler);
                     done();
                 };
@@ -530,10 +652,10 @@
 
             it('should display the second modal on top of the first one', function(done) {
                 dialog = openDialog('modal_no_inputs', function() {
-                    var zIndexFirst = $('#modal_no_inputs').closest('.akno-modal').css('zIndex');
+                    var zIndexFirst = $('#modal_no_inputs').closest('.akno-dialog').css('zIndex');
 
                     var secondDialog = openDialog('modal_with_inputs', function() {
-                        var zIndexSecond = $('#modal_with_inputs').closest('.akno-modal').css('zIndex');
+                        var zIndexSecond = $('#modal_with_inputs').closest('.akno-dialog').css('zIndex');
                         expect(parseInt(zIndexSecond, 10)).to.be.greaterThan(parseInt(zIndexFirst, 10));
                         secondDialog.destroy();
                         done();

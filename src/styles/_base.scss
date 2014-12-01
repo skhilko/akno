@@ -1,9 +1,21 @@
 /* General styles for the modal */
 
+$content-padding: 1.5em !default;
+
+@mixin clearfix() {
+    &:before,
+    &:after {
+        content: " ";
+        display: table;
+    }
+    &:after {
+        clear: both;
+    }
+}
 /*
     Styles for the html/body for special modal where we want 3d effects
 */
-.akno-modal {
+.akno-dialog {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -31,40 +43,57 @@
                 opacity .3s;
 }
 
-.akno-state-visible {
+.akno-state-open {
     visibility: visible;
 }
 
-.akno-state-visible ~ .akno-overlay {
+.akno-state-open ~ .akno-overlay {
     visibility: visible;
     opacity: 1;
     transition: visibility 0s linear 0s,
                 opacity .3s;
 }
 
+.akno-header {
+    @include clearfix();
+
+    .akno-action-close {
+        font-size: 1.5em;
+        line-height: 1em;
+        width: 1em;
+        height: 1em;
+        float: right;
+        border: none;
+        padding: 0;
+        margin: 0;
+        background-color: transparent;
+        color: #212121;
+    }
+}
+
+
 /* Content styles */
 .akno-content {
     position: relative;
     margin: 0 auto;
-    border-radius: 3px;
     background: #fff;
     border: 1px solid #bdc3c7;
+    padding: $content-padding;
 }
 
-.akno-content h1 {
-    margin: 0;
-    padding: 0.4em;
-    font-weight: 300;
-    font-size: 2.4em;
-    border-bottom: 1px solid #ecf0f1;
-}
+.akno-footer {
+    margin: $content-padding/2 -#{$content-padding} -#{$content-padding} -#{$content-padding};
+    padding: 1em $content-padding $content-padding;
+    margin-top: $content-padding;
+    text-align: center;
 
-.akno-content > div {
-    margin: 0;
-    padding: 15px 40px 30px;
-}
+    button {
+        display: inline-block;
+        text-align: center;
+        margin: 0 0 0 1em;
 
-.akno-content button {
-    display: block;
-    margin: 0 auto;
+        &:first-child {
+            margin-left: 0;
+        }
+    }
 }

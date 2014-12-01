@@ -7,7 +7,7 @@
     <style id="localStyles">
 
         /* speeding up tests */
-        .test-page .akno-modal {
+        .test-page .akno-dialog {
             -webkit-transition: visibility .1s linear;
             transition: visibility .1s linear;
         }
@@ -22,7 +22,7 @@
              transition: visibility 0s linear .1s, opacity .1s;
         }
 
-        .test-page .akno-state-visible ~ .akno-overlay {
+        .test-page .akno-state-open ~ .akno-overlay {
           -webkit-transition: visibility 0s linear 0s, opacity .1s;
           transition: visibility 0s linear 0s, opacity .1s;
         }
@@ -69,7 +69,6 @@
             <input id="modal_input_hidden_1" type="text">
             <input id="modal_input_hidden_2" type="text">
             <input id="modal_input_2" type="text">
-            <button id="modal_1_close" class="akno-action-close">Close me!</button>
         </div>
     </div>
 
