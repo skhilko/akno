@@ -168,7 +168,7 @@ function getUid(object) {
  *
  * Options:
  * - effect {String}, default 'scale-up' - effect to be used to show the dialog.
- * - header {String}, optional - header text. Header is not rendered in case the parameter is not provided.
+ * - title {String}, optional - title text.
  * - open {Boolean}, default `true` - if set to `true`, the akno will open upon initialization.
  * - buttons {Array}, optional - an array of objects in the following format:
  *     {
@@ -364,7 +364,7 @@ Akno.prototype._render = function() {
 
     var wrapper = document.createElement('div');
     wrapper.innerHTML = tmpl.dialog({
-        header: options.header,
+        title: options.title,
         effect: EFFECTS[options.effect],
         hasButtons: hasButtons
     });
@@ -553,7 +553,13 @@ function encodeHTMLSource() {  var encodeHTMLRules = { "&": "&#38;", "<": "&#60;
 String.prototype.encodeHTML=encodeHTMLSource();
 var tmpl = {};
   tmpl['dialog']=function anonymous(it) {
-var out='<div class="akno-dialog '+(it.effect || '')+'" tabindex="-1"><div class="akno-content"><div class="akno-header"><button type="button" class="akno-action-close">×</button>';if(it.header){out+='<h2>'+(it.header||'').toString().encodeHTML()+'</h2>';}out+='</div><div class="akno-body"></div>';if(it.hasButtons){out+='<div class="akno-footer"></div>';}out+='</div></div>';return out;
+var encodeHTML = typeof _encodeHTML !== 'undefined' ? _encodeHTML : (function (doNotSkipEncoded) {
+		var encodeHTMLRules = { "&": "&#38;", "<": "&#60;", ">": "&#62;", '"': "&#34;", "'": "&#39;", "/": "&#47;" },
+			matchHTML = doNotSkipEncoded ? /[&<>"'\/]/g : /&(?!#?\w+;)|<|>|"|'|\//g;
+		return function(code) {
+			return code ? code.toString().replace(matchHTML, function(m) {return encodeHTMLRules[m] || m;}) : "";
+		};
+	}());var out='<div class="akno-dialog '+(it.effect || '')+'" tabindex="-1"><div class="akno-content"><div class="akno-header"><button type="button" class="akno-action-close">×</button>';if(it.title){out+='<h2>'+encodeHTML(it.title)+'</h2>';}out+='</div><div class="akno-body"></div>';if(it.hasButtons){out+='<div class="akno-footer"></div>';}out+='</div></div>';return out;
 };
 return tmpl;})();
 window.Akno = Akno;

@@ -167,7 +167,7 @@ function getUid(object) {
  *
  * Options:
  * - effect {String}, default 'scale-up' - effect to be used to show the dialog.
- * - header {String}, optional - header text. Header is not rendered in case the parameter is not provided.
+ * - title {String}, optional - title text.
  * - open {Boolean}, default `true` - if set to `true`, the akno will open upon initialization.
  * - buttons {Array}, optional - an array of objects in the following format:
  *     {
@@ -363,7 +363,7 @@ Akno.prototype._render = function() {
 
     var wrapper = document.createElement('div');
     wrapper.innerHTML = tmpl.dialog({
-        header: options.header,
+        title: options.title,
         effect: EFFECTS[options.effect],
         hasButtons: hasButtons
     });
