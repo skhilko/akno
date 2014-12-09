@@ -5,6 +5,7 @@
     describe('Akno', function () {
 
         var dialog;
+        var MOCHA_TIMEOUT = this.timeout();
 
         function isVisible (el) {
             return el.css('visibility') !== 'hidden' && el.css('display') !== 'none';
@@ -53,7 +54,7 @@
                         clearTimeout(loopInterval);
                         deferred.reject(new Error(errorMsg));
                     }
-                }, 1000);
+                }, MOCHA_TIMEOUT);
             }
 
             return deferred.promise();
