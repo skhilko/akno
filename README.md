@@ -19,7 +19,7 @@ Contributing
 Contributions are welcome! If you would like to contribute, please issue a pull request.
 Here is what you need to do to get them accepted:
 - Lint the files using `grunt jshint`
-- Test the code. We are using [mocha](http://visionmedia.github.io/mocha/) with [chai](http://chaijs.com/).
+- Test the code. We are using [mocha](http://mochajs.org/) with [chai](http://chaijs.com/).
 Please add test cases to `test/spec/test.js`, and run `grunt test`.
 
 Local build
